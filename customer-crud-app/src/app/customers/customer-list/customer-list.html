@@ -1,0 +1,13 @@
+<a routerLink="/customers/new">Add New Customer</a>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Active</th>
+  </tr>
+  <tr *ngFor="let c of customers">
+    <td>{{ c.rowId }}</td>
+    <td>{{ c.customerName }}</td>
+    <td>{{ c.active ? 'Yes' : 'No' }}</td>
+  </tr>
+</table>
