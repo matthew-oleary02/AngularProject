@@ -19,4 +19,10 @@ export class CustomerListComponent implements OnInit {
   ngOnInit() {
     this.customerService.getCustomers().subscribe(c => this.customers = c);
   }
+
+  onDelete(id: number) {
+    if (!Number.isFinite(id) || id <= 0) return;
+    if (!confirm(`Delete customer #${id}?`)) return;
+    this.customerService.deleteCustomer(id);
+  }
 }

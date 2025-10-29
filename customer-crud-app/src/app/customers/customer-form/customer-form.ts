@@ -15,6 +15,7 @@ import { Customer } from '../customer.model';
 export class CustomerFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
+  isDelete = false;
   customerId!: number;
 
   constructor(
@@ -32,9 +33,20 @@ export class CustomerFormComponent implements OnInit {
       accountingSystemName: [''], active: [true], customerNote: ['']
     });
 
-    this.customerId = +this.route.snapshot.params['id'];
-    if(this.customerId){
-      this.isEdit = true;
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.customerId = Number(idParam);
+      if (Number.isFinite(this.customerId) && this.customerId > 0) {
+        this.isEdit = true;
+      }
+    }
+
+    const firstSegment = this.route.snapshot.url[0]?.path;
+    if (firstSegment === 'delete' || this.route.snapshot.routeConfig?.path?.includes('delete')) {
+      this.isDelete = true;
+    }
+
+    if(this.isEdit) {
       this.customerService.getCustomer(this.customerId).subscribe(c => {
         if(c) this.form.patchValue({
           customerName: c.customerName,
@@ -56,6 +68,15 @@ export class CustomerFormComponent implements OnInit {
   }
 
   submit() {
+
+    if (this.isDelete) {
+      if (Number.isFinite(this.customerId) && this.customerId > 0) {
+        this.customerService.deleteCustomer(this.customerId);
+      }
+      this.router.navigate(['/customers']);
+      return;
+    }
+
     const customer: Customer = {
       rowId: this.customerId || 0,
       customerName: this.form.value.customerName,
@@ -78,7 +99,7 @@ export class CustomerFormComponent implements OnInit {
       customerNote: this.form.value.customerNote
     };
 
-    if(this.isEdit){
+    if (this.isEdit) {
       this.customerService.updateCustomer(customer);
     } else {
       this.customerService.addCustomer(customer);

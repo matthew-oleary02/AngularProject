@@ -1,13 +1,47 @@
-<a routerLink="/customers/new">Add New Customer</a>
+<button type="button" [routerLink]="['/customers/new']">Add New Customer</button>
 <table>
   <tr>
     <th>ID</th>
     <th>Name</th>
+    <th>Address 1</th>
+    <th>Address 2</th>
+    <th>City</th>
+    <th>State</th>
+    <th>Zip</th>
+    <th>Country</th>
+    <th>Primary Contact Name</th>
+    <th>Primary Contact Phone</th>
+    <th>Primary Contact Email</th>
+    <th>Accounting System Name</th>
     <th>Active</th>
+    <th>Customer Note</th>
+    <th>Created By</th>
+    <th>Created On</th>
+    <th>Modified By</th>
+    <th>Modified On</th>
+    <th> </th>
+    <th> </th>
   </tr>
   <tr *ngFor="let c of customers">
     <td>{{ c.rowId }}</td>
     <td>{{ c.customerName }}</td>
+    <td>{{ c.billingAddress.address1 }}</td>
+    <td>{{ c.billingAddress.address2 }}</td>
+    <td>{{ c.billingAddress.city }} </td>
+    <td>{{ c.billingAddress.state }}</td>
+    <td>{{ c.billingAddress.zip }}</td>
+    <td>{{ c.billingAddress.country }}</td>
+    <td>{{ c.primaryContact.name }}</td>
+    <td>{{ c.primaryContact.phone }}</td>
+    <td>{{ c.primaryContact.email }}</td>
+    <td>{{ c.accountingSystemName }}</td>
     <td>{{ c.active ? 'Yes' : 'No' }}</td>
+    <td>{{ c.customerNote }}</td>
+    <td>{{ c.createdBy }}</td>
+    <td>{{ c.createdOn | date:'short' }}</td>
+    <td>{{ c.modifiedBy }}</td>
+    <td>{{ c.modifiedOn | date:'short' }}</td>
+    <td><button type="button" [routerLink]="['/customers/edit', c.rowId]">Edit</button></td>
+    <td><button type="button" (click)="onDelete(c.rowId)">Delete</button></td>
   </tr>
 </table>

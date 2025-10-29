@@ -1,22 +1,25 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <label>Name</label>
-  <input formControlName="customerName">
+  <label>Name:</label>
+  <input formControlName="customerName" type="text">
   <div *ngIf="form.controls['customerName'].invalid && form.controls['customerName'].touched">Required</div>
 
-  <label>Address1</label><input formControlName="address1">
-  <label>Address2</label><input formControlName="address2">
-  <label>City</label><input formControlName="city">
-  <label>State</label><input formControlName="state">
-  <label>Zip</label><input formControlName="zip">
-  <label>Country</label><input formControlName="country">
+  <label>Address1:</label><input formControlName="address1" type="text">
+  <label>Address2:</label><input formControlName="address2" type="text">
+  <label>City:</label><input formControlName="city" type="text">
+  <label>State:</label><input formControlName="state" type="text">
+  <label>Zip:</label><input formControlName="zip" type="text">
+  <label>Country:</label><input formControlName="country" type="text">
 
-  <label>Primary Contact Name</label><input formControlName="primaryContactName">
-  <label>Phone</label><input formControlName="primaryContactPhone">
-  <label>Email</label><input formControlName="primaryContactEmail">
+  <label>Primary Contact Name:</label><input formControlName="primaryContactName" type="text">
+  <label>Phone:</label><input formControlName="primaryContactPhone" type="text">
+  <label>Email:</label><input formControlName="primaryContactEmail" type="text">
 
-  <label>Accounting System</label><input formControlName="accountingSystemName">
-  <label>Active</label><input type="checkbox" formControlName="active">
-  <label>Note</label><textarea formControlName="customerNote"></textarea>
+  <label>Accounting System:</label><input formControlName="accountingSystemName" type="text">
+  <label>Active:</label><input type="checkbox" formControlName="active">
+  <label>Note:</label><textarea formControlName="customerNote"></textarea>
 
-  <button type="submit">Save</button>
+  <div>
+    <button type="submit">{{ isDelete ? 'Delete' : 'Save' }}</button>
+    <button type="button" [routerLink]="['/customers']">Cancel</button>
+  </div>
 </form>
