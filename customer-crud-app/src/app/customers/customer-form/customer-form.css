@@ -1,76 +1,83 @@
-:root{
+:root { 
   --accent: dodgerblue;
   --muted: #6b7280;
   --card-bg: #ffffff;
-  --page-bg: #f2f2f2;
-  --border: #000;
+  --page-bg: #f0f2f5;
+  --border: #bfc7d5;
+  --text-dark: #0b2545;
+  --text-light: #ffffff;
 }
 
-/* form card — centered and consistent with list styling */
-form {
-  max-width: 900px;
+/* ======= GLOBAL PAGE STYLING ======= */
+body {
+  background-color: var(--page-bg);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}
+
+/* ======= CARD CONTAINER (used by both form + table) ======= */
+.card {
+  width: 100%;
+  max-width: 1000px;
   margin: 24px auto;
   padding: 20px;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px 18px;
-  align-items: start;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   box-sizing: border-box;
-  background-color: #f8fbff;
+  overflow-x: auto; /* allows table scroll if needed */
 }
 
-/* make labels clear and readable */
+/* ======= FORM STYLING ======= */
+form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 20px;
+  align-items: start;
+  box-sizing: border-box;
+}
+
 label {
   display: block;
   font-weight: 600;
-  color: #0b2545;
+  color: var(--text-dark);
   margin-bottom: 6px;
 }
 
-/* inputs and selects */
 input[type="text"],
 input[type="email"],
 select,
 textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #cfd8e3;
+  border: 1px solid #9ea7b8;
   border-radius: 6px;
-  background: #fff;
+  background: #fafafa;
   box-sizing: border-box;
   font-size: 14px;
-  color: #10203a;
-  outline: none;
-  transition: border-color .15s ease, box-shadow .15s ease;
+  color: var(--text-dark);
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
+input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(30,144,255,0.08);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
 }
 
-/* textarea should span full width */
 textarea {
   height: 150px;
   resize: vertical;
   grid-column: 1 / -1;
 }
 
-/* checkbox alignment */
-input[type="checkbox"] {
-  width: auto;
-  transform: translateY(2px);
-}
-
-/* action row — span full width and align buttons to the right */
-form > div {
+/* Action buttons row */
+form > div.actions {
   grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
@@ -78,41 +85,145 @@ form > div {
   margin-top: 8px;
 }
 
-/* Make submit look the same as the cancel (secondary) button */
-button[type="submit"],
-button[type="button"][routerlink],
-button[type="button"] {
+/* ======= BUTTONS ======= */
+button {
   background: transparent;
-  color: #0b2545;
-  border: 1px solid #cfd8e3;
+  color: var(--text-dark);
+  border: 1px solid var(--border);
   padding: 10px 14px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
   transition: transform .05s ease, box-shadow .12s ease, background-color .12s ease;
-  box-shadow: none;
 }
 
-/* subtle hover for all action buttons */
-button[type="submit"]:hover,
-button[type="button"]:hover {
-  background-color: rgba(0,0,0,0.03);
+button:hover {
+  background-color: rgba(0,0,0,0.04);
   transform: translateY(-1px);
 }
 
-/* preserve distinct focus styling for accessibility */
-button[type="submit"]:focus,
-button[type="button"]:focus {
+button:focus {
   outline: 3px solid rgba(30,144,255,0.12);
   outline-offset: 2px;
 }
 
-/* small responsive tweaks */
-@media (max-width: 700px) {
+/* Primary action button */
+button.primary {
+  background-color: var(--accent);
+  color: var(--text-light);
+  border: none;
+}
+
+button.primary:hover {
+  background-color: #1c84ff;
+}
+
+/* ======= TABLE STYLING ======= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fafbff;
+  min-width: 800px;
+  table-layout: auto; /* allow flexible column widths */
+}
+
+th, td {
+  border: 1px solid var(--border);
+  padding: 10px;
+  text-align: center;
+  color: var(--text-dark);
+  vertical-align: middle;
+  font-size: 14px;
+  white-space: normal; /* allow text wrapping */
+  word-break: break-word; /* break long words */
+}
+
+th {
+  background-color: var(--accent);
+  color: var(--text-light);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+tr:nth-child(even) {
+  background-color: #f4f6fb;
+}
+
+tr:hover {
+  background-color: #eaf1ff;
+}
+
+/* ======= TABLE ACTION BUTTONS ======= */
+td button {
+  background: transparent;
+  color: var(--text-dark);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+td button:hover {
+  background-color: rgba(0,0,0,0.04);
+  transform: translateY(-1px);
+}
+
+/* ======= SCROLLBAR STYLING ======= */
+.card::-webkit-scrollbar {
+  height: 8px;
+}
+.card::-webkit-scrollbar-thumb {
+  background: #c2c9d6;
+  border-radius: 4px;
+}
+.card::-webkit-scrollbar-thumb:hover {
+  background: #a3aec2;
+}
+
+/* ======= RESPONSIVE BEHAVIOR ======= */
+@media (max-width: 900px) {
   form {
     grid-template-columns: 1fr;
-    padding: 16px;
   }
 
-  textarea { height: 130px; }
+  textarea {
+    height: 130px;
+  }
+
+  th, td {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  table {
+    min-width: 700px;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 12px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    min-width: 600px;
+  }
+
+  th, td {
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left;
+  }
+
+  button {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
 }
