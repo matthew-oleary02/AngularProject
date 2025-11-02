@@ -23,6 +23,10 @@ export class CustomerListComponent implements OnInit {
   onDelete(id: number) {
     if (!Number.isFinite(id) || id <= 0) return;
     if (!confirm(`Delete customer #${id}?`)) return;
-    this.customerService.deleteCustomer(id);
+    //this.customerService.deleteCustomer(id);
+
+    this.customerService.deleteCustomer(id).subscribe(() => {
+      this.customerService.getCustomers().subscribe(c => this.customers = c);
+  });
   }
 }

@@ -86,6 +86,7 @@ export class CustomerFormComponent implements OnInit {
         city: this.form.value.city,
         state: this.form.value.state,
         zip: this.form.value.zip,
+        county: this.form.value.county,
         country: this.form.value.country,
         email: this.form.value.primaryContactEmail
       },

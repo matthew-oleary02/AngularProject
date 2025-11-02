@@ -7,6 +7,7 @@ export interface Customer {
     city: string;
     state: string;
     zip: string;
+    county: string;
     country: string;
     email: string;
   };
