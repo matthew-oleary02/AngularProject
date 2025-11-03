@@ -12,28 +12,14 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {}
 */
 
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from './api';
-import { Customer } from './customers/customer.model'; // Adjust path if needed
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  template: `
-    <ul>
-      <li *ngFor="let customer of customers">
-        {{ customer.customerName }} - {{ customer.billingAddress.email }}
-      </li>
-    </ul>
-  `
+  standalone: true,
+  imports: [CommonModule, RouterModule],
+  template: `<router-outlet></router-outlet>`
 })
-export class AppComponent implements OnInit {
-  customers: Customer[] = []; // ✅ Correct type
-
-  constructor(private api: ApiService) {}
-
-  ngOnInit() {
-    this.api.getCustomers().subscribe((data: Customer[]) => {
-      this.customers = data;
-    });
-  }
-}
+export class AppComponent {}

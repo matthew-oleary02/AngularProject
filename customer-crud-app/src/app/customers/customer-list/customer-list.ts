@@ -17,16 +17,18 @@ export class CustomerListComponent implements OnInit {
   constructor(private customerService: CustomerService) {}
 
   ngOnInit() {
-    this.customerService.getCustomers().subscribe(c => this.customers = c);
+    this.customerService.getCustomers().subscribe({
+      next: c => this.customers = c,
+      error: err => console.error('Error fetching customers:', err)
+    });
   }
 
   onDelete(id: number) {
     if (!Number.isFinite(id) || id <= 0) return;
     if (!confirm(`Delete customer #${id}?`)) return;
-    //this.customerService.deleteCustomer(id);
 
     this.customerService.deleteCustomer(id).subscribe(() => {
       this.customerService.getCustomers().subscribe(c => this.customers = c);
-  });
+    });
   }
 }

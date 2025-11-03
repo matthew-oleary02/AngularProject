@@ -28,9 +28,24 @@ export class CustomerFormComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       customerName: ['', Validators.required],
-      address1: [''], address2: [''], city: [''], state: [''], zip: [''], country: [''],
-      primaryContactName: [''], primaryContactPhone: [''], primaryContactEmail: [''],
-      accountingSystemName: [''], active: [true], customerNote: ['']
+      billingAddress: this.fb.group({
+        address1: [''],
+        address2: [''],
+        city: [''],
+        state: [''],
+        zip: [''],
+        county: [''],
+        country: [''],
+        email: ['']
+      }),
+      primaryContact: this.fb.group({
+        name: [''],
+        phone: [''],
+        email: ['']
+      }),
+      accountingSystemName: [''],
+      active: [true],
+      customerNote: ['']
     });
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -46,66 +61,40 @@ export class CustomerFormComponent implements OnInit {
       this.isDelete = true;
     }
 
-    if(this.isEdit) {
+    if (this.isEdit) {
       this.customerService.getCustomer(this.customerId).subscribe(c => {
-        if(c) this.form.patchValue({
-          customerName: c.customerName,
-          address1: c.billingAddress.address1,
-          address2: c.billingAddress.address2,
-          city: c.billingAddress.city,
-          state: c.billingAddress.state,
-          zip: c.billingAddress.zip,
-          country: c.billingAddress.country,
-          primaryContactName: c.primaryContact.name,
-          primaryContactPhone: c.primaryContact.phone,
-          primaryContactEmail: c.primaryContact.email,
-          accountingSystemName: c.accountingSystemName,
-          active: c.active,
-          customerNote: c.customerNote
-        });
+        if (c) this.form.patchValue(c);
       });
     }
   }
 
   submit() {
-
-    if (this.isDelete) {
-      if (Number.isFinite(this.customerId) && this.customerId > 0) {
-        this.customerService.deleteCustomer(this.customerId);
-      }
-      this.router.navigate(['/customers']);
-      return;
+  if (this.isDelete) {
+    if (Number.isFinite(this.customerId) && this.customerId > 0) {
+      this.customerService.deleteCustomer(this.customerId).subscribe(() => {
+        this.router.navigate(['/customers']);
+      });
     }
-
-    const customer: Customer = {
-      rowId: this.customerId || 0,
-      customerName: this.form.value.customerName,
-      billingAddress: {
-        address1: this.form.value.address1,
-        address2: this.form.value.address2,
-        city: this.form.value.city,
-        state: this.form.value.state,
-        zip: this.form.value.zip,
-        county: this.form.value.county,
-        country: this.form.value.country,
-        email: this.form.value.primaryContactEmail
-      },
-      primaryContact: {
-        name: this.form.value.primaryContactName,
-        phone: this.form.value.primaryContactPhone,
-        email: this.form.value.primaryContactEmail
-      },
-      accountingSystemName: this.form.value.accountingSystemName,
-      active: this.form.value.active,
-      customerNote: this.form.value.customerNote
-    };
-
-    if (this.isEdit) {
-      this.customerService.updateCustomer(customer);
-    } else {
-      this.customerService.addCustomer(customer);
-    }
-
-    this.router.navigate(['/customers']);
+    return;
   }
+
+  const customer: Customer = {
+    rowId: this.customerId || 0,
+    ...this.form.value
+  };
+
+  const request = this.isEdit
+    ? this.customerService.updateCustomer(customer)
+    : this.customerService.addCustomer(customer);
+
+  request.subscribe({
+    next: () => {
+      this.router.navigate(['/customers']);
+    },
+    error: err => {
+      console.error('Error saving customer:', err);
+    }
+  });
+}
+
 }

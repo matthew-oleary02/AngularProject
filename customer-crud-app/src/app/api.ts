@@ -7,7 +7,7 @@ import { Customer } from './customers/customer.model'; // Adjust path if needed
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:3000/api';
+  private baseUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 

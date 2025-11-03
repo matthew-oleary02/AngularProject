@@ -23,6 +23,7 @@
     <th>Modified On</th>
     <th> </th>
     <th> </th>
+    <th> </th>
   </tr>
   <tr *ngFor="let c of customers">
     <td>{{ c.rowId }}</td>
@@ -45,6 +46,7 @@
     <td>{{ c.modifiedBy }}</td>
     <td>{{ c.modifiedOn | date:'short' }}</td>
     <td><button type="button" [routerLink]="['/customers/edit', c.rowId]">Edit</button></td>
+    <td><button type="button" [routerLink]="['/customers/view', c.rowId]">View</button></td>
     <td><button type="button" (click)="onDelete(c.rowId)">Delete</button></td>
   </tr>
 </table>

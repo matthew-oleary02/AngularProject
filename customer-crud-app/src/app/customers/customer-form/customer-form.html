@@ -1,28 +1,44 @@
 <div class="card">
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <label>Name:</label>
-  <input formControlName="customerName" type="text">
-  <div *ngIf="form.controls['customerName'].invalid && form.controls['customerName'].touched">Required</div>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h2>{{ isEdit ? 'Edit Customer' : isDelete ? 'Delete Customer' : 'Add New Customer' }}</h2>
 
-  <label>Address1:</label><input formControlName="address1" type="text">
-  <label>Address2:</label><input formControlName="address2" type="text">
-  <label>City:</label><input formControlName="city" type="text">
-  <label>State:</label><input formControlName="state" type="text">
-  <label>Zip:</label><input formControlName="zip" type="text">
-  <label>County:</label><input formControlName="country" type="text">
-  <label>Country:</label><input formControlName="country" type="text">
+    <label>Name:</label>
+    <input formControlName="customerName" type="text" />
+    <div *ngIf="form.controls['customerName'].invalid && form.controls['customerName'].touched">
+      Required
+    </div>
 
-  <label>Primary Contact Name:</label><input formControlName="primaryContactName" type="text">
-  <label>Phone:</label><input formControlName="primaryContactPhone" type="text">
-  <label>Email:</label><input formControlName="primaryContactEmail" type="text">
+    <fieldset formGroupName="billingAddress">
+      <legend>Billing Address</legend>
+      <label>Address 1:</label><input formControlName="address1" type="text" />
+      <label>Address 2:</label><input formControlName="address2" type="text" />
+      <label>City:</label><input formControlName="city" type="text" />
+      <label>State:</label><input formControlName="state" type="text" />
+      <label>Zip:</label><input formControlName="zip" type="text" />
+      <label>County:</label><input formControlName="county" type="text" />
+      <label>Country:</label><input formControlName="country" type="text" />
+      <label>Email:</label><input formControlName="email" type="email" />
+    </fieldset>
 
-  <label>Accounting System:</label><input formControlName="accountingSystemName" type="text">
-  <label>Active:</label><input type="checkbox" formControlName="active">
-  <label>Note:</label><textarea formControlName="customerNote"></textarea>
+    <fieldset formGroupName="primaryContact">
+      <legend>Primary Contact</legend>
+      <label>Name:</label><input formControlName="name" type="text" />
+      <label>Phone:</label><input formControlName="phone" type="text" />
+      <label>Email:</label><input formControlName="email" type="email" />
+    </fieldset>
 
-  <div>
-    <button type="submit">{{ isDelete ? 'Delete' : 'Save' }}</button>
-    <button type="button" [routerLink]="['/customers']">Cancel</button>
-  </div>
-</form>
+    <label>Accounting System:</label>
+    <input formControlName="accountingSystemName" type="text" />
+
+    <label>Active:</label>
+    <input type="checkbox" formControlName="active" />
+
+    <label>Customer Note:</label>
+    <textarea formControlName="customerNote"></textarea>
+
+    <div class="form-actions">
+      <button type="submit">{{ isDelete ? 'Delete' : 'Save' }}</button>
+      <button type="button" [routerLink]="['/customers']">Cancel</button>
+    </div>
+  </form>
 </div>
