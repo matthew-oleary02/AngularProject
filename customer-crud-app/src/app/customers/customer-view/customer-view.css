@@ -1,0 +1,183 @@
+:root { 
+  --accent: dodgerblue;
+  --muted: #6b7280;
+  --card-bg: #ffffff;
+  --page-bg: #f0f2f5;
+  --border: #bfc7d5;
+  --text-dark: #0b2545;
+  --text-light: #ffffff;
+}
+
+h1 {
+    text-align: center;
+    color: var(--text-dark);
+    margin-top: 16px;
+}
+
+/* ======= PAGE LAYOUT ======= */
+body {
+  background-color: var(--page-bg);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ======= CARD WRAPPER ======= */
+.card {
+  width: 95%;
+  margin: 24px auto;
+  padding: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+/* ======= BUTTONS ======= */
+button {
+  background: transparent;
+  color: var(--text-dark);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform .05s ease, box-shadow .12s ease, background-color .12s ease;
+}
+
+button:hover {
+  background-color: rgba(0,0,0,0.04);
+  transform: translateY(-1px);
+}
+
+button:focus {
+  outline: 3px solid rgba(30,144,255,0.12);
+  outline-offset: 2px;
+}
+
+/* Primary action (like submit or save) */
+button.primary {
+  background-color: var(--accent);
+  color: var(--text-light);
+  border: none;
+}
+
+button.primary:hover {
+  background-color: #1c84ff;
+}
+
+/* Grid-based read-only detail layout — consistent with list/form styles */
+.detail-grid {
+    display: grid;
+    /* make sections lay out horizontally where space allows */
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px 20px;
+    align-items: start;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.title {
+    grid-column: 1 / -1;
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+    color: var(--text-dark, #0b2545);
+    font-weight: 700;
+}
+
+/* Make group title visually stronger and separate from regular labels */
+.group-title {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+    padding: 10px 12px;
+    color: var(--accent, dodgerblue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    background: rgba(30,144,255,0.06);
+    border-left: 4px solid var(--accent, dodgerblue);
+    border-radius: 6px;
+    letter-spacing: 0.2px;
+}
+
+/* each item is now a small two-column grid (label / value),
+     allowing multiple items to sit side-by-side in the parent grid */
+.item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 4px 12px;
+    align-items: center;
+    padding: 6px 0;
+    box-sizing: border-box;
+}
+
+/* keep label/value visual hierarchy */
+.label {
+    color: var(--muted, #6b7280);
+    font-weight: 600;
+    padding: 0;
+    align-self: center;
+}
+
+.value {
+    padding: 0;
+    color: var(--text-dark, #0b2545);
+    word-break: break-word;
+}
+
+/* full-width rows (addresses or notes that need more room) */
+.item.full {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+}
+
+/* actions remain full width and aligned to the end */
+.actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center; /* center the action button */
+    margin-top: 12px;
+}
+
+/* Make the action button match the other forms/list look */
+.actions button {
+  background: transparent;
+  color: #0b2545;
+  border: 1px solid #cfd8e3;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  /* keep a consistent min-width so centering looks balanced */
+  min-width: 110px;
+}
+
+@media (max-width: 700px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .label { padding-top: 8px; }
+}
+
+/* ======= RESPONSIVENESS ======= */
+@media (max-width: 900px) {
+  th, td {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  table {
+    min-width: 800px; /* keep scroll but not too wide */
+  }
+
+  .card {
+    width: 98%;
+  }
+
+  button {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}

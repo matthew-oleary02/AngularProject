@@ -8,6 +8,12 @@
   --text-light: #ffffff;
 }
 
+h1 {
+    text-align: center;
+    color: var(--text-dark);
+    margin-top: 16px;
+}
+
 /* ======= GLOBAL PAGE STYLING ======= */
 body {
   background-color: var(--page-bg);
@@ -80,9 +86,41 @@ textarea {
 form > div.actions {
   grid-column: 1 / -1;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center; /* center buttons horizontally */
   gap: 12px;
-  margin-top: 8px;
+  margin-top: 16px; /* give a bit more breathing room */
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center; /* center buttons horizontally */
+  gap: 12px;
+  margin-top: 16px; /* give a bit more breathing room */
+}
+
+/* full-width label + centered input for the Name field */
+.full-label {
+  grid-column: 1 / -1;
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.full-input {
+  grid-column: 1 / -1;
+  justify-self: center; /* center the input inside the grid */
+  width: 60%;           /* control visual width */
+  min-width: 260px;
+  padding: 10px 12px;
+}
+
+/* ensure error message for name sits under the centered input */
+.error {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #c0392b;
+  font-size: 13px;
+  padding-top: 6px;
 }
 
 /* ======= BUTTONS ======= */
@@ -116,72 +154,6 @@ button.primary {
 
 button.primary:hover {
   background-color: #1c84ff;
-}
-
-/* ======= TABLE STYLING ======= */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fafbff;
-  min-width: 800px;
-  table-layout: auto; /* allow flexible column widths */
-}
-
-th, td {
-  border: 1px solid var(--border);
-  padding: 10px;
-  text-align: center;
-  color: var(--text-dark);
-  vertical-align: middle;
-  font-size: 14px;
-  white-space: normal; /* allow text wrapping */
-  word-break: break-word; /* break long words */
-}
-
-th {
-  background-color: var(--accent);
-  color: var(--text-light);
-  font-weight: 600;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-tr:nth-child(even) {
-  background-color: #f4f6fb;
-}
-
-tr:hover {
-  background-color: #eaf1ff;
-}
-
-/* ======= TABLE ACTION BUTTONS ======= */
-td button {
-  background: transparent;
-  color: var(--text-dark);
-  border: 1px solid var(--border);
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.15s ease, transform 0.1s ease;
-}
-
-td button:hover {
-  background-color: rgba(0,0,0,0.04);
-  transform: translateY(-1px);
-}
-
-/* ======= SCROLLBAR STYLING ======= */
-.card::-webkit-scrollbar {
-  height: 8px;
-}
-.card::-webkit-scrollbar-thumb {
-  background: #c2c9d6;
-  border-radius: 4px;
-}
-.card::-webkit-scrollbar-thumb:hover {
-  background: #a3aec2;
 }
 
 /* ======= RESPONSIVE BEHAVIOR ======= */

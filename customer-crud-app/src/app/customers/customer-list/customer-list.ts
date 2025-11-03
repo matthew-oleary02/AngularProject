@@ -27,8 +27,14 @@ export class CustomerListComponent implements OnInit {
     if (!Number.isFinite(id) || id <= 0) return;
     if (!confirm(`Delete customer #${id}?`)) return;
 
-    this.customerService.deleteCustomer(id).subscribe(() => {
-      this.customerService.getCustomers().subscribe(c => this.customers = c);
+    this.customerService.deleteCustomer(id).subscribe({
+      next: () => {
+        this.customers = this.customers.filter(c => c.rowId !== id);
+      },
+      error: (err) => {
+        console.error('Error deleting customer:', err)
+        alert('Failed to delete customer. Please try again.');
+      }
     });
   }
 }

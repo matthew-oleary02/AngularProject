@@ -1,40 +1,71 @@
+<h1>{{ isEdit ? 'Edit Customer' : isDelete ? 'Delete Customer' : 'Add New Customer' }}</h1>
+
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <h2>{{ isEdit ? 'Edit Customer' : isDelete ? 'Delete Customer' : 'Add New Customer' }}</h2>
 
-    <label>Name:</label>
-    <input formControlName="customerName" type="text" />
-    <div *ngIf="form.controls['customerName'].invalid && form.controls['customerName'].touched">
+    <!-- Name (spans two columns) -->
+    <label for="customerName" class="full-label">Name:</label>
+    <input id="customerName" class="full-input" formControlName="customerName" type="text" />
+    <div class="error" *ngIf="form.get('customerName')?.invalid && form.get('customerName')?.touched">
       Required
     </div>
 
-    <fieldset formGroupName="billingAddress">
+    <!-- Billing address fieldset (occupies full width, internal two-column layout) -->
+    <fieldset formGroupName="billingAddress" class="fieldset-grid">
       <legend>Billing Address</legend>
-      <label>Address 1:</label><input formControlName="address1" type="text" />
-      <label>Address 2:</label><input formControlName="address2" type="text" />
-      <label>City:</label><input formControlName="city" type="text" />
-      <label>State:</label><input formControlName="state" type="text" />
-      <label>Zip:</label><input formControlName="zip" type="text" />
-      <label>County:</label><input formControlName="county" type="text" />
-      <label>Country:</label><input formControlName="country" type="text" />
-      <label>Email:</label><input formControlName="email" type="email" />
+
+      <label for="address1">Address 1:</label>
+      <input id="address1" formControlName="address1" type="text" />
+
+      <label for="address2">Address 2:</label>
+      <input id="address2" formControlName="address2" type="text" />
+
+      <label for="city">City:</label>
+      <input id="city" formControlName="city" type="text" />
+
+      <label for="state">State:</label>
+      <input id="state" formControlName="state" type="text" />
+
+      <label for="zip">Zip:</label>
+      <input id="zip" formControlName="zip" type="text" />
+
+      <label for="county">County:</label>
+      <input id="county" formControlName="county" type="text" />
+
+      <label for="country">Country:</label>
+      <input id="country" formControlName="country" type="text" />
+
+      <label for="billingEmail">Email:</label>
+      <input id="billingEmail" formControlName="email" type="email" />
     </fieldset>
 
-    <fieldset formGroupName="primaryContact">
+    <!-- Primary contact fieldset -->
+    <fieldset formGroupName="primaryContact" class="fieldset-grid">
       <legend>Primary Contact</legend>
-      <label>Name:</label><input formControlName="name" type="text" />
-      <label>Phone:</label><input formControlName="phone" type="text" />
-      <label>Email:</label><input formControlName="email" type="email" />
+
+      <label for="contactName">Name:</label>
+      <input id="contactName" formControlName="name" type="text" />
+
+      <label for="contactPhone">Phone:</label>
+      <input id="contactPhone" formControlName="phone" type="text" />
+
+      <label for="contactEmail">Email:</label>
+      <input id="contactEmail" formControlName="email" type="email" />
     </fieldset>
 
-    <label>Accounting System:</label>
-    <input formControlName="accountingSystemName" type="text" />
+    <!-- Additional information fieldset (new) -->
+    <fieldset class="fieldset-grid additional-info">
+      <legend>Additional Information</legend>
 
-    <label>Active:</label>
-    <input type="checkbox" formControlName="active" />
+      <label for="accountingSystemName">Accounting System:</label>
+      <input id="accountingSystemName" formControlName="accountingSystemName" type="text" />
 
-    <label>Customer Note:</label>
-    <textarea formControlName="customerNote"></textarea>
+      <label for="active">Active:</label>
+      <input id="active" type="checkbox" formControlName="active" />
+
+      <label class="full-label">Customer Note:</label>
+      <textarea formControlName="customerNote" class="full"></textarea>
+    </fieldset>
 
     <div class="form-actions">
       <button type="submit">{{ isDelete ? 'Delete' : 'Save' }}</button>

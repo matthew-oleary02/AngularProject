@@ -1,1 +1,40 @@
-<p>customer-view works!</p>
+<h1>Customer Details</h1>
+<div *ngIf="customer; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ customer.customerName || 'Customer' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ customer.rowId }}</div></div>
+
+    <div class="group-title">Billing Address</div>
+    <div class="item"><div class="label">Address 1</div><div class="value">{{ customer.billingAddress.address1 }}</div></div>
+    <div class="item"><div class="label">Address 2</div><div class="value">{{ customer.billingAddress.address2 }}</div></div>
+    <div class="item"><div class="label">City</div><div class="value">{{ customer.billingAddress.city }}</div></div>
+    <div class="item"><div class="label">State</div><div class="value">{{ customer.billingAddress.state }}</div></div>
+    <div class="item"><div class="label">Zip</div><div class="value">{{ customer.billingAddress.zip }}</div></div>
+    <div class="item"><div class="label">County</div><div class="value">{{ customer.billingAddress.county }}</div></div>
+    <div class="item"><div class="label">Country</div><div class="value">{{ customer.billingAddress.country }}</div></div>
+    <div class="item"><div class="label">Email</div><div class="value">{{ customer.billingAddress.email }}</div></div>
+
+    <div class="group-title">Primary Contact</div>
+    <div class="item"><div class="label">Name</div><div class="value">{{ customer.primaryContact.name }}</div></div>
+    <div class="item"><div class="label">Phone</div><div class="value">{{ customer.primaryContact.phone }}</div></div>
+    <div class="item"><div class="label">Email</div><div class="value">{{ customer.primaryContact.email }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Accounting System Name</div><div class="value">{{ customer.accountingSystemName }}</div></div>
+    <div class="item"><div class="label">Active</div><div class="value">{{ customer.active ? 'Yes' : 'No' }}</div></div>
+    <div class="item"><div class="label">Customer Note</div><div class="value">{{ customer.customerNote }}</div></div>
+    <div class="item"><div class="label">Created By</div><div class="value">{{ customer.createdBy }}</div></div>
+    <div class="item"><div class="label">Created On</div><div class="value">{{ customer.createdOn | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ customer.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ customer.modifiedOn | date:'short' }}</div></div>
+  </div>
+  <button type="button" [routerLink]="['/customers']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Customer not found.</p>
+    <button type="button" [routerLink]="['/customers']">Back</button>
+  </div>
+</ng-template>

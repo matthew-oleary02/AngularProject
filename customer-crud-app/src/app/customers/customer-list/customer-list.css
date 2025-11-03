@@ -8,6 +8,12 @@
   --text-light: #ffffff;
 }
 
+h1 {
+    text-align: center;
+    color: var(--text-dark);
+    margin-top: 16px;
+}
+
 /* ======= PAGE LAYOUT ======= */
 body {
   background-color: var(--page-bg);
@@ -85,6 +91,7 @@ form > div.actions {
 
 /* ======= BUTTONS ======= */
 button {
+  justify-content: center;
   background: transparent;
   color: var(--text-dark);
   border: 1px solid var(--border);
@@ -177,6 +184,11 @@ td button:hover {
 }
 .card::-webkit-scrollbar-thumb:hover {
   background: #a3aec2;
+}
+
+.card + button {
+  display: block;
+  margin: 16px auto;
 }
 
 /* ======= RESPONSIVENESS ======= */

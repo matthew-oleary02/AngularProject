@@ -143,7 +143,7 @@ app.post('/customers', async (req, res) => {
     request.input('AccountingSystemName', sql.VarChar, customer.accountingSystemName);
     request.input('Active', sql.Bit, customer.active);
     request.input('CustomerNote', sql.VarChar, customer.customerNote);
-    request.input('CreatedBy', sql.VarChar, 'matty'); // You can make this dynamic later
+    request.input('CreatedBy', sql.VarChar, 'matty')
 
     await request.query(query);
     res.setHeader('Content-Type', 'application/json');
@@ -199,12 +199,61 @@ app.put('/customers/:id', async (req, res) => {
     request.input('AccountingSystemName', sql.VarChar, customer.accountingSystemName);
     request.input('Active', sql.Bit, customer.active);
     request.input('CustomerNote', sql.VarChar, customer.customerNote);
-    request.input('ModifiedBy', sql.VarChar, 'matty'); // You can make this dynamic later
+    request.input('ModifiedBy', sql.VarChar, 'matty');
 
     await request.query(query);
     res.status(200).json({ message: 'Customer updated successfully' });
   } catch (err) {
     console.error('Error updating customer:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.delete('/customers/:id', async (req, res) => {
+  try {
+   await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+
+    const result = await request.query('DELETE FROM Customers OUTPUT DELETED.* WHERE RowID = @RowID');
+
+    if (!result.recordset || result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    const row = result.recordset[0];
+    const customer = {
+      rowId: parseInt(row.RowID, 10),
+      customerName: row.CustomerName,
+      billingAddress: {
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zip: row.Zip,
+        county: row.County,
+        country: row.Country,
+        email: row.Email
+      },
+      primaryContact: {
+        name: row.PrimaryContactName,
+        phone: row.PrimaryContactPhone,
+        email: row.PrimaryContactEmail
+      },
+      accountingSystemName: row.AccountingSystemName,
+      active: row.Active,
+      customerNote: row.CustomerNote,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+
+    res.json(customer);
+  } catch (err) {
+    console.error('Error fetching customer:', err);
     res.status(500).send('Server error');
   }
 });
