@@ -69,32 +69,41 @@ export class CustomerFormComponent implements OnInit {
   }
 
   submit() {
-  if (this.isDelete) {
-    if (Number.isFinite(this.customerId) && this.customerId > 0) {
-      this.customerService.deleteCustomer(this.customerId).subscribe(() => {
+    // If not delete action, prevent submission when the form is invalid
+    if (!this.isDelete && this.form.invalid) {
+      // mark controls so validation messages appear
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    if (this.isDelete) {
+      if (Number.isFinite(this.customerId) && this.customerId > 0) {
+        this.customerService.deleteCustomer(this.customerId).subscribe(() => {
+          this.router.navigate(['/customers']);
+        }, err => {
+          console.error('Error deleting customer:', err);
+        });
+      }
+      return;
+    }
+
+    const customer: Customer = {
+      rowId: this.customerId || 0,
+      ...this.form.value
+    };
+
+    const request = this.isEdit
+      ? this.customerService.updateCustomer(customer)
+      : this.customerService.addCustomer(customer);
+
+    request.subscribe({
+      next: () => {
         this.router.navigate(['/customers']);
-      });
-    }
-    return;
+      },
+      error: err => {
+        console.error('Error saving customer:', err);
+      }
+    });
   }
-
-  const customer: Customer = {
-    rowId: this.customerId || 0,
-    ...this.form.value
-  };
-
-  const request = this.isEdit
-    ? this.customerService.updateCustomer(customer)
-    : this.customerService.addCustomer(customer);
-
-  request.subscribe({
-    next: () => {
-      this.router.navigate(['/customers']);
-    },
-    error: err => {
-      console.error('Error saving customer:', err);
-    }
-  });
-}
 
 }

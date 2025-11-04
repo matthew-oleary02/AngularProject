@@ -67,9 +67,9 @@
       <textarea formControlName="customerNote" class="full"></textarea>
     </fieldset>
 
-    <div class="form-actions">
-      <button type="submit">{{ isDelete ? 'Delete' : 'Save' }}</button>
-      <button type="button" [routerLink]="['/customers']">Cancel</button>
-    </div>
+<div class="form-actions">
+  <button type="submit" [disabled]="form.invalid && !isDelete">{{ isDelete ? 'Delete' : 'Save' }}</button>
+  <button type="button" [routerLink]="['/customers']">Cancel</button>
+</div>
   </form>
 </div>

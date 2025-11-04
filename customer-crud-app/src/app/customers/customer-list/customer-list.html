@@ -1,5 +1,15 @@
 <h1>Customer List</h1>
 <div class="card">
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search name, city, state, zip, contact..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <button type="button" (click)="clearFilter()" style="padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;">Clear</button>
+  </div>
 <table>
   <tr>
     <th>Name</th>

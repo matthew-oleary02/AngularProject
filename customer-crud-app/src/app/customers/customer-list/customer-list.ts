@@ -13,14 +13,50 @@ import { Customer } from '../customer.model';
 })
 export class CustomerListComponent implements OnInit {
   customers: Customer[] = [];
+  private allCustomers: Customer[] = [];
+  filterText = '';
 
   constructor(private customerService: CustomerService) {}
 
   ngOnInit() {
     this.customerService.getCustomers().subscribe({
-      next: c => this.customers = c,
+      next: c => {
+        this.allCustomers = c || [];
+        this.customers = [...this.allCustomers];
+      },
       error: err => console.error('Error fetching customers:', err)
     });
+  }
+
+  onFilterChange(query: string) {
+    this.filterText = query || '';
+    const q = this.filterText.toLowerCase().trim();
+    if (!q) {
+      this.customers = [...this.allCustomers];
+      return;
+    }
+
+    this.customers = this.allCustomers.filter(c => {
+      const fields = [
+        c.customerName,
+        c.billingAddress?.address1,
+        c.billingAddress?.address2,
+        c.billingAddress?.city,
+        c.billingAddress?.state,
+        c.billingAddress?.zip,
+        c.billingAddress?.country,
+        c.primaryContact?.name,
+        c.primaryContact?.phone,
+        c.primaryContact?.email,
+        c.customerNote
+      ];
+      return fields.some(f => !!f && String(f).toLowerCase().includes(q));
+    });
+  }
+
+  clearFilter() {
+    this.filterText = '';
+    this.customers = [...this.allCustomers];
   }
 
   onDelete(id: number) {
