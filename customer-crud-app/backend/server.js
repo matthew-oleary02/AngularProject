@@ -19,7 +19,7 @@ const config = {
     }
 };
 
-// GET /customers
+// GET /customers (all customers)
 app.get('/customers', async (req, res) => {
   try {
     await sql.connect(config);
@@ -59,7 +59,7 @@ app.get('/customers', async (req, res) => {
   }
 });
 
-// GET /customers/:id
+// GET /customers/:id (single customer by ID)
 app.get('/customers/:id', async (req, res) => {
   try {
     await sql.connect(config);
@@ -109,7 +109,7 @@ app.get('/customers/:id', async (req, res) => {
   }
 });
 
-// POST /customers
+// POST /customers (add new customer)
 app.post('/customers', async (req, res) => {
   try {
     await sql.connect(config);
@@ -154,6 +154,7 @@ app.post('/customers', async (req, res) => {
   }
 });
 
+// PUT /customers/:id (update existing customer)
 app.put('/customers/:id', async (req, res) => {
   try {
     await sql.connect(config);
@@ -209,6 +210,7 @@ app.put('/customers/:id', async (req, res) => {
   }
 });
 
+// DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {
   try {
    await sql.connect(config);
@@ -258,6 +260,7 @@ app.delete('/customers/:id', async (req, res) => {
   }
 });
 
+/* Start the server */
 app.listen(3000, () => console.log('Server running on port 3000'));
 
 /* Test database connection

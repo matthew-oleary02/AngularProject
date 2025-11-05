@@ -25,6 +25,7 @@ export class CustomerFormComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
+  /* Initialize the form and load customer data if editing */
   ngOnInit() {
     this.form = this.fb.group({
       customerName: ['', Validators.required],
@@ -48,6 +49,7 @@ export class CustomerFormComponent implements OnInit {
       customerNote: ['']
     });
 
+    /* Determine if we're editing or deleting an existing customer */
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.customerId = Number(idParam);
@@ -56,11 +58,13 @@ export class CustomerFormComponent implements OnInit {
       }
     }
 
+    /* Check if the route indicates a delete action */
     const firstSegment = this.route.snapshot.url[0]?.path;
     if (firstSegment === 'delete' || this.route.snapshot.routeConfig?.path?.includes('delete')) {
       this.isDelete = true;
     }
 
+    /* If editing, load the customer data into the form */
     if (this.isEdit) {
       this.customerService.getCustomer(this.customerId).subscribe(c => {
         if (c) this.form.patchValue(c);
@@ -68,6 +72,7 @@ export class CustomerFormComponent implements OnInit {
     }
   }
 
+  /* Handle form submission for add, edit, or delete */
   submit() {
     // If not delete action, prevent submission when the form is invalid
     if (!this.isDelete && this.form.invalid) {
@@ -76,6 +81,7 @@ export class CustomerFormComponent implements OnInit {
       return;
     }
 
+    /* Handle delete action */
     if (this.isDelete) {
       if (Number.isFinite(this.customerId) && this.customerId > 0) {
         this.customerService.deleteCustomer(this.customerId).subscribe(() => {
@@ -96,6 +102,7 @@ export class CustomerFormComponent implements OnInit {
       ? this.customerService.updateCustomer(customer)
       : this.customerService.addCustomer(customer);
 
+    /* Execute the appropriate request and navigate back to the customer list on success */
     request.subscribe({
       next: () => {
         this.router.navigate(['/customers']);

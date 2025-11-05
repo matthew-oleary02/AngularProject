@@ -39,8 +39,9 @@ body {
 
 /* ======= BUTTONS ======= */
 button {
-  background: transparent;
-  color: var(--text-dark);
+  justify-content: center;
+  background-color: rgb(138, 138, 138);
+  color: white;
   border: 1px solid var(--border);
   padding: 10px 14px;
   border-radius: 6px;
@@ -50,7 +51,7 @@ button {
 }
 
 button:hover {
-  background-color: rgba(0,0,0,0.04);
+  background-color: gray;
   transform: translateY(-1px);
 }
 
@@ -59,10 +60,10 @@ button:focus {
   outline-offset: 2px;
 }
 
-/* Primary action (like submit or save) */
+/* Primary action (submit) */
 button.primary {
   background-color: var(--accent);
-  color: var(--text-light);
+  color: var(--text-dark);
   border: none;
 }
 
@@ -70,10 +71,8 @@ button.primary:hover {
   background-color: #1c84ff;
 }
 
-/* Grid-based read-only detail layout — consistent with list/form styles */
 .detail-grid {
     display: grid;
-    /* make sections lay out horizontally where space allows */
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 12px 20px;
     align-items: start;
@@ -89,7 +88,6 @@ button.primary:hover {
     font-weight: 700;
 }
 
-/* Make group title visually stronger and separate from regular labels */
 .group-title {
     grid-column: 1 / -1;
     margin-top: 12px;
@@ -103,8 +101,6 @@ button.primary:hover {
     letter-spacing: 0.2px;
 }
 
-/* each item is now a small two-column grid (label / value),
-     allowing multiple items to sit side-by-side in the parent grid */
 .item {
     display: grid;
     grid-template-columns: 120px 1fr;
@@ -114,7 +110,6 @@ button.primary:hover {
     box-sizing: border-box;
 }
 
-/* keep label/value visual hierarchy */
 .label {
     color: var(--muted, #6b7280);
     font-weight: 600;
@@ -128,22 +123,19 @@ button.primary:hover {
     word-break: break-word;
 }
 
-/* full-width rows (addresses or notes that need more room) */
 .item.full {
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 180px 1fr;
 }
 
-/* actions remain full width and aligned to the end */
 .actions {
     grid-column: 1 / -1;
     display: flex;
-    justify-content: center; /* center the action button */
+    justify-content: center;
     margin-top: 12px;
 }
 
-/* Make the action button match the other forms/list look */
 .actions button {
   background: transparent;
   color: #0b2545;
@@ -152,7 +144,6 @@ button.primary:hover {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  /* keep a consistent min-width so centering looks balanced */
   min-width: 110px;
 }
 
@@ -169,7 +160,7 @@ button.primary:hover {
   }
 
   table {
-    min-width: 800px; /* keep scroll but not too wide */
+    min-width: 800px;
   }
 
   .card {

@@ -46,7 +46,7 @@ import { Customer } from './customer.model';
 
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
-  private apiUrl = 'http://localhost:3000/customers'; // Update if your backend runs on a different port
+  private apiUrl = 'http://localhost:3000/customers';
 
   constructor(private http: HttpClient) {}
 

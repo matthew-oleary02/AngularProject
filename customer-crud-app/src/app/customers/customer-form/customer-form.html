@@ -3,14 +3,13 @@
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="submit()">
 
-    <!-- Name (spans two columns) -->
     <label for="customerName" class="full-label">Name:</label>
     <input id="customerName" class="full-input" formControlName="customerName" type="text" />
+    <!-- Validation message for customer name -->
     <div class="error" *ngIf="form.get('customerName')?.invalid && form.get('customerName')?.touched">
       Required
     </div>
 
-    <!-- Billing address fieldset (occupies full width, internal two-column layout) -->
     <fieldset formGroupName="billingAddress" class="fieldset-grid">
       <legend>Billing Address</legend>
 
@@ -39,7 +38,6 @@
       <input id="billingEmail" formControlName="email" type="email" />
     </fieldset>
 
-    <!-- Primary contact fieldset -->
     <fieldset formGroupName="primaryContact" class="fieldset-grid">
       <legend>Primary Contact</legend>
 
@@ -53,7 +51,6 @@
       <input id="contactEmail" formControlName="email" type="email" />
     </fieldset>
 
-    <!-- Additional information fieldset (new) -->
     <fieldset class="fieldset-grid additional-info">
       <legend>Additional Information</legend>
 
@@ -68,8 +65,8 @@
     </fieldset>
 
 <div class="form-actions">
-  <button type="submit" [disabled]="form.invalid && !isDelete">{{ isDelete ? 'Delete' : 'Save' }}</button>
-  <button type="button" [routerLink]="['/customers']">Cancel</button>
+  <td><button type="submit" [disabled]="form.invalid && !isDelete">{{ isDelete ? 'Delete' : 'Save' }}</button></td>
+  <td><button type="button" class="btn-cancel"[routerLink]="['/customers']">Cancel</button></td>
 </div>
   </form>
 </div>

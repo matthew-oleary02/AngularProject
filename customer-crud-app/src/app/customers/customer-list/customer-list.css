@@ -92,8 +92,8 @@ form > div.actions {
 /* ======= BUTTONS ======= */
 button {
   justify-content: center;
-  background: transparent;
-  color: var(--text-dark);
+  background-color: rgb(58, 177, 58);
+  color: white;
   border: 1px solid var(--border);
   padding: 10px 14px;
   border-radius: 6px;
@@ -103,7 +103,7 @@ button {
 }
 
 button:hover {
-  background-color: rgba(0,0,0,0.04);
+  background-color: rgb(44, 128, 72);
   transform: translateY(-1px);
 }
 
@@ -112,15 +112,14 @@ button:focus {
   outline-offset: 2px;
 }
 
-/* Primary action (like submit or save) */
-button.primary {
+/* Primary action (submit) */
+.primary {
   background-color: var(--accent);
-  color: var(--text-light);
   border: none;
 }
 
-button.primary:hover {
-  background-color: #1c84ff;
+.primary:hover {
+  background-color: #4b5157;
 }
 
 /* ======= TABLE STYLING ======= */
@@ -128,7 +127,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   background-color: #fafbff;
-  table-layout: auto; /* auto width to allow flexibility */
+  table-layout: auto;
 }
 
 th, td {
@@ -157,24 +156,43 @@ tr:hover {
   background-color: #eaf1ff;
 }
 
-/* Table action buttons */
+/* Table action buttons - use classes so hover works */
 td button {
-  background: transparent;
-  color: var(--text-dark);
   border: 1px solid var(--border);
   padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.15s ease, transform 0.1s ease;
+  color: #fff;
 }
 
-td button:hover {
-  background-color: rgba(0,0,0,0.04);
-  transform: translateY(-1px);
+.btn-edit {
+  background-color: royalblue;
+  border-color: rgba(0,0,0,0.08);
+}
+.btn-view {
+  background-color: goldenrod;
+  border-color: rgba(0,0,0,0.08);
+}
+.btn-delete {
+  background-color: crimson;
+  border-color: rgba(0,0,0,0.08);
 }
 
-/* Scrollbar styling for wide tables */
+.btn-clear {
+  background-color: rgb(138, 138, 138);
+  border-color: rgba(0,0,0,0.08);
+}
+
+.btn-edit:hover { background-color: #2b5fbf; transform: translateY(-2px); }
+.btn-view:hover { background-color: #b78f00; transform: translateY(-2px); }
+.btn-delete:hover { background-color: #b30f2f; transform: translateY(-2px); }
+.btn-clear:hover { background-color: #6b6767; transform: translateY(-2px); }
+
+td button:hover { transform: translateY(-1px); }
+
+/* ======= SCROLLBAR STYLING ======= */
 .card::-webkit-scrollbar {
   height: 8px;
 }
@@ -199,7 +217,7 @@ td button:hover {
   }
 
   table {
-    min-width: 800px; /* keep scroll but not too wide */
+    min-width: 800px;
   }
 
   .card {

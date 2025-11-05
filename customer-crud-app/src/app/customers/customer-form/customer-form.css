@@ -23,7 +23,7 @@ body {
   padding: 0;
 }
 
-/* ======= CARD CONTAINER (used by both form + table) ======= */
+/* ======= CARD CONTAINER ======= */
 .card {
   width: 100%;
   max-width: 1000px;
@@ -34,7 +34,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   box-sizing: border-box;
-  overflow-x: auto; /* allows table scroll if needed */
+  overflow-x: auto;
 }
 
 /* ======= FORM STYLING ======= */
@@ -82,24 +82,22 @@ textarea {
   grid-column: 1 / -1;
 }
 
-/* Action buttons row */
 form > div.actions {
   grid-column: 1 / -1;
   display: flex;
-  justify-content: center; /* center buttons horizontally */
+  justify-content: center;
   gap: 12px;
-  margin-top: 16px; /* give a bit more breathing room */
+  margin-top: 16px;
 }
 
 .form-actions {
   grid-column: 1 / -1;
   display: flex;
-  justify-content: center; /* center buttons horizontally */
+  justify-content: center;
   gap: 12px;
-  margin-top: 16px; /* give a bit more breathing room */
+  margin-top: 16px;
 }
 
-/* full-width label + centered input for the Name field */
 .full-label {
   grid-column: 1 / -1;
   margin-bottom: 6px;
@@ -108,13 +106,12 @@ form > div.actions {
 
 .full-input {
   grid-column: 1 / -1;
-  justify-self: center; /* center the input inside the grid */
-  width: 60%;           /* control visual width */
+  justify-self: center;
+  width: 60%;           
   min-width: 260px;
   padding: 10px 12px;
 }
 
-/* ensure error message for name sits under the centered input */
 .error {
   grid-column: 1 / -1;
   text-align: center;
@@ -125,8 +122,9 @@ form > div.actions {
 
 /* ======= BUTTONS ======= */
 button {
-  background: transparent;
-  color: var(--text-dark);
+  justify-content: center;
+  background-color: rgb(58, 177, 58);
+  color: white;
   border: 1px solid var(--border);
   padding: 10px 14px;
   border-radius: 6px;
@@ -136,7 +134,7 @@ button {
 }
 
 button:hover {
-  background-color: rgba(0,0,0,0.04);
+  background-color: rgb(44, 128, 72);
   transform: translateY(-1px);
 }
 
@@ -145,16 +143,34 @@ button:focus {
   outline-offset: 2px;
 }
 
-/* Primary action button */
+/* Primary action (submit) */
 button.primary {
   background-color: var(--accent);
-  color: var(--text-light);
+  color: var(--text-dark);
   border: none;
 }
 
 button.primary:hover {
   background-color: #1c84ff;
 }
+
+td button {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  color: #fff; 
+}
+
+.btn-cancel {
+  background-color: rgb(138, 138, 138);
+  border-color: rgba(0,0,0,0.08);
+}
+
+.btn-cancel:hover { background-color: #6b6767; transform: translateY(-2px); }
+
+td button:hover { transform: translateY(-1px); }
 
 /* ======= RESPONSIVE BEHAVIOR ======= */
 @media (max-width: 900px) {
@@ -194,7 +210,7 @@ button.primary:hover {
     text-align: left;
   }
 
-  button {
+  button, td button {
     padding: 8px 10px;
     font-size: 13px;
   }
