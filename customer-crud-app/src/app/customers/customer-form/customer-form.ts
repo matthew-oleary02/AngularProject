@@ -15,7 +15,6 @@ import { Customer } from '../customer.model';
 export class CustomerFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
-  isDelete = false;
   customerId!: number;
 
   constructor(
@@ -58,12 +57,6 @@ export class CustomerFormComponent implements OnInit {
       }
     }
 
-    /* Check if the route indicates a delete action */
-    const firstSegment = this.route.snapshot.url[0]?.path;
-    if (firstSegment === 'delete' || this.route.snapshot.routeConfig?.path?.includes('delete')) {
-      this.isDelete = true;
-    }
-
     /* If editing, load the customer data into the form */
     if (this.isEdit) {
       this.customerService.getCustomer(this.customerId).subscribe(c => {
@@ -75,21 +68,9 @@ export class CustomerFormComponent implements OnInit {
   /* Handle form submission for add, edit, or delete */
   submit() {
     // If not delete action, prevent submission when the form is invalid
-    if (!this.isDelete && this.form.invalid) {
+    if (this.form.invalid) {
       // mark controls so validation messages appear
       this.form.markAllAsTouched();
-      return;
-    }
-
-    /* Handle delete action */
-    if (this.isDelete) {
-      if (Number.isFinite(this.customerId) && this.customerId > 0) {
-        this.customerService.deleteCustomer(this.customerId).subscribe(() => {
-          this.router.navigate(['/customers']);
-        }, err => {
-          console.error('Error deleting customer:', err);
-        });
-      }
       return;
     }
 

@@ -1,4 +1,4 @@
-<h1>{{ isEdit ? 'Edit Customer' : isDelete ? 'Delete Customer' : 'Add New Customer' }}</h1>
+<h1>{{ isEdit ? 'Edit Customer' : 'Add New Customer' }}</h1>
 
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="submit()">
@@ -65,7 +65,7 @@
     </fieldset>
 
 <div class="form-actions">
-  <td><button type="submit" [disabled]="form.invalid && !isDelete">{{ isDelete ? 'Delete' : 'Save' }}</button></td>
+  <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
   <td><button type="button" class="btn-cancel"[routerLink]="['/customers']">Cancel</button></td>
 </div>
   </form>

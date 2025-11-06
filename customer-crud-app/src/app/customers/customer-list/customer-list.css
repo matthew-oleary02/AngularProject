@@ -156,7 +156,7 @@ tr:hover {
   background-color: #eaf1ff;
 }
 
-/* Table action buttons - use classes so hover works */
+
 td button {
   border: 1px solid var(--border);
   padding: 6px 10px;
