@@ -15,4 +15,4 @@ Simple Angular web application for customer records (create, read, update, delet
 ## Notes
 
 - backend directory contains .env file and server.js file
-- ensure .env file has correct credentials to connect to SQL Server database
+- ensure .env file has correct credentials to connect to local SQL Server database
