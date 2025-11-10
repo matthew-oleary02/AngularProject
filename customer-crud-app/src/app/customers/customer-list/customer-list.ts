@@ -17,6 +17,7 @@ export class CustomerListComponent implements OnInit {
   customers: Customer[] = [];
   private allCustomers: Customer[] = [];
   filterText = '';
+  activeFilter: boolean | null = true;
 
   constructor(private customerService: CustomerService) {}
 
@@ -25,7 +26,7 @@ export class CustomerListComponent implements OnInit {
     this.customerService.getCustomers().subscribe({
       next: c => {
         this.allCustomers = c || [];
-        this.customers = [...this.allCustomers];
+        this.applyFilters();
       },
       error: err => console.error('Error fetching customers:', err)
     });
@@ -34,13 +35,25 @@ export class CustomerListComponent implements OnInit {
   /* Filter customers based on user input */
   onFilterChange(query: string) {
     this.filterText = query || '';
+    this.applyFilters();
+  }
+
+  /* Called when the Active checkbox is toggled */
+  onActiveToggle(checked: boolean) {
+    // set activeFilter to boolean (true= active, false= inactive)
+    this.activeFilter = checked;
+    this.applyFilters();
+  }
+
+  /* Central filter logic: text + active toggle */
+  private applyFilters() {
     const q = this.filterText.toLowerCase().trim();
-    if (!q) {
-      this.customers = [...this.allCustomers];
-      return;
-    }
 
     this.customers = this.allCustomers.filter(c => {
+      // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
+      const matchesActive = this.activeFilter === null ? true : (c.active === this.activeFilter);
+
+      // text search across multiple fields
       const fields = [
         c.customerName,
         c.billingAddress?.address1,
@@ -54,14 +67,16 @@ export class CustomerListComponent implements OnInit {
         c.primaryContact?.email,
         c.customerNote
       ];
-      return fields.some(f => !!f && String(f).toLowerCase().includes(q));
+      const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
+
+      return matchesActive && matchesQuery;
     });
   }
 
   /* Clear the filter input and reset customer list */
   clearFilter() {
     this.filterText = '';
-    this.customers = [...this.allCustomers];
+    this.applyFilters();
   }
 
   /* Delete a customer after confirmation */

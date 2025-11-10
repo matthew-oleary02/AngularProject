@@ -12,6 +12,16 @@
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
     <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
   </div>
 <table>
   <tr>

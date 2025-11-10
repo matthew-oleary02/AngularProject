@@ -146,7 +146,7 @@ app.post('/customers', async (req, res) => {
     request.input('AccountingSystemName', sql.VarChar, customer.accountingSystemName);
     request.input('Active', sql.Bit, customer.active);
     request.input('CustomerNote', sql.VarChar, customer.customerNote);
-    request.input('CreatedBy', sql.VarChar, 'matty')
+    request.input('CreatedBy', sql.VarChar, 'admin_user');
 
     await request.query(query);
     res.setHeader('Content-Type', 'application/json');
