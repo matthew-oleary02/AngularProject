@@ -1,3 +1,5 @@
+/* app.routes.ts - Defines the routing configuration for the Customer CRUD application */
+
 import { Routes } from '@angular/router';
 import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';

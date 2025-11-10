@@ -1,3 +1,5 @@
+/* app.config.ts - Application configuration for Angular providers */
+
 import { importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';

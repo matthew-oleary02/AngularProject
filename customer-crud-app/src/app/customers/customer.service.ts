@@ -39,6 +39,8 @@ export class CustomerService {
 }
 */
 
+/* customer.service.ts - Angular service for managing customer data via HTTP requests */
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -50,22 +52,27 @@ export class CustomerService {
 
   constructor(private http: HttpClient) {}
 
+/* Fetch all customers from the backend */
 getCustomers(): Observable<Customer[]> {
   return this.http.get<Customer[]>(this.apiUrl);
 }
 
+/* Fetch a single customer by ID */
 getCustomer(id: number): Observable<Customer> {
   return this.http.get<Customer>(`${this.apiUrl}/${id}`);
 }
 
+/* Add a new customer */
 addCustomer(customer: Customer): Observable<Customer> {
   return this.http.post<Customer>(this.apiUrl, customer);
 }
 
+/* Update an existing customer */
 updateCustomer(customer: Customer): Observable<Customer> {
   return this.http.put<Customer>(`${this.apiUrl}/${customer.rowId}`, customer);
 }
 
+/* Delete a customer by ID */
 deleteCustomer(id: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/${id}`);
 }

@@ -20,6 +20,7 @@ export class CustomerViewComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
+  /* Load customer details based on route parameter */
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : NaN;
@@ -27,6 +28,7 @@ export class CustomerViewComponent implements OnInit {
       console.error('Invalid customer ID', idParam);
     };
     
+    /* Fetch customer details from the service */
     this.customerService.getCustomer(id).subscribe({
       next: c => this.customer = c,
       error: err => console.error('Error fetching customers:', err)

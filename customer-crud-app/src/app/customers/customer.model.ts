@@ -1,3 +1,5 @@
+/* customer.model.ts - Defines the Customer interface */
+
 export interface Customer {
   rowId: number;
   customerName: string;

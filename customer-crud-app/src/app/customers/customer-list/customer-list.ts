@@ -1,3 +1,5 @@
+/* customer-list.ts - Angular component for displaying and managing customer list */
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -18,6 +20,7 @@ export class CustomerListComponent implements OnInit {
 
   constructor(private customerService: CustomerService) {}
 
+  /* Load all customers on component initialization */
   ngOnInit() {
     this.customerService.getCustomers().subscribe({
       next: c => {
@@ -28,6 +31,7 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
+  /* Filter customers based on user input */
   onFilterChange(query: string) {
     this.filterText = query || '';
     const q = this.filterText.toLowerCase().trim();
@@ -54,11 +58,13 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
+  /* Clear the filter input and reset customer list */
   clearFilter() {
     this.filterText = '';
     this.customers = [...this.allCustomers];
   }
 
+  /* Delete a customer after confirmation */
   onDelete(id: number) {
     if (!Number.isFinite(id) || id <= 0) return;
     if (!confirm(`Delete customer #${id}?`)) return;

@@ -1,3 +1,5 @@
+/* customer-form.ts - Angular component for customer add/edit form */
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomerService } from '../customer.service';

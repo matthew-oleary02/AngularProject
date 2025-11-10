@@ -1,3 +1,6 @@
+/* server.js - Express server for Customer CRUD operations */
+
+/* Uses mssql package to connect to SQL Server database */
 const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
@@ -200,7 +203,7 @@ app.put('/customers/:id', async (req, res) => {
     request.input('AccountingSystemName', sql.VarChar, customer.accountingSystemName);
     request.input('Active', sql.Bit, customer.active);
     request.input('CustomerNote', sql.VarChar, customer.customerNote);
-    request.input('ModifiedBy', sql.VarChar, 'matty');
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
 
     await request.query(query);
     res.status(200).json({ message: 'Customer updated successfully' });
