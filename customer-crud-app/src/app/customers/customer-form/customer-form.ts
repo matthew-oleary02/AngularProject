@@ -50,7 +50,7 @@ export class CustomerFormComponent implements OnInit {
       customerNote: ['']
     });
 
-    /* Determine if we're editing or deleting an existing customer */
+    /* Check if we are in edit mode based on route parameters */
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.customerId = Number(idParam);
@@ -67,7 +67,7 @@ export class CustomerFormComponent implements OnInit {
     }
   }
 
-  /* Handle form submission for add, edit, or delete */
+  /* Handle form submission for add or edit */
   submit() {
     // If not delete action, prevent submission when the form is invalid
     if (this.form.invalid) {

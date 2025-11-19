@@ -24,5 +24,4 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('h1')?.textContent).toContain('Customer CRUD App');
   });
 });
-
 */

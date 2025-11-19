@@ -1,7 +1,7 @@
 <div class="login-container">
-  <h2>Login</h2>
+  <h1>{{ isRegister ? 'Register' : 'Login' }}</h1>
 
-  <form (ngSubmit)="login()">
+  <form (ngSubmit)="isRegister ? register() : login()">
     <div class="form-group">
       <label>Username</label>
       <input [(ngModel)]="username" name="username" required>
@@ -12,8 +12,10 @@
       <input [(ngModel)]="password" type="password" name="password" required>
     </div>
 
-    <button type="submit" class="login-btn">Login</button>
+    <button type="submit" class="login-btn">{{ isRegister ? 'Create Account' : 'Login'}}</button>
   </form>
+
+  <button (click)="isRegister = true" class="register-btn">Register</button>
 
   <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 </div>

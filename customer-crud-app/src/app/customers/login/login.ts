@@ -8,14 +8,15 @@ import { HttpClient } from '@angular/common/http';
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './login.html',
+  styleUrls: ['./login.css']
 })
 export class LoginComponent {
 
   username: string = '';
   password: string = '';
   errorMessage: string = '';
+  isRegister = false;
 
   constructor(
     private http: HttpClient,
@@ -23,18 +24,34 @@ export class LoginComponent {
   ) {}
 
   login() {
-    const body = {
-      username: this.username,
-      password: this.password
-    };
+  const body = { username: this.username, password: this.password };
 
-    this.http.post('/api/auth/login', body).subscribe({
+  this.http.post('http://localhost:3000/api/auth/login', body).subscribe({
+    next: (response: any) => {
+      localStorage.setItem('token', response.token);
+      this.router.navigate(['/customers']);
+    },
+    error: (err) => {
+      this.errorMessage = err.error.message || 'Invalid username or password.';
+    }
+  });
+
+    if (this.isRegister) {
+    this.router.navigate(['/register']);
+  }
+  
+}
+
+  register() {
+    const body = { username: this.username, password: this.password, role: 'User', RoleId: 1 };
+    this.http.post('http://localhost:3000/api/auth/register', body).subscribe({
       next: (response: any) => {
         localStorage.setItem('token', response.token);
-        this.router.navigate(['/']);
-      },
-      error: () => {
-        this.errorMessage = 'Invalid username or password.';
+        this.router.navigate(['/customers']);
+      }
+      ,
+      error: (err) => {
+        this.errorMessage = err.error.message || 'Registration failed.';
       }
     });
   }

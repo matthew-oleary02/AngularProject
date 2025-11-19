@@ -4,9 +4,12 @@ import { Routes } from '@angular/router';
 import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';
 import { CustomerViewComponent } from './customers/customer-view/customer-view';
+import { LoginComponent } from './customers/login/login';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'customers', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  //{ path: '', redirectTo: 'customers', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   { path: 'customers', component: CustomerListComponent },
   { path: 'customers/new', component: CustomerFormComponent },
   { path: 'customers/edit/:id', component: CustomerFormComponent },

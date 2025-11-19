@@ -4,6 +4,8 @@
 const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
@@ -21,6 +23,94 @@ const config = {
         trustServerCertificate: true
     }
 };
+
+// POST /api/auth/register
+app.post('/api/auth/register', async (req, res) => {
+    const { username, password, role } = req.body;
+    if (!username || !password || !role) {
+        return res.status(400).json({ message: 'Username, password, and role are required' });
+    }
+
+    try {
+        await sql.connect(config);
+
+        // Check if user already exists
+        const checkUser = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
+        if (checkUser.recordset.length > 0) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert user
+        await sql.query`
+            INSERT INTO Users (Username, PasswordHash, Role)
+            VALUES (${username}, ${hashedPassword}, ${role})
+        `;
+
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (err) {
+        console.error('Error registering user:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+// POST /api/auth/login
+app.post('/api/auth/login', async (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
+
+    try {
+        await sql.connect(config);
+
+        const result = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
+        if (result.recordset.length === 0) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        const user = result.recordset[0];
+
+        // Verify password
+        const isMatch = await bcrypt.compare(password, user.PasswordHash);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Create JWT
+        const token = jwt.sign(
+            { userId: user.UserID, username: user.Username, role: user.Role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.json({ token });
+    } catch (err) {
+        console.error('Error logging in:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+// Middleware to verify JWT
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Token required' });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Invalid token' });
+        req.user = user;
+        next();
+    });
+}
+
+// GET /api/auth/me
+app.get('/api/auth/me', authenticateToken, (req, res) => {
+    res.json({ userId: req.user.userId, username: req.user.username, role: req.user.role });
+});
+
 
 // GET /customers (all customers)
 app.get('/customers', async (req, res) => {

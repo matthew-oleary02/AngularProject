@@ -14,7 +14,9 @@ import { Customer } from '../customer.model';
   styleUrls: ['./customer-list.css']
 })
 export class CustomerListComponent implements OnInit {
+  /* List of customers to display */
   customers: Customer[] = [];
+  /* Full list of customers from the server */
   private allCustomers: Customer[] = [];
   filterText = '';
   activeFilter: boolean | null = true;
