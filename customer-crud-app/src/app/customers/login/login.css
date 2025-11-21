@@ -1,39 +1,130 @@
+:root {
+  --accent: dodgerblue;
+  --muted: #6b7280;
+  --card-bg: #ffffff;
+  --page-bg: #f0f2f5;
+  --border: #bfc7d5;
+  --text-dark: #0b2545;
+  --text-light: #ffffff;
+}
+
+/* ======= PAGE BACKGROUND ======= */
+body {
+  background-color: var(--page-bg);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}
+
+/* ======= LOGIN CONTAINER ======= */
 .login-container {
-  width: 320px;
-  margin: 50px auto;
+  width: 95%;
+  max-width: 400px;
+  margin: 40px auto;
   padding: 20px;
-  background: white;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-sizing: border-box;
 }
 
-h2 {
+h1 {
   text-align: center;
+  color: var(--text-dark);
+  margin-bottom: 20px;
 }
 
+h3 {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+/* ======= FORM STYLING ======= */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
-input {
+label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="password"] {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px 12px;
+  border: 1px solid #9ea7b8;
+  border-radius: 6px;
+  background: #fafafa;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: var(--text-dark);
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+input:focus {
+  border-color: var(--accent);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
+}
+
+/* ======= BUTTONS ======= */
+.login-btn,
+.register-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background-color .15s ease, transform .05s ease;
+  margin-top: 10px;
 }
 
 .login-btn {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: dodgerblue;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
+  background-color: #1c84ff; transform: translateY(-2px);
+  color: var(--text-light);
 }
 
+.login-btn:hover {
+  background-color: #2b5fbf;
+  transform: translateY(-1px);
+}
+
+.register-btn {
+  background-color: rgb(58, 177, 58);
+  color: var(--text-light);
+}
+
+.register-btn:hover {
+  background-color: rgb(44, 128, 72);
+  transform: translateY(-1px);
+}
+
+/* ======= ERROR MESSAGE ======= */
 .error {
-  color: red;
-  margin-top: 10px;
+  color: #c0392b;
+  margin-top: 12px;
   text-align: center;
+  font-size: 13px;
+}
+
+/* ======= RESPONSIVE ======= */
+@media (max-width: 500px) {
+  .login-container {
+    margin: 20px auto;
+    padding: 16px;
+  }
+
+  .login-btn,
+  .register-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
 }

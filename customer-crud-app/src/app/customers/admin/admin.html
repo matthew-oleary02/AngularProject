@@ -1,0 +1,40 @@
+<div class="admin-container">
+  <h2>User Management</h2>
+
+  <!-- Search Filter -->
+  <input
+    type="text"
+    placeholder="Search by username or role..."
+    [(ngModel)]="filterText"
+    (input)="onFilterChange(filterText)"
+    class="search-box"
+  />
+
+  <!-- User Table -->
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <span [class.active]="user.active">{{ user.active ? 'Yes' : 'No' }}</span>
+        </td>
+        <td>
+          <button (click)="editUser(user.id)">Edit</button>
+          <button (click)="deleteUser(user.id)" class="delete-btn">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>

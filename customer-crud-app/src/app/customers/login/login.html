@@ -1,10 +1,11 @@
 <div class="login-container">
   <h1>{{ isRegister ? 'Register' : 'Login' }}</h1>
 
+  <h3>{{ isRegister ? 'Create a new account' : 'Access your account' }}</h3>
   <form (ngSubmit)="isRegister ? register() : login()">
     <div class="form-group">
       <label>Username</label>
-      <input [(ngModel)]="username" name="username" required>
+      <input [(ngModel)]="username" type="text" name="username" required>
     </div>
 
     <div class="form-group">
@@ -12,10 +13,17 @@
       <input [(ngModel)]="password" type="password" name="password" required>
     </div>
 
-    <button type="submit" class="login-btn">{{ isRegister ? 'Create Account' : 'Login'}}</button>
+    <!-- Primary action button -->
+    <button type="submit" class="login-btn">
+      {{ isRegister ? 'Create Account' : 'Login' }}
+    </button>
   </form>
 
-  <button (click)="isRegister = true" class="register-btn">Register</button>
+  <!-- Toggle button -->
+  <button (click)="toggleMode()" class="register-btn">
+    {{ isRegister ? 'Back to Login' : 'Register New Account' }}
+  </button>
 
+  <!-- Error message -->
   <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 </div>

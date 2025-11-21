@@ -12,47 +12,46 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-
   username: string = '';
   password: string = '';
   errorMessage: string = '';
-  isRegister = false;
+  isRegister = false; // Default to Login mode
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  constructor(private http: HttpClient, private router: Router) {}
+
+  toggleMode() {
+    this.isRegister = !this.isRegister; // Switch between Login and Register
+    this.errorMessage = ''; // Clear error when switching
+  }
 
   login() {
-  const body = { username: this.username, password: this.password };
+    const body = { username: this.username, password: this.password };
 
-  this.http.post('http://localhost:3000/api/auth/login', body).subscribe({
-    next: (response: any) => {
-      localStorage.setItem('token', response.token);
-      this.router.navigate(['/customers']);
-    },
-    error: (err) => {
-      this.errorMessage = err.error.message || 'Invalid username or password.';
-    }
-  });
-
-    if (this.isRegister) {
-    this.router.navigate(['/register']);
-  }
-  
-}
-
-  register() {
-    const body = { username: this.username, password: this.password, role: 'User', RoleId: 1 };
-    this.http.post('http://localhost:3000/api/auth/register', body).subscribe({
+    this.http.post('http://localhost:3000/api/auth/login', body).subscribe({
       next: (response: any) => {
         localStorage.setItem('token', response.token);
         this.router.navigate(['/customers']);
+      },
+      error: (err) => {
+        this.errorMessage = err.error.message || 'Invalid username or password.';
       }
-      ,
+    });
+  }
+
+  register() {
+    const body = { username: this.username, password: this.password, role: 'User', RoleId: 1 };
+
+    this.http.post('http://localhost:3000/api/auth/register', body).subscribe({
+      next: (response: any) => {
+        // After registration, log them in or redirect
+        this.errorMessage = '';
+        this.isRegister = false; // Switch back to login mode
+        alert('Registration successful! Please log in.');
+      },
       error: (err) => {
         this.errorMessage = err.error.message || 'Registration failed.';
       }
     });
   }
+
 }

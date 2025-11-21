@@ -24,6 +24,10 @@ const config = {
     }
 };
 
+/* ===========================
+    AUTHENTICATION ENDPOINTS
+=========================== */
+
 // POST /api/auth/register
 app.post('/api/auth/register', async (req, res) => {
     const { username, password, role } = req.body;
@@ -93,6 +97,10 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
+/* ===========================
+    AUTHENTICATION MIDDLEWARE
+=========================== */
+
 // Middleware to verify JWT
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
@@ -110,6 +118,129 @@ function authenticateToken(req, res, next) {
 app.get('/api/auth/me', authenticateToken, (req, res) => {
     res.json({ userId: req.user.userId, username: req.user.username, role: req.user.role });
 });
+
+
+/* ===========================
+   USER MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /admin (all users)
+app.get('/admin', authenticateToken, async (req, res) => {
+    try {
+        await sql.connect(config);
+        const result = await sql.query('SELECT UserID, Username, Email, Role, Active, CreatedOn, ModifiedOn FROM Users');
+        res.json(result.recordset);
+    } catch (err) {
+        console.error('Error fetching users:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+// GET /admin/:id (single user)
+app.get('/admin/:id', authenticateToken, async (req, res) => {
+    try {
+        await sql.connect(config);
+        const id = parseInt(req.params.id, 10);
+
+        const request = new sql.Request();
+        request.input('UserID', sql.Int, id);
+
+        const result = await request.query('SELECT UserID, Username, Email, Role, Active, CreatedOn, ModifiedOn FROM Users WHERE UserID = @UserID');
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json(result.recordset[0]);
+    } catch (err) {
+        console.error('Error fetching user:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+// POST /admin (add new user)
+app.post('/admin', authenticateToken, async (req, res) => {
+    const { username, password, email, role, active } = req.body;
+    if (!username || !password || !email || !role) {
+        return res.status(400).json({ message: 'Username, password, email, and role are required' });
+    }
+
+    try {
+        await sql.connect(config);
+
+        // Check if user exists
+        const checkUser = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
+        if (checkUser.recordset.length > 0) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await sql.query`
+            INSERT INTO Users (Username, PasswordHash, Email, Role, Active, CreatedOn)
+            VALUES (${username}, ${hashedPassword}, ${email}, ${role}, ${active}, GETDATE())
+        `;
+
+        res.status(201).json({ message: 'User added successfully' });
+    } catch (err) {
+        console.error('Error adding user:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+// PUT /admin/:id (update user)
+app.put('/admin/:id', authenticateToken, async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { username, password, email, role, active } = req.body;
+
+    try {
+        await sql.connect(config);
+
+        const request = new sql.Request();
+        request.input('UserID', sql.Int, id);
+
+        // If password provided, hash it
+        let passwordHashQuery = '';
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            passwordHashQuery = `, PasswordHash = '${hashedPassword}'`;
+        }
+
+        const query = `
+            UPDATE Users
+            SET Username = '${username}', Email = '${email}', Role = '${role}', Active = ${active} ${passwordHashQuery}, ModifiedOn = GETDATE()
+            WHERE UserID = @UserID
+        `;
+
+        await request.query(query);
+        res.json({ message: 'User updated successfully' });
+    } catch (err) {
+        console.error('Error updating user:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+// DELETE /admin/:id (delete user)
+app.delete('/admin/:id', authenticateToken, async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    try {
+        await sql.connect(config);
+
+        const request = new sql.Request();
+        request.input('UserID', sql.Int, id);
+
+        await request.query('DELETE FROM Users WHERE UserID = @UserID');
+        res.status(204).send();
+    } catch (err) {
+        console.error('Error deleting user:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+/* ===========================
+   CUSTOMER MANAGEMENT ENDPOINTS
+=========================== */
 
 
 // GET /customers (all customers)
