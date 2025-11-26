@@ -35,23 +35,43 @@ export class AdminComponent implements OnInit {
     this.applyFilters();
   }
 
+
   private applyFilters() {
     const q = this.filterText.toLowerCase().trim();
     this.users = this.allUsers.filter((u) => {
-      return (
-        u.username.toLowerCase().includes(q) ||
-        u.role.toLowerCase().includes(q)
-      );
+      const username = u.username ? u.username.toLowerCase() : '';
+      const role = u.role ? u.role.toLowerCase() : '';
+      const email = u.email ? u.email.toLowerCase() : '';
+      return username.includes(q) || role.includes(q) || email.includes(q);
     });
   }
 
-  editUser(id: number) {
-    this.router.navigate(['/edit-user', id]);
-  }
 
-  deleteUser(id: number) {
-    this.userService.deleteUser(id).subscribe(() => {
-      this.users = this.users.filter((u) => u.id !== id);
-    });
+isAdmin(): boolean {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT
+    return payload.role === 'Admin';
+  } catch {
+    return false;
   }
+}
+  
+onDelete(id: number) {
+  if (!Number.isFinite(id) || id <= 0) return;
+  if (!confirm(`Delete user #${id}?`)) return;
+
+  this.userService.deleteUser(id).subscribe({
+    next: () => {
+      this.users = this.users.filter(u => u.id !== id);
+    },
+    error: (err) => {
+      console.error('Error deleting user:', err);
+      alert('Failed to delete user. Please try again.');
+    }
+  });
+}
+
 }

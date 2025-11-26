@@ -1,0 +1,27 @@
+<h1> Edit Profile </h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label for="firstName" class="full-label">First Name:</label>
+    <input id="firstName" class="full-input" formControlName="firstName" type="text" />
+    <!-- Validation message for first name -->
+    <div class="error" *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched">
+      Required
+    </div>
+
+    <label for="lastName" class="full-label">Last Name:</label>
+    <input id="lastName" class="full-input" formControlName="lastName" type="text" />
+    <!-- Validation message for last name -->
+    <div class="error" *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched">
+      Required
+    </div>
+
+    <label for="email" class="full-label">Email:</label>
+    <input id="email" class="full-input" formControlName="email" type="email" />
+    <!-- Validation message for email -->
+    <div class="error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+      Valid email required
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Save Profile</button>
+  </form>

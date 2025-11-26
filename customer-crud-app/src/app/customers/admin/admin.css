@@ -1,0 +1,133 @@
+
+:root {
+  --accent: dodgerblue;
+  --muted: #6b7280;
+  --card-bg: #ffffff;
+  --page-bg: #f0f2f5;
+  --border: #bfc7d5;
+  --text-dark: #0b2545;
+  --text-light: #ffffff;
+}
+
+/* ======= PAGE HEADER ======= */
+h2 {
+  text-align: center;
+  color: var(--text-dark);
+  margin: 20px 0;
+}
+
+/* ======= PAGE BACKGROUND ======= */
+body {
+  background-color: var(--page-bg);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}
+
+/* ======= CARD WRAPPER ======= */
+.admin-container {
+  width: 95%;
+  margin: 24px auto;
+  padding: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+/* ======= SEARCH BOX ======= */
+.search-box {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border: 1px solid #9ea7b8;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  color: var(--text-dark);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.search-box:focus {
+  border-color: var(--accent);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
+}
+
+/* ======= TABLE STYLING ======= */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fafbff;
+}
+
+.user-table th,
+.user-table td {
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  text-align: center;
+  color: var(--text-dark);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.user-table th {
+  background-color: var(--accent);
+  color: var(--text-light);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #f4f6fb;
+}
+
+.user-table tr:hover {
+  background-color: #eaf1ff;
+}
+
+/* ======= ACTION BUTTONS ======= */
+td button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 4px;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn-edit {
+  background-color: royalblue;
+}
+.btn-delete {
+  background-color: crimson;
+}
+
+.btn-edit:hover { background-color: #2b5fbf; transform: translateY(-2px); }
+.btn-delete:hover { background-color: #b30f2f; transform: translateY(-2px); }
+
+/* ======= RESPONSIVENESS ======= */
+@media (max-width: 900px) {
+  .user-table th,
+  .user-table td {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .admin-container {
+    width: 98%;
+  }
+
+  td button {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}

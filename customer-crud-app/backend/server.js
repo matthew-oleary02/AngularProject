@@ -85,7 +85,7 @@ app.post('/api/auth/login', async (req, res) => {
 
         // Create JWT
         const token = jwt.sign(
-            { userId: user.UserID, username: user.Username, role: user.Role },
+            { id: user.Id, username: user.Username, role: user.Role },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
@@ -119,40 +119,135 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
     res.json({ userId: req.user.userId, username: req.user.username, role: req.user.role });
 });
 
+/* ===========================
+    USER PROFILE ENDPOINTS
+=========================== */
+
+
+
+app.get('/profile', authenticateToken, async (req, res) => {
+    const id = parseInt(req.user.id, 10);
+    try {
+        await sql.connect(config);
+        const request = new sql.Request();
+        request.input('Id', sql.Int, id);
+        const result = await request.query(`
+            SELECT Id, Username, FirstName, LastName, Email
+            FROM Users
+            WHERE Id = @Id
+        `);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const row = result.recordset[0];
+        const user = {
+            id: row.Id,
+            username: row.Username,
+            firstName: row.FirstName,
+            lastName: row.LastName,
+            email: row.Email
+        };
+
+        res.json(user);
+    } catch (err) {
+        console.error('Error fetching profile:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+
+app.put('/profile', authenticateToken, async (req, res) => {
+    const id = parseInt(req.user.id, 10);
+    const { username, password, email } = req.body;
+    try {
+        await sql.connect(config);
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const query = `
+            UPDATE Users SET
+                Username = @Username,
+                PasswordHash = @PasswordHash,
+                Email = @Email,
+                ModifiedOn = GETDATE()
+            WHERE Id = @Id
+        `;
+        const request = new sql.Request();
+        request.input('Id', sql.Int, id);
+        request.input('Username', sql.VarChar, username);
+        request.input('PasswordHash', sql.VarChar, hashedPassword);
+        request.input('Email', sql.VarChar, email);
+        await request.query(query);
+        res.status(200).json({ message: 'Profile updated successfully' });
+    }
+    catch (err) {
+        console.error('Error updating profile:', err);
+        res.status(500).send('Server error');
+    }
+});
+
 
 /* ===========================
    USER MANAGEMENT ENDPOINTS
 =========================== */
 
 // GET /admin (all users)
+
 app.get('/admin', authenticateToken, async (req, res) => {
-    try {
-        await sql.connect(config);
-        const result = await sql.query('SELECT UserID, Username, Email, Role, Active, CreatedOn, ModifiedOn FROM Users');
-        res.json(result.recordset);
-    } catch (err) {
-        console.error('Error fetching users:', err);
-        res.status(500).send('Server error');
-    }
+  try {
+    await sql.connect(config);
+    const result = await sql.query(`
+      SELECT Id, Username, PasswordHash, Role, CreatedOn, RoleId, Email, Active, ModifiedOn FROM Users
+    `);
+
+    // Map to camelCase for Angular
+    const users = result.recordset.map(row => ({
+      id: row.Id,
+      username: row.Username,
+      passwordHash: row.PasswordHash,
+      role: row.Role,
+      createdOn: row.CreatedOn,
+      roleId: row.RoleId,
+      email: row.Email,
+      active: row.Active,
+      modifiedOn: row.ModifiedOn
+    }));
+
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).send('Server error');
+  }
 });
 
 // GET /admin/:id (single user)
 app.get('/admin/:id', authenticateToken, async (req, res) => {
+    const id = parseInt(req.params.id, 10);
     try {
         await sql.connect(config);
-        const id = parseInt(req.params.id, 10);
-
         const request = new sql.Request();
-        request.input('UserID', sql.Int, id);
-
-        const result = await request.query('SELECT UserID, Username, Email, Role, Active, CreatedOn, ModifiedOn FROM Users WHERE UserID = @UserID');
+        request.input('Id', sql.Int, id);
+        const result = await request.query('SELECT Id, Username, PasswordHash, Role, CreatedOn, RoleId, Email, Active, ModifiedOn FROM Users WHERE Id = @Id');
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        res.json(result.recordset[0]);
-    } catch (err) {
+        const row = result.recordset[0];
+        const user = {
+            id: row.Id,
+            username: row.Username,
+            passwordHash: row.PasswordHash,
+            role: row.Role,
+            createdOn: row.CreatedOn,
+            roleId: row.RoleId,
+            email: row.Email,
+            active: row.Active,
+            modifiedOn: row.ModifiedOn
+        };
+        res.json(user);
+    }
+    catch (err) {
         console.error('Error fetching user:', err);
         res.status(500).send('Server error');
     }
@@ -161,26 +256,22 @@ app.get('/admin/:id', authenticateToken, async (req, res) => {
 // POST /admin (add new user)
 app.post('/admin', authenticateToken, async (req, res) => {
     const { username, password, email, role, active } = req.body;
-    if (!username || !password || !email || !role) {
-        return res.status(400).json({ message: 'Username, password, email, and role are required' });
-    }
-
     try {
         await sql.connect(config);
-
-        // Check if user exists
-        const checkUser = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
-        if (checkUser.recordset.length > 0) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await sql.query`
+        const query = `
             INSERT INTO Users (Username, PasswordHash, Email, Role, Active, CreatedOn)
-            VALUES (${username}, ${hashedPassword}, ${email}, ${role}, ${active}, GETDATE())
+            VALUES (@Username, @PasswordHash, @Email, @Role, @Active, GETDATE())
         `;
-
+        const request = new sql.Request();
+        request.input('Username', sql.VarChar, username);
+        request.input('PasswordHash', sql.VarChar, hashedPassword);
+        request.input('Email', sql.VarChar, email);
+        request.input('Role', sql.VarChar, role);
+        request.input('Active', sql.Bit, active);
+        await request.query(query);
         res.status(201).json({ message: 'User added successfully' });
     } catch (err) {
         console.error('Error adding user:', err);
@@ -192,28 +283,29 @@ app.post('/admin', authenticateToken, async (req, res) => {
 app.put('/admin/:id', authenticateToken, async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const { username, password, email, role, active } = req.body;
-
     try {
         await sql.connect(config);
-
-        const request = new sql.Request();
-        request.input('UserID', sql.Int, id);
-
-        // If password provided, hash it
-        let passwordHashQuery = '';
-        if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            passwordHashQuery = `, PasswordHash = '${hashedPassword}'`;
-        }
-
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
         const query = `
-            UPDATE Users
-            SET Username = '${username}', Email = '${email}', Role = '${role}', Active = ${active} ${passwordHashQuery}, ModifiedOn = GETDATE()
-            WHERE UserID = @UserID
+            UPDATE Users SET
+                Username = @Username,
+                PasswordHash = @PasswordHash,
+                Email = @Email,
+                Role = @Role,
+                Active = @Active,
+                ModifiedOn = GETDATE()
+            WHERE Id = @Id
         `;
-
+        const request = new sql.Request();
+        request.input('Id', sql.Int, id);
+        request.input('Username', sql.VarChar, username);
+        request.input('PasswordHash', sql.VarChar, hashedPassword);
+        request.input('Email', sql.VarChar, email);
+        request.input('Role', sql.VarChar, role);
+        request.input('Active', sql.Bit, active);
         await request.query(query);
-        res.json({ message: 'User updated successfully' });
+        res.status(200).json({ message: 'User updated successfully' });
     } catch (err) {
         console.error('Error updating user:', err);
         res.status(500).send('Server error');
@@ -228,9 +320,9 @@ app.delete('/admin/:id', authenticateToken, async (req, res) => {
         await sql.connect(config);
 
         const request = new sql.Request();
-        request.input('UserID', sql.Int, id);
+        request.input('Id', sql.Int, id);
 
-        await request.query('DELETE FROM Users WHERE UserID = @UserID');
+        await request.query('DELETE FROM Users WHERE Id = @Id');
         res.status(204).send();
     } catch (err) {
         console.error('Error deleting user:', err);

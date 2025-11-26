@@ -1,16 +1,18 @@
+
 <div class="admin-container">
   <h2>User Management</h2>
 
-  <!-- Search Filter -->
+  <!-- Search -->
   <input
     type="text"
-    placeholder="Search by username or role..."
+    placeholder="Search by username, role, or email..."
     [(ngModel)]="filterText"
     (input)="onFilterChange(filterText)"
     class="search-box"
+    style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
   />
 
-  <!-- User Table -->
+  <!-- Table -->
   <table class="user-table">
     <thead>
       <tr>
@@ -19,6 +21,7 @@
         <th>Email</th>
         <th>Role</th>
         <th>Active</th>
+        <th>Created On</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -28,13 +31,13 @@
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.role }}</td>
+        <td>{{ user.active ? 'Yes' : 'No' }}</td>
+        <td>{{ user.createdOn | date:'short' }}</td>
         <td>
-          <span [class.active]="user.active">{{ user.active ? 'Yes' : 'No' }}</span>
-        </td>
-        <td>
-          <button (click)="editUser(user.id)">Edit</button>
-          <button (click)="deleteUser(user.id)" class="delete-btn">Delete</button>
+          <button class="btn-edit" [routerLink]="['/admin/edit', user.id]">Edit</button>
+          <button (click)="onDelete(user.id)" class="btn-delete">Delete</button>
         </td>
       </tr>
     </tbody>
   </table>
+</div>

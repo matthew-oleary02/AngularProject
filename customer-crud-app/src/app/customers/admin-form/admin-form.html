@@ -1,0 +1,37 @@
+<!-- admin-form.html -->
+
+<h1>{{ isEdit ? 'Edit User' : 'Add New User' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="username" class="full-label">Username:</label>
+    <input id="username" class="full-input" formControlName="username" type="text" />
+    <!-- Validation message for customer name -->
+    <div class="error" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+      Required
+    </div>
+
+    <label for="email" class="full-label">Email:</label>
+    <input id="email" class="full-input" formControlName="email" type="email" />
+    <!-- Validation message for email -->
+    <div class="error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+      Valid email required
+    </div>
+
+    <label for="role" class="full-label">Role:</label>
+    <input id="role" class="full-input" formControlName="role" type="text" />
+    <!-- Validation message for role -->
+    <div class="error" *ngIf="form.get('role')?.invalid && form.get('role')?.touched">
+      Required
+    </div>
+
+    <label for="active">Active:</label>
+    <input id="active" type="checkbox" formControlName="active" />
+
+<div class="form-actions">
+  <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
+  <td><button type="button" class="btn-cancel"[routerLink]="['/admin']">Cancel</button></td>
+</div>
+  </form>
+</div>
