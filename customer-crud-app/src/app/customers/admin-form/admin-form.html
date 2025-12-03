@@ -19,8 +19,20 @@
       Valid email required
     </div>
 
+    <label for="password" class="full-label">Password:</label>
+    <input id="password" class="full-input" formControlName="password" type="password" />
+    <!-- Validation message for password -->
+    <div class="error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+      {{ isEdit ? 'Password is optional' : 'Password required' }}
+    </div>
+
     <label for="role" class="full-label">Role:</label>
-    <input id="role" class="full-input" formControlName="role" type="text" />
+    <select id="role" class="full-input" formControlName="role">
+      <option value="" disabled selected>Select a role</option>
+      <option value="User">User</option>
+      <option value="Manager">Manager</option>
+      <option value="Admin">Admin</option>
+    </select>
     <!-- Validation message for role -->
     <div class="error" *ngIf="form.get('role')?.invalid && form.get('role')?.touched">
       Required

@@ -255,22 +255,23 @@ app.get('/admin/:id', authenticateToken, async (req, res) => {
 
 // POST /admin (add new user)
 app.post('/admin', authenticateToken, async (req, res) => {
-    const { username, password, email, role, active } = req.body;
+  const id = parseInt(req.params.id, 10);  
+  const admin = req.body;
     try {
         await sql.connect(config);
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const query = `
             INSERT INTO Users (Username, PasswordHash, Email, Role, Active, CreatedOn)
             VALUES (@Username, @PasswordHash, @Email, @Role, @Active, GETDATE())
         `;
         const request = new sql.Request();
-        request.input('Username', sql.VarChar, username);
-        request.input('PasswordHash', sql.VarChar, hashedPassword);
-        request.input('Email', sql.VarChar, email);
-        request.input('Role', sql.VarChar, role);
-        request.input('Active', sql.Bit, active);
+        request.input('Username', sql.VarChar, admin.username);
+        request.input('PasswordHash', sql.VarChar, admin.hashedPassword);
+        request.input('Email', sql.VarChar, admin.email);
+        request.input('Role', sql.VarChar, admin.role);
+        request.input('Active', sql.Bit, admin.active);
+
         await request.query(query);
         res.status(201).json({ message: 'User added successfully' });
     } catch (err) {
@@ -279,38 +280,61 @@ app.post('/admin', authenticateToken, async (req, res) => {
     }
 });
 
-// PUT /admin/:id (update user)
+
 app.put('/admin/:id', authenticateToken, async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    const { username, password, email, role, active } = req.body;
-    try {
-        await sql.connect(config);
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const query = `
-            UPDATE Users SET
-                Username = @Username,
-                PasswordHash = @PasswordHash,
-                Email = @Email,
-                Role = @Role,
-                Active = @Active,
-                ModifiedOn = GETDATE()
-            WHERE Id = @Id
-        `;
-        const request = new sql.Request();
-        request.input('Id', sql.Int, id);
-        request.input('Username', sql.VarChar, username);
-        request.input('PasswordHash', sql.VarChar, hashedPassword);
-        request.input('Email', sql.VarChar, email);
-        request.input('Role', sql.VarChar, role);
-        request.input('Active', sql.Bit, active);
-        await request.query(query);
-        res.status(200).json({ message: 'User updated successfully' });
-    } catch (err) {
-        console.error('Error updating user:', err);
-        res.status(500).send('Server error');
+  const id = parseInt(req.params.id, 10);
+  const admin = req.body;
+
+  try {
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid user id' });
     }
+
+    await sql.connect(config);
+
+    // Optional password update
+    let hashedPassword = null;
+    if (admin.password && typeof admin.password === 'string' && admin.password.length > 0) {
+      hashedPassword = await bcrypt.hash(admin.password, 10);
+    }
+
+    // Build query depending on whether password is being changed
+    const query = `
+      UPDATE Users SET
+        Username = @Username,
+        Email = @Email,
+        Role = @Role,
+        Active = @Active,
+        ${hashedPassword ? 'PasswordHash = @PasswordHash,' : ''}
+        ModifiedOn = GETDATE()
+      WHERE Id = @Id
+    `;
+
+    const request = new sql.Request();
+    request.input('Id', sql.Int, id); // use route param
+    request.input('Username', sql.VarChar(100), admin.username);
+    request.input('Email', sql.VarChar(200), admin.email);
+    request.input('Role', sql.VarChar(50), admin.role);
+    request.input('Active', sql.Bit, admin.active);
+
+    if (hashedPassword) {
+      request.input('PasswordHash', sql.VarChar(200), hashedPassword);
+    }
+
+    const result = await request.query(query);
+
+    // Optionally check rows affected
+    if (result.rowsAffected && result.rowsAffected[0] === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json({ message: 'User updated successfully' });
+  } catch (err) {
+    console.error('Error updating user:', err);
+    return res.status(500).send('Server error');
+  }
 });
+
 
 // DELETE /admin/:id (delete user)
 app.delete('/admin/:id', authenticateToken, async (req, res) => {

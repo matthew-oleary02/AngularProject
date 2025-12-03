@@ -29,7 +29,8 @@ export class AdminFormComponent implements OnInit {
     this.form = this.fb.group({
         username: ['', Validators.required],
         email: [''],
-        role: ['User', Validators.required],
+        password: ['', Validators.required],
+        role: ['', Validators.required],
         active: [true],
     });
 
@@ -47,6 +48,9 @@ export class AdminFormComponent implements OnInit {
       this.userService.getUser(this.userId).subscribe(c => {
         if (c) this.form.patchValue(c);
       });
+      /* Make password optional for edit mode */
+      this.form.get('password')?.setValidators([]);
+      this.form.get('password')?.updateValueAndValidity();
     }
   }
 
@@ -60,7 +64,7 @@ export class AdminFormComponent implements OnInit {
     }
 
     const user: Users = {
-      rowId: this.userId || 0,
+      id: this.userId || 0,
       ...this.form.value
     };
 
