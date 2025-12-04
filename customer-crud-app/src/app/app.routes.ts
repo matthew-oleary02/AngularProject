@@ -4,6 +4,7 @@ import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';
 import { CustomerViewComponent } from './customers/customer-view/customer-view';
 import { LoginComponent } from './customers/login/login';
+import { HomeComponent } from './customers/home/home';
 import { ProfileComponent } from './customers/profile/profile';
 import { ProfileFormComponent } from './customers/profile-form/profile-form';
 import { AdminComponent } from './customers/admin/admin';
@@ -13,6 +14,7 @@ import { AuthGuard } from './core/auth-guard';
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'profile/edit', component: ProfileFormComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },

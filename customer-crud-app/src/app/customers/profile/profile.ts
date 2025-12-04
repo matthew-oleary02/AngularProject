@@ -16,6 +16,7 @@ export class ProfileComponent {
   firstName: string = '';
   lastName: string = '';
   email: string = '';
+  password: string = '';
 
   private apiUrl = 'http://localhost:3000/profile';
 
@@ -43,6 +44,7 @@ export class ProfileComponent {
         this.firstName = data.firstName;
         this.lastName = data.lastName;
         this.email = data.email;
+
       },
       error: (err) => {
         console.error('Error fetching profile:', err);
@@ -55,11 +57,6 @@ export class ProfileComponent {
 
   editProfile() {
     this.router.navigate(['/profile/edit']);
-  }
-
-  changePassword() {
-    console.log('Change password clicked');
-    // Navigate to change password page
   }
 
   logout() {

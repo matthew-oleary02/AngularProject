@@ -1,5 +1,5 @@
 <header class="app-header">
-  <h1>Customer CRUD App</h1>
+  <h1 routerLink="/home">Customer CRUD App</h1>
   <nav>
     <a *ngIf="isLoggedIn()" routerLink="/customers">Customers</a>
     <a *ngIf="isLoggedIn() && isAdmin()" routerLink="/admin">Admin</a>

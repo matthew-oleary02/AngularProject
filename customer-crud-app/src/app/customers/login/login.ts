@@ -30,7 +30,7 @@ export class LoginComponent {
     this.http.post('http://localhost:3000/api/auth/login', body).subscribe({
       next: (response: any) => {
         localStorage.setItem('token', response.token);
-        this.router.navigate(['/customers']);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         this.errorMessage = err.error.message || 'Invalid username or password.';

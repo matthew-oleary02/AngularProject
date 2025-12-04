@@ -30,7 +30,8 @@ export class ProfileFormComponent implements OnInit {
             username: ['', Validators.required],
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]]
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', Validators.required]
         });
         /* Load profile data */
         this.loadUserProfile();
@@ -43,7 +44,8 @@ export class ProfileFormComponent implements OnInit {
                     username: data.username,
                     firstName: data.firstName,
                     lastName: data.lastName,
-                    email: data.email
+                    email: data.email,
+                    password: data.password
                 });
             },
             error: (err) => {
@@ -59,7 +61,7 @@ export class ProfileFormComponent implements OnInit {
             this.profileService.updateProfile(updatedProfile).subscribe({
                 next: (data: Profile) => {
                     console.log('Profile updated successfully:', data);
-                    this.router.navigate(['/profile', data.id]);
+                    this.router.navigate(['/profile']);
                 },
                 error: (err) => {
                     console.error('Error updating profile:', err);

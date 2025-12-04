@@ -2,6 +2,14 @@
 
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <label for="username" class="full-label">Username:</label>
+    <input id="username" class="full-input" formControlName="username" type="text" />
+    <!-- Validation message for username -->
+    <div class="error" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+      Required
+    </div>
+
     <label for="firstName" class="full-label">First Name:</label>
     <input id="firstName" class="full-input" formControlName="firstName" type="text" />
     <!-- Validation message for first name -->
@@ -23,5 +31,16 @@
       Valid email required
     </div>
 
-    <button type="submit" [disabled]="form.invalid">Save Profile</button>
+    <label for="password" class="full-label">Password:</label>
+    <input id="password" class="full-input" formControlName="password" type="password" />
+    <!-- Validation message for password -->
+    <div class="error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+      {{ 'Password must be at least 6 characters' }}
+    </div>
+
+    <div class="form-actions">
+      <td><button type="submit" [disabled]="form.invalid">{{ 'Save Profile' }}</button></td>
+      <td><button type="button" class="btn-cancel"[routerLink]="['/profile']">Cancel</button></td>
+    </div>
   </form>
+</div>

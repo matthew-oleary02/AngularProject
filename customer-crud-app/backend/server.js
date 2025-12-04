@@ -158,34 +158,62 @@ app.get('/profile', authenticateToken, async (req, res) => {
 });
 
 
+
+// Ensure: const bcrypt = require('bcrypt');
+// Ensure: app.use(express.json());
+
 app.put('/profile', authenticateToken, async (req, res) => {
-    const id = parseInt(req.user.id, 10);
-    const { username, password, email } = req.body;
-    try {
-        await sql.connect(config);
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const query = `
-            UPDATE Users SET
-                Username = @Username,
-                PasswordHash = @PasswordHash,
-                Email = @Email,
-                ModifiedOn = GETDATE()
-            WHERE Id = @Id
-        `;
-        const request = new sql.Request();
-        request.input('Id', sql.Int, id);
-        request.input('Username', sql.VarChar, username);
-        request.input('PasswordHash', sql.VarChar, hashedPassword);
-        request.input('Email', sql.VarChar, email);
-        await request.query(query);
-        res.status(200).json({ message: 'Profile updated successfully' });
+  const id = parseInt(req.user.id, 10);
+  const profile = req.body;
+
+  try {
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid user id' });
     }
-    catch (err) {
-        console.error('Error updating profile:', err);
-        res.status(500).send('Server error');
+
+    await sql.connect(config);
+
+    let hashedPassword = null;
+    if (profile.password && typeof profile.password === 'string' && profile.password.length > 0) {
+      hashedPassword = await bcrypt.hash(profile.password, 10);
     }
+
+    // Build query depending on whether password is being changed
+    const query = `
+      UPDATE Users SET
+        Username   = @Username,
+        FirstName  = @FirstName,
+        LastName   = @LastName,
+        Email      = @Email,
+        ${hashedPassword ? 'PasswordHash = @PasswordHash,' : ''}
+        ModifiedOn = GETDATE()
+      WHERE Id = @Id
+    `;
+
+    const request = new sql.Request();
+    request.input('Id', sql.Int, id);
+    request.input('Username', sql.VarChar(100), profile.username);
+    request.input('FirstName', sql.VarChar(100), profile.firstName);
+    request.input('LastName', sql.VarChar(100), profile.lastName);
+    request.input('Email', sql.VarChar(200), profile.email);
+
+    if (hashedPassword) {
+      request.input('PasswordHash', sql.VarChar(200), hashedPassword);
+    }
+
+    const result = await request.query(query);
+
+    if (result.rowsAffected && result.rowsAffected[0] === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json({ message: 'Profile updated successfully' });
+  } catch (err) {
+    console.error('Error updating profile:', err);
+    return res.status(500).send('Server error');
+  }
 });
+
 
 
 /* ===========================
@@ -253,34 +281,45 @@ app.get('/admin/:id', authenticateToken, async (req, res) => {
     }
 });
 
-// POST /admin (add new user)
-app.post('/admin', authenticateToken, async (req, res) => {
-  const id = parseInt(req.params.id, 10);  
-  const admin = req.body;
-    try {
-        await sql.connect(config);
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const query = `
-            INSERT INTO Users (Username, PasswordHash, Email, Role, Active, CreatedOn)
-            VALUES (@Username, @PasswordHash, @Email, @Role, @Active, GETDATE())
-        `;
-        const request = new sql.Request();
-        request.input('Username', sql.VarChar, admin.username);
-        request.input('PasswordHash', sql.VarChar, admin.hashedPassword);
-        request.input('Email', sql.VarChar, admin.email);
-        request.input('Role', sql.VarChar, admin.role);
-        request.input('Active', sql.Bit, admin.active);
 
-        await request.query(query);
-        res.status(201).json({ message: 'User added successfully' });
-    } catch (err) {
-        console.error('Error adding user:', err);
-        res.status(500).send('Server error');
+// POST /admin (add new user)
+
+app.post('/admin', authenticateToken, async (req, res) => {
+  const admin = req.body;
+
+  try {
+    await sql.connect(config);
+
+    if (!admin.username || !admin.email || !admin.role || typeof admin.active !== 'boolean') {
+      return res.status(400).json({ message: 'Missing required fields' });
     }
+    if (!admin.password || typeof admin.password !== 'string') {
+      return res.status(400).json({ message: 'Password is required for new users' });
+    }
+
+    const hashedPassword = await bcrypt.hash(admin.password, 10);
+
+    const query = `
+      INSERT INTO Users (Username, PasswordHash, Email, Role, Active, CreatedOn)
+      VALUES (@Username, @PasswordHash, @Email, @Role, @Active, GETDATE())
+    `;
+
+    const request = new sql.Request();
+    request.input('Username', sql.VarChar(100), admin.username);
+    request.input('PasswordHash', sql.VarChar(200), hashedPassword); // use computed hash
+    request.input('Email', sql.VarChar(200), admin.email);
+    request.input('Role', sql.VarChar(50), admin.role);
+    request.input('Active', sql.Bit, admin.active);
+
+    await request.query(query);
+    return res.status(201).json({ message: 'User added successfully' });
+  } catch (err) {
+    console.error('Error adding user:', err);
+    return res.status(500).send('Server error');
+  }
 });
 
-
+// PUT /admin/:id (update existing user)
 app.put('/admin/:id', authenticateToken, async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const admin = req.body;
