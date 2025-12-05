@@ -4,6 +4,7 @@ import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';
 import { CustomerViewComponent } from './customers/customer-view/customer-view';
 import { OfficesComponent } from './customers/resources/offices';
+import { OfficesFormComponent } from './customers/offices-form/offices-form';
 import { LoginComponent } from './customers/login/login';
 import { HomeComponent } from './customers/home/home';
 import { ProfileComponent } from './customers/profile/profile';
@@ -26,4 +27,6 @@ export const routes: Routes = [
   { path: 'customers/edit/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/view/:id', component: CustomerViewComponent, canActivate: [AuthGuard] },
   { path : 'offices', component: OfficesComponent, canActivate: [AuthGuard] },
+  { path : 'offices/new', component: OfficesFormComponent, canActivate: [AuthGuard] },
+  { path : 'offices/edit/:id', component: OfficesFormComponent, canActivate: [AuthGuard] },
 ];
