@@ -1,0 +1,16 @@
+/* ======= PAGE HEADER ======= */
+h1 {
+  text-align: center;
+  color: var(--text-dark);
+  margin: 20px 0;
+}
+
+/* ======= PAGE BACKGROUND ======= */
+body {
+  text-align: center;
+  background-color: var(--page-bg);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}

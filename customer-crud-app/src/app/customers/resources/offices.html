@@ -1,0 +1,68 @@
+
+<!-- offices.html -->
+<h1>Office Management</h1>
+
+<div class="card">
+  <!-- Search & Filter Toolbar -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search by name, address, city, state, country, phone..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+      aria-label="Search offices"
+    />
+
+    <button type="button" class="btn-clear" (click)="clearFilter()">Clear</button>
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <input
+        type="checkbox"
+        id="activeOnly"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+        aria-checked="{{ activeFilter === true }}"
+      />
+      <label for="activeOnly" title="Show only active offices">Active only</label>
+    </div>
+  </div>
+
+  <!-- Office Table -->
+  <table class="office-table" aria-label="Offices table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Office Name</th>
+        <th scope="col">Address1</th>
+        <th scope="col">Address2</th>
+        <th scope="col">City</th>
+        <th scope="col">State</th>
+        <th scope="col">Country</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Active</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let office of offices">
+        <td>{{ office.id }}</td>
+        <td>{{ office.name }}</td>
+        <td>{{ office.address1 }}</td>
+        <td>{{ office.address2 }}</td>
+        <td>{{ office.city }}</td>
+        <td>{{ office.state }}</td>
+        <td>{{ office.country }}</td>
+        <td>{{ office.phone }}</td>
+        <td>{{ office.active ? 'Yes' : 'No' }}</td>
+        <td>
+          <button class="btn-edit" [routerLink]="['/offices/edit', office.id]">Edit</button>
+          <button class="btn-delete" (click)="onDelete(office.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Primary action positioned after the card: your CSS targets `.card + button` -->
+<button type="button" [routerLink]="['/offices/new']">Add New Office</button>

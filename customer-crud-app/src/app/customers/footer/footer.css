@@ -1,0 +1,7 @@
+body {
+  text-align: left;
+  background-color: var(--page-bg);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}

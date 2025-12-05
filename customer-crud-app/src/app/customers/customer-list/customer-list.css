@@ -37,58 +37,6 @@ body {
   overflow-x: auto;
 }
 
-/* ======= FORM STYLING ======= */
-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 14px 20px;
-  align-items: start;
-}
-
-label {
-  display: block;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin-bottom: 6px;
-}
-
-input[type="text"],
-input[type="email"],
-select,
-textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #9ea7b8;
-  border-radius: 6px;
-  background: #fafafa;
-  box-sizing: border-box;
-  font-size: 14px;
-  color: var(--text-dark);
-  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--accent);
-  background-color: #fff;
-  box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
-}
-
-textarea {
-  height: 150px;
-  resize: vertical;
-  grid-column: 1 / -1;
-}
-
-form > div.actions {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 8px;
-}
-
 /* ======= BUTTONS ======= */
 button {
   justify-content: center;

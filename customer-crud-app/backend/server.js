@@ -639,6 +639,147 @@ app.delete('/customers/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    OFFICE MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /offices (all offices)
+app.get('/offices', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM Offices');
+    const offices = result.recordset.map(row => ({
+      id: row.OfficeID,
+      name: row.OfficeName,
+      address1: row.Address1,
+      address2: row.Address2,
+      city: row.City,
+      state: row.State,
+      zip: row.Zip,
+      county: row.County,
+      country: row.Country,
+      phone: row.Phone,
+      active: row.Active
+    }));
+    res.json(offices);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.get('/offices/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('Id', sql.Int, id);
+    const result = await request.query('SELECT * FROM Offices WHERE OfficeID = @OfficeID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Office not found' });
+    }
+    const row = result.recordset[0];
+    const office = {
+      id: parseInt(row.Id, 10),
+      name: row.OfficeName,
+      address1: row.Address1,
+      address2: row.Address2,
+      city: row.City,
+      state: row.State,
+      zip: row.Zip,
+      county: row.County,
+      country: row.Country,
+      phone: row.Phone,
+      active: row.Active
+    };
+    res.json(office);
+  } catch (err) {
+    console.error('Error fetching office:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.post('/offices', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const office = req.body;
+    const query = `
+      INSERT INTO Offices (OfficeName, Address1, Address2, City, State, Zip, County, Country, Phone, Active)
+      VALUES (@OfficeName, @Address1, @Address2, @City, @State, @Zip, @County, @Country, @Phone, @Active)
+    `;
+    const request = new sql.Request();
+    request.input('OfficeName', sql.VarChar, office.name);
+    request.input('Address1', sql.VarChar, office.address1);
+    request.input('Address2', sql.VarChar, office.address2);
+    request.input('City', sql.VarChar, office.city);
+    request.input('State', sql.VarChar, office.state);
+    request.input('Zip', sql.VarChar, office.zip);
+    request.input('County', sql.VarChar, office.county);
+    request.input('Country', sql.VarChar, office.country);
+    request.input('Phone', sql.VarChar, office.phone);
+    request.input('Active', sql.Bit, office.active);
+    await request.query(query);
+    res.status(201).json({ message: 'Office added successfully' });
+  } catch (err) {
+    console.error('Error adding office:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.put('/offices/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const office = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE Offices SET
+        OfficeName = @OfficeName,
+        Address1 = @Address1,
+        Address2 = @Address2,
+        City = @City,
+        State = @State,
+        Zip = @Zip,
+        County = @County,
+        Country = @Country,
+        Phone = @Phone,
+        Active = @Active
+      WHERE OfficeID = @OfficeID
+    `;
+    const request = new sql.Request();
+    request.input('OfficeID', sql.Int, id);
+    request.input('OfficeName', sql.VarChar, office.name);
+    request.input('Address1', sql.VarChar, office.address1);
+    request.input('Address2', sql.VarChar, office.address2);
+    request.input('City', sql.VarChar, office.city);
+    request.input('State', sql.VarChar, office.state);
+    request.input('Zip', sql.VarChar, office.zip);
+    request.input('County', sql.VarChar, office.county);
+    request.input('Country', sql.VarChar, office.country);
+    request.input('Phone', sql.VarChar, office.phone);
+    request.input('Active', sql.Bit, office.active);
+    await request.query(query);
+    res.status(200).json({ message: 'Office updated successfully' });
+  } catch (err) {
+    console.error('Error updating office:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.delete('/offices/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('OfficeID', sql.Int, id);
+    await request.query('DELETE FROM Offices WHERE OfficeID = @OfficeID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting office:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
 /* Start the server */
 app.listen(3000, () => console.log('Server running on port 3000'));
 
