@@ -1,0 +1,41 @@
+<!-- vendors-view.html - Form for adding/editing a vendors record -->
+ 
+<h1>Vendor Details</h1>
+<div *ngIf="vendor; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ vendor.vendorName || 'Vendor' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ vendor.rowId }}</div></div>
+
+    <div class="group-title">Billing Address</div>
+    <div class="item"><div class="label">Address 1</div><div class="value">{{ vendor.billingAddress.address1 }}</div></div>
+    <div class="item"><div class="label">Address 2</div><div class="value">{{ vendor.billingAddress.address2 }}</div></div>
+    <div class="item"><div class="label">City</div><div class="value">{{ vendor.billingAddress.city }}</div></div>
+    <div class="item"><div class="label">State</div><div class="value">{{ vendor.billingAddress.state }}</div></div>
+    <div class="item"><div class="label">Zip</div><div class="value">{{ vendor.billingAddress.zip }}</div></div>
+    <div class="item"><div class="label">County</div><div class="value">{{ vendor.billingAddress.county }}</div></div>
+    <div class="item"><div class="label">Country</div><div class="value">{{ vendor.billingAddress.country }}</div></div>
+    <div class="item"><div class="label">Email</div><div class="value">{{ vendor.billingAddress.email }}</div></div>
+
+    <div class="group-title">Primary Contact</div>
+    <div class="item"><div class="label">Name</div><div class="value">{{ vendor.primaryContact.name }}</div></div>
+    <div class="item"><div class="label">Phone</div><div class="value">{{ vendor.primaryContact.phone }}</div></div>
+    <div class="item"><div class="label">Email</div><div class="value">{{ vendor.primaryContact.email }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Status</div><div class="value">{{ vendor.status }}</div></div>
+    <div class="item"><div class="label">Status Note</div><div class="value">{{ vendor.statusNote }}</div></div>
+    <div class="item"><div class="label">Created By</div><div class="value">{{ vendor.createdBy }}</div></div>
+    <div class="item"><div class="label">Created On</div><div class="value">{{ vendor.createdOn | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ vendor.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ vendor.modifiedOn | date:'short' }}</div></div>
+  </div>
+  <button type="button" [routerLink]="['/vendors']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Vendor not found.</p>
+    <button type="button" [routerLink]="['/vendors']">Back</button>
+  </div>
+</ng-template>

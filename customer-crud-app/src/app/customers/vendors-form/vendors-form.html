@@ -1,0 +1,71 @@
+<!-- vendor-form.html - Form for adding/editing a vendor -->
+
+<h1>{{ isEdit ? 'Edit Vendor' : 'Add New Vendor' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="vendorName" class="full-label">Name:</label>
+    <input id="vendorName" class="full-input" formControlName="vendorName" type="text" />
+    <!-- Validation message for vendor name -->
+    <div class="error" *ngIf="form.get('vendorName')?.invalid && form.get('vendorName')?.touched">
+      Required
+    </div>
+
+    <fieldset formGroupName="billingAddress" class="fieldset-grid">
+      <legend>Billing Address</legend>
+
+      <label for="address1">Address 1:</label>
+      <input id="address1" formControlName="address1" type="text" />
+
+      <label for="address2">Address 2:</label>
+      <input id="address2" formControlName="address2" type="text" />
+
+      <label for="city">City:</label>
+      <input id="city" formControlName="city" type="text" />
+
+      <label for="state">State:</label>
+      <input id="state" formControlName="state" type="text" />
+
+      <label for="zip">Zip:</label>
+      <input id="zip" formControlName="zip" type="text" />
+
+      <label for="county">County:</label>
+      <input id="county" formControlName="county" type="text" />
+
+      <label for="country">Country:</label>
+      <input id="country" formControlName="country" type="text" />
+
+      <label for="billingEmail">Email:</label>
+      <input id="billingEmail" formControlName="email" type="email" />
+    </fieldset>
+
+    <fieldset formGroupName="primaryContact" class="fieldset-grid">
+      <legend>Primary Contact</legend>
+
+      <label for="contactName">Name:</label>
+      <input id="contactName" formControlName="name" type="text" />
+
+      <label for="contactPhone">Phone:</label>
+      <input id="contactPhone" formControlName="phone" type="text" />
+
+      <label for="contactEmail">Email:</label>
+      <input id="contactEmail" formControlName="email" type="email" />
+    </fieldset>
+
+    <fieldset class="fieldset-grid additional-info">
+      <legend>Additional Information</legend>
+
+      <label for="status">Status:</label>
+      <input id="status" formControlName="status" type="text" />
+
+      <label class="full-label">Status Note:</label>
+      <textarea formControlName="statusNote" class="full"></textarea>
+    </fieldset>
+
+<div class="form-actions">
+  <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
+  <td><button type="button" class="btn-cancel"[routerLink]="['/vendors']">Cancel</button></td>
+</div>
+  </form>
+</div>

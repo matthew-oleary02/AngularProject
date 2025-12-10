@@ -640,6 +640,245 @@ app.delete('/customers/:id', async (req, res) => {
 });
 
 /* ===========================
+    VENDOR MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /vendors (all vendors)
+app.get('/vendors', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM Vendor');
+
+    const vendors = result.recordset.map(row => ({
+      rowId: parseInt(row.RowID, 10),
+      vendorName: row.VendorName,
+      billingAddress: {
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zip: row.Zip,
+        county: row.County,
+        country: row.Country,
+        email: row.Email
+      },
+      primaryContact: {
+        name: row.PrimaryContactName,
+        phone: row.PrimaryContactPhone,
+        email: row.PrimaryContactEmail
+      },
+      status: row.Status,
+      vendorNote: row.VendorNote,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+
+    res.json(vendors);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendors/:id (single vendor by ID)
+app.get('/vendors/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+
+    const result = await request.query('SELECT * FROM Vendor WHERE RowID = @RowID');
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor not found' });
+    }
+
+    const row = result.recordset[0];
+    const vendor = {
+      rowId: parseInt(row.RowID, 10),
+      vendorName: row.VendorName,
+      billingAddress: {
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zip: row.Zip,
+        county: row.County,
+        country: row.Country,
+        email: row.Email
+      },
+      primaryContact: {
+        name: row.PrimaryContactName,
+        phone: row.PrimaryContactPhone,
+        email: row.PrimaryContactEmail
+      },
+      status: row.Status,
+      vendorNote: row.VendorNote,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+
+    res.json(vendor);
+  } catch (err) {
+    console.error('Error fetching vendor:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendors (add new vendor)
+app.post('/vendors', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendor = req.body;
+
+    const query = `
+      INSERT INTO Vendor (
+        VendorName, Address1, Address2, City, State, Zip, County, Country, Email,
+        PrimaryContactName, PrimaryContactPhone, PrimaryContactEmail,
+        Status, StatusNote, CreatedBy, CreatedOn
+      ) VALUES (
+        @VendorName, @Address1, @Address2, @City, @State, @Zip, @County, @Country, @Email,
+        @PrimaryContactName, @PrimaryContactPhone, @PrimaryContactEmail,
+        @Status, @StatusNote, @CreatedBy, GETDATE()
+      )
+    `;
+
+    const request = new sql.Request();
+    request.input('VendorName', sql.VarChar, vendor.vendorName);
+    request.input('Address1', sql.VarChar, vendor.billingAddress.address1);
+    request.input('Address2', sql.VarChar, vendor.billingAddress.address2);
+    request.input('City', sql.VarChar, vendor.billingAddress.city);
+    request.input('State', sql.VarChar, vendor.billingAddress.state);
+    request.input('Zip', sql.VarChar, vendor.billingAddress.zip);
+    request.input('County', sql.VarChar, vendor.billingAddress.county);
+    request.input('Country', sql.VarChar, vendor.billingAddress.country);
+    request.input('Email', sql.VarChar, vendor.billingAddress.email);
+    request.input('PrimaryContactName', sql.VarChar, vendor.primaryContact.name);
+    request.input('PrimaryContactPhone', sql.VarChar, vendor.primaryContact.phone);
+    request.input('PrimaryContactEmail', sql.VarChar, vendor.primaryContact.email);
+    request.input('Status', sql.VarChar, vendor.status);
+    request.input('StatusNote', sql.VarChar, vendor.statusNote);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Vendor added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendors/:id (update existing vendor)
+app.put('/vendors/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendor = req.body;
+    const id = req.params.id;
+
+    const query = `
+      UPDATE Customers SET
+        VendorName = @VendorName,
+        Address1 = @Address1,
+        Address2 = @Address2,
+        City = @City,
+        State = @State,
+        Zip = @Zip,
+        County = @County,
+        Country = @Country,
+        Email = @Email,
+        PrimaryContactName = @PrimaryContactName,
+        PrimaryContactPhone = @PrimaryContactPhone,
+        PrimaryContactEmail = @PrimaryContactEmail,
+        Status = @Status,
+        StatusNote = @StatusNote,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('StatusNote', sql.VarChar, vendor.vendorName);
+    request.input('Address1', sql.VarChar, vendor.billingAddress.address1);
+    request.input('Address2', sql.VarChar, vendor.billingAddress.address2);
+    request.input('City', sql.VarChar, vendor.billingAddress.city);
+    request.input('State', sql.VarChar, vendor.billingAddress.state);
+    request.input('Zip', sql.VarChar, vendor.billingAddress.zip);
+    request.input('County', sql.VarChar, vendor.billingAddress.county);
+    request.input('Country', sql.VarChar, vendor.billingAddress.country);
+    request.input('Email', sql.VarChar, vendor.billingAddress.email);
+    request.input('PrimaryContactName', sql.VarChar, vendor.primaryContact.name);
+    request.input('PrimaryContactPhone', sql.VarChar, vendor.primaryContact.phone);
+    request.input('PrimaryContactEmail', sql.VarChar, vendor.primaryContact.email);
+    request.input('Status', sql.VarChar, vendor.active);
+    request.input('VendorNote', sql.VarChar, vendor.vendorNote);
+    request.input('ModifiedBy', sql.VarChar, 'admin');
+
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendors/:id (delete vendor)
+app.delete('/vendors/:id', async (req, res) => {
+  try {
+   await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+
+    const result = await request.query('DELETE FROM Vendor OUTPUT DELETED.* WHERE RowID = @RowID');
+
+    if (!result.recordset || result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor not found' });
+    }
+
+    const row = result.recordset[0];
+    const vendor = {
+      rowId: parseInt(row.RowID, 10),
+      vendorName: row.VendorName,
+      billingAddress: {
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zip: row.Zip,
+        county: row.County,
+        country: row.Country,
+        email: row.Email
+      },
+      primaryContact: {
+        name: row.PrimaryContactName,
+        phone: row.PrimaryContactPhone,
+        email: row.PrimaryContactEmail
+      },
+      status: row.Status,
+      statusNote: row.StatusNote,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+
+    res.json(vendor);
+  } catch (err) {
+    console.error('Error fetching vendor:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
     OFFICE MANAGEMENT ENDPOINTS
 =========================== */
 
@@ -673,7 +912,7 @@ app.get('/offices/:id', async (req, res) => {
     await sql.connect(config);
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
-    request.input('Id', sql.Int, id);
+    request.input('OfficeID', sql.Int, id);
     const result = await request.query('SELECT * FROM Offices WHERE OfficeID = @OfficeID');
     if (result.recordset.length === 0) {
       return res.status(404).json({ message: 'Office not found' });

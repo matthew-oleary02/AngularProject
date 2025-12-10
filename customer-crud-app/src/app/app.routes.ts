@@ -3,6 +3,9 @@ import { Routes } from '@angular/router';
 import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';
 import { CustomerViewComponent } from './customers/customer-view/customer-view';
+import { VendorListComponent } from './customers/vendors/vendors';
+import { VendorsFormComponent } from './customers/vendors-form/vendors-form';
+import { VendorsViewComponent } from './customers/vendors-view/vendors-view';
 import { OfficesComponent } from './customers/resources/offices';
 import { OfficesFormComponent } from './customers/offices-form/offices-form';
 import { LoginComponent } from './customers/login/login';
@@ -26,6 +29,10 @@ export const routes: Routes = [
   { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/edit/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/view/:id', component: CustomerViewComponent, canActivate: [AuthGuard] },
+  { path: 'vendors', component: VendorListComponent, canActivate: [AuthGuard] },
+  { path: 'vendors/new', component: VendorsFormComponent, canActivate: [AuthGuard] },
+  { path: 'vendors/edit/:id', component: VendorsFormComponent, canActivate: [AuthGuard] },
+  { path: 'vendors/view/:id', component: VendorsViewComponent, canActivate: [AuthGuard] },
   { path : 'offices', component: OfficesComponent, canActivate: [AuthGuard] },
   { path : 'offices/new', component: OfficesFormComponent, canActivate: [AuthGuard] },
   { path : 'offices/edit/:id', component: OfficesFormComponent, canActivate: [AuthGuard] },

@@ -1,0 +1,55 @@
+<div class="card">
+  <h1>Vendor List</h1>
+  <!-- Toolbar with filter input and clear button -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search name, city, state, zip, contact..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+  </div>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Address 1</th>
+    <th>City</th>
+    <th>State</th>
+    <th>Zip</th>
+    <th>Country</th>
+    <th>Status</th>
+    <th>Created On</th>
+    <th>Modified On</th>
+    <th> </th>
+    <th> </th>
+    <th> </th>
+  </tr>
+  <tr *ngFor="let v of vendors">
+    <td>{{ v.vendorName }}</td>
+    <td>{{ v.billingAddress.address1 }}</td>
+    <td>{{ v.billingAddress.city }} </td>
+    <td>{{ v.billingAddress.state }}</td>
+    <td>{{ v.billingAddress.zip }}</td>
+    <td>{{ v.billingAddress.country }}</td>
+    <td>{{ v.status }}</td>
+    <td>{{ v.createdOn | date:'short' }}</td>
+    <td>{{ v.modifiedOn | date:'short' }}</td>
+    <td><button type="button" class="btn btn-edit" [routerLink]="['/vendors/edit', v.rowId]">Edit</button></td>
+    <td><button type="button" class="btn btn-view" [routerLink]="['/vendors/view', v.rowId]">View</button></td>
+    <td><button type="button" class="btn btn-delete" (click)="onDelete(v.rowId)">Delete</button></td>
+  </tr>
+</table>
+</div>
+<button type="button" [routerLink]="['/vendors/new']" >Add New Vendor</button>
