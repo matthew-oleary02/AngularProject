@@ -37,6 +37,27 @@ body {
   overflow-x: auto;
 }
 
+
+/* ======= SEARCH BOX ======= */
+.search-box {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border: 1px solid #9ea7b8;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  color: var(--text-dark);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.search-box:focus {
+  border-color: var(--accent);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(30,144,255,0.1);
+}
+
 /* ======= BUTTONS ======= */
 button {
   justify-content: center;
@@ -107,12 +128,13 @@ tr:hover {
 
 td button {
   border: 1px solid var(--border);
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.15s ease, transform 0.1s ease;
   color: #fff;
+  margin: 0 4px;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .btn-edit {
@@ -175,5 +197,10 @@ td button:hover { transform: translateY(-1px); }
   button {
     padding: 8px 10px;
     font-size: 13px;
+  }
+
+    td button {
+      padding: 6px 8px;
+      font-size: 12px;
   }
 }

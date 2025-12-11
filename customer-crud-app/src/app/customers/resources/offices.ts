@@ -43,15 +43,15 @@ export class OfficesComponent implements OnInit {
     this.applyFilters();
   }
 
+  /* Called when the Active checkbox is toggled */
   onActiveToggle(checked: boolean) {
-    // Checked => show active only; Unchecked => show all
-    this.activeFilter = checked ? true : null;
+    // set activeFilter to boolean (true= active, false= inactive)
+    this.activeFilter = checked;
     this.applyFilters();
   }
 
   clearFilter() {
     this.filterText = '';
-    this.activeFilter = null; // show all
     this.applyFilters();
   }
 

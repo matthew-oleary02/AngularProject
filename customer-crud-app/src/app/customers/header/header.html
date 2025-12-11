@@ -2,7 +2,7 @@
   <h1 routerLink="/home">Customer CRUD App</h1>
   <nav>
     <a *ngIf="isLoggedIn()" routerLink="/customers">Customers</a>
-    <a *ngIf="isLoggedIn()" routerLink="/vendors">Vendors</a>
+    <a *ngIf="isLoggedIn() && isManager() || isAdmin()" routerLink="/vendors">Vendors</a>
     <a *ngIf="isLoggedIn()" routerLink="/offices">Resources</a>
     <a *ngIf="isLoggedIn() && isAdmin()" routerLink="/admin">Admin</a>
     <a *ngIf="isLoggedIn()" routerLink="/profile">Profile</a>

@@ -36,4 +36,16 @@ export class HeaderComponent {
     return false;
   }
 }
+
+  isManager(): boolean {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT
+      return payload.role === 'Manager';
+    } catch {
+      return false;
+    }
+}
 }

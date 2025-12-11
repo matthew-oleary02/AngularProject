@@ -1,0 +1,93 @@
+
+/* ======= PROFILE CONTAINER ======= */
+.profile-container {
+  width: 95%;
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* ======= HEADING ======= */
+.profile-container h1 {
+  text-align: center;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+  font-size: 1.8rem;
+}
+
+/* ======= PROFILE DETAILS ======= */
+.profile-container p {
+  font-size: 15px;
+  color: var(--text-dark);
+  margin: 8px 0;
+}
+
+.profile-container strong {
+  color: var(--accent);
+}
+
+/* ======= BUTTONS ======= */
+.profile-container button {
+  display: inline-block;
+  margin: 12px 8px 0 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.05s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+}
+
+.profile-container button:first-of-type {
+  background-color: royalblue;
+  color: #fff;
+}
+
+.profile-container button:last-of-type {
+  background-color: crimson;
+  color: #fff;
+}
+
+.profile-container button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.profile-container button:first-of-type:hover {
+  background-color: #2b5fbf;
+}
+
+.profile-container button:last-of-type:hover {
+  background-color: #b30f2f;
+}
+
+/* ======= LOADING STATE ======= */
+ng-template p {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ======= RESPONSIVENESS ======= */
+@media (max-width: 768px) {
+  .profile-container {
+    width: 98%;
+    padding: 16px;
+  }
+
+  .profile-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .profile-container button {
+    width: 100%;
+    margin: 12px 0;
+  }
+}

@@ -3,15 +3,29 @@
   <h1>User Management</h1>
 
   <!-- Search -->
-  <input
-    type="text"
-    placeholder="Search by username, role, or email..."
-    [(ngModel)]="filterText"
-    (input)="onFilterChange(filterText)"
-    class="search-box"
-    style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-  />
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search by username, role, or email..."
+      [(ngModel)]="filterText"
+      (input)="onFilterChange(filterText)"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
 
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+      <td>
+        <input
+          type="checkbox"
+          id="active"
+          name="active"
+          (change)="onActiveToggle($event.target.checked)"
+          [checked]="activeFilter === true"
+          style="margin-right:4px;"
+        />
+        <label for="active">Active</label>
+      </td>
+    </div>
   <!-- Table -->
   <table class="user-table">
     <thead>

@@ -56,8 +56,19 @@
     <fieldset class="fieldset-grid additional-info">
       <legend>Additional Information</legend>
 
-      <label for="status">Status:</label>
-      <input id="status" formControlName="status" type="text" />
+      <label for="status" class="full-label">Status:</label>
+        <select id="status" class="full-input" formControlName="status">
+        <option value="" disabled selected>Select a status</option>
+        <option value="Available">Available</option>
+        <option value="On Hold">On Hold</option>
+        <option value="Inactive">Inactive</option>
+        <option value="Retired Due To Inactivity">Retired Due To Inactivity</option>
+        <option value="Non-Compliant">Non-Compliant</option>
+      </select>
+      <!-- Validation message for status -->
+      <div class="error" *ngIf="form.get('status')?.invalid && form.get('status')?.touched">
+        Required
+      </div>
 
       <label class="full-label">Status Note:</label>
       <textarea formControlName="statusNote" class="full"></textarea>

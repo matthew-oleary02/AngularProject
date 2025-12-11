@@ -35,14 +35,28 @@ export class AdminComponent implements OnInit {
     this.applyFilters();
   }
 
+  /* Clear the filter input and reset customer list */
+  clearFilter() {
+    this.filterText = '';
+    this.applyFilters();
+  }
 
+  /* Called when the Active checkbox is toggled */
+  onActiveToggle(checked: boolean) {
+    // set activeFilter to boolean (true= active, false= inactive)
+    this.activeFilter = checked;
+    this.applyFilters();
+  }
+  
   private applyFilters() {
     const q = this.filterText.toLowerCase().trim();
     this.users = this.allUsers.filter((u) => {
       const username = u.username ? u.username.toLowerCase() : '';
       const role = u.role ? u.role.toLowerCase() : '';
       const email = u.email ? u.email.toLowerCase() : '';
-      return username.includes(q) || role.includes(q) || email.includes(q);
+      const matchesText = username.includes(q) || role.includes(q) || email.includes(q);
+      const matchesActiveFilter = this.activeFilter === null || u.active === this.activeFilter;
+      return matchesText && matchesActiveFilter;
     });
   }
 

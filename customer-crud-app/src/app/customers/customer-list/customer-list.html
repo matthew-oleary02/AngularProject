@@ -10,6 +10,7 @@
       placeholder="Search name, city, state, zip, contact..."
       (input)="onFilterChange($event.target.value)"
       [value]="filterText"
+      class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
     <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
@@ -35,9 +36,7 @@
     <th>Active</th>
     <th>Created On</th>
     <th>Modified On</th>
-    <th> </th>
-    <th> </th>
-    <th> </th>
+    <th>Actions</th>
   </tr>
   <tr *ngFor="let c of customers">
     <td>{{ c.customerName }}</td>
@@ -49,9 +48,11 @@
     <td>{{ c.active ? 'Yes' : 'No' }}</td>
     <td>{{ c.createdOn | date:'short' }}</td>
     <td>{{ c.modifiedOn | date:'short' }}</td>
-    <td><button type="button" class="btn btn-edit" [routerLink]="['/customers/edit', c.rowId]">Edit</button></td>
-    <td><button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button></td>
-    <td><button type="button" class="btn btn-delete" (click)="onDelete(c.rowId)">Delete</button></td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customers/edit', c.rowId]">Edit</button>
+      <button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(c.rowId)">Delete</button>
+    </td>
   </tr>
 </table>
 </div>

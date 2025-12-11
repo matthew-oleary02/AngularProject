@@ -5,8 +5,10 @@
   <p><strong>First Name:</strong> {{ firstName }}</p>
   <p><strong>Last Name:</strong> {{ lastName }}</p>
 
-  <button type="button" (click)="editProfile()" routerLink="/profile/edit">Edit Profile</button>
-  <button type="button" (click)="logout()">Log Out</button>
+  <td>
+    <button type="button" class="btn btn-edit" (click)="editProfile()" routerLink="/profile/edit">Edit Profile</button>
+    <button type="button" class="btn btn-delete" (click)="logout()">Log Out</button>
+  </td>
 </div>
 
 <ng-template #loading>

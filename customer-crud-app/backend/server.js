@@ -668,7 +668,7 @@ app.get('/vendors', async (req, res) => {
         email: row.PrimaryContactEmail
       },
       status: row.Status,
-      vendorNote: row.VendorNote,
+      statusNote: row.StatusNote,
       createdBy: row.CreatedBy,
       createdOn: row.CreatedOn,
       modifiedBy: row.ModifiedBy,
@@ -717,7 +717,7 @@ app.get('/vendors/:id', async (req, res) => {
         email: row.PrimaryContactEmail
       },
       status: row.Status,
-      vendorNote: row.VendorNote,
+      statusNote: row.StatusNote,
       createdBy: row.CreatedBy,
       createdOn: row.CreatedOn,
       modifiedBy: row.ModifiedBy,
@@ -783,7 +783,7 @@ app.put('/vendors/:id', async (req, res) => {
     const id = req.params.id;
 
     const query = `
-      UPDATE Customers SET
+      UPDATE Vendor SET
         VendorName = @VendorName,
         Address1 = @Address1,
         Address2 = @Address2,
@@ -805,7 +805,7 @@ app.put('/vendors/:id', async (req, res) => {
 
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
-    request.input('StatusNote', sql.VarChar, vendor.vendorName);
+    request.input('VendorName', sql.VarChar, vendor.vendorName);
     request.input('Address1', sql.VarChar, vendor.billingAddress.address1);
     request.input('Address2', sql.VarChar, vendor.billingAddress.address2);
     request.input('City', sql.VarChar, vendor.billingAddress.city);
@@ -817,8 +817,8 @@ app.put('/vendors/:id', async (req, res) => {
     request.input('PrimaryContactName', sql.VarChar, vendor.primaryContact.name);
     request.input('PrimaryContactPhone', sql.VarChar, vendor.primaryContact.phone);
     request.input('PrimaryContactEmail', sql.VarChar, vendor.primaryContact.email);
-    request.input('Status', sql.VarChar, vendor.active);
-    request.input('VendorNote', sql.VarChar, vendor.vendorNote);
+    request.input('Status', sql.VarChar, vendor.status);
+    request.input('StatusNote', sql.VarChar, vendor.statusNote);
     request.input('ModifiedBy', sql.VarChar, 'admin');
 
     await request.query(query);

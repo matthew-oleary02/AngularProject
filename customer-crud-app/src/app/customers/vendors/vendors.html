@@ -7,9 +7,11 @@
       placeholder="Search name, city, state, zip, contact..."
       (input)="onFilterChange($event.target.value)"
       [value]="filterText"
+      class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
     <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <!--
     <td>
       <input
         type="checkbox"
@@ -20,6 +22,7 @@
       />
       <label for="active">Active</label>
     </td>
+    -->
   </div>
 <table>
   <tr>
@@ -32,9 +35,7 @@
     <th>Status</th>
     <th>Created On</th>
     <th>Modified On</th>
-    <th> </th>
-    <th> </th>
-    <th> </th>
+    <th>Actions</th>
   </tr>
   <tr *ngFor="let v of vendors">
     <td>{{ v.vendorName }}</td>
@@ -46,9 +47,11 @@
     <td>{{ v.status }}</td>
     <td>{{ v.createdOn | date:'short' }}</td>
     <td>{{ v.modifiedOn | date:'short' }}</td>
-    <td><button type="button" class="btn btn-edit" [routerLink]="['/vendors/edit', v.rowId]">Edit</button></td>
-    <td><button type="button" class="btn btn-view" [routerLink]="['/vendors/view', v.rowId]">View</button></td>
-    <td><button type="button" class="btn btn-delete" (click)="onDelete(v.rowId)">Delete</button></td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/vendors/edit', v.rowId]">Edit</button>
+      <button type="button" class="btn btn-view" [routerLink]="['/vendors/view', v.rowId]">View</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(v.rowId)">Delete</button>
+    </td>
   </tr>
 </table>
 </div>

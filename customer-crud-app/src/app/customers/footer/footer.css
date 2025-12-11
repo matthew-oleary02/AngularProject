@@ -1,7 +1,29 @@
-body {
-  text-align: left;
-  background-color: var(--page-bg);
-  color: var(--text-dark);
+
+/* ======= FOOTER STYLING ======= */
+.app-footer {
+  background-color: var(--accent);
+  color: var(--text-light);
+  text-align: center;
+  padding: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Make footer text subtle but readable */
+.app-footer p {
   margin: 0;
-  padding: 0;
+  color: var(--text-light);
+}
+
+/* ======= RESPONSIVENESS ======= */
+@media (max-width: 768px) {
+  .app-footer {
+    font-size: 13px;
+    padding: 12px;
+  }
 }
