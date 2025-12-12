@@ -16,6 +16,7 @@ export interface Vendor {
     phone: string;
     email: string;
   };
+  vendorType: string;
   status: string;
   statusNote: string;
   createdBy?: string;

@@ -45,6 +45,7 @@ export class VendorsFormComponent implements OnInit {
         phone: [''],
         email: ['']
       }),
+      vendorType: [''],
       status: [''],
       statusNote: ['']
     });

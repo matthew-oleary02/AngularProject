@@ -297,18 +297,26 @@ app.post('/admin', authenticateToken, async (req, res) => {
       return res.status(400).json({ message: 'Password is required for new users' });
     }
 
+    // Map role string to roleId
+    const roleMap = { 'Admin': 1, 'Manager': 2, 'User': 3 };
+    const roleId = roleMap[admin.role];
+    if (!roleId) {
+      return res.status(400).json({ message: 'Invalid role. Must be Admin, Manager, or User' });
+    }
+
     const hashedPassword = await bcrypt.hash(admin.password, 10);
 
     const query = `
-      INSERT INTO Users (Username, PasswordHash, Email, Role, Active, CreatedOn)
-      VALUES (@Username, @PasswordHash, @Email, @Role, @Active, GETDATE())
+      INSERT INTO Users (Username, PasswordHash, Email, Role, RoleId, Active, CreatedOn)
+      VALUES (@Username, @PasswordHash, @Email, @Role, @RoleId, @Active, GETDATE())
     `;
 
     const request = new sql.Request();
     request.input('Username', sql.VarChar(100), admin.username);
-    request.input('PasswordHash', sql.VarChar(200), hashedPassword); // use computed hash
+    request.input('PasswordHash', sql.VarChar(200), hashedPassword);
     request.input('Email', sql.VarChar(200), admin.email);
     request.input('Role', sql.VarChar(50), admin.role);
+    request.input('RoleId', sql.Int, roleId);
     request.input('Active', sql.Bit, admin.active);
 
     await request.query(query);
@@ -331,6 +339,13 @@ app.put('/admin/:id', authenticateToken, async (req, res) => {
 
     await sql.connect(config);
 
+    // Map role string to roleId
+    const roleMap = { 'Admin': 1, 'Manager': 2, 'User': 3 };
+    const roleId = roleMap[admin.role];
+    if (!roleId) {
+      return res.status(400).json({ message: 'Invalid role. Must be Admin, Manager, or User' });
+    }
+
     // Optional password update
     let hashedPassword = null;
     if (admin.password && typeof admin.password === 'string' && admin.password.length > 0) {
@@ -343,6 +358,7 @@ app.put('/admin/:id', authenticateToken, async (req, res) => {
         Username = @Username,
         Email = @Email,
         Role = @Role,
+        RoleId = @RoleId,
         Active = @Active,
         ${hashedPassword ? 'PasswordHash = @PasswordHash,' : ''}
         ModifiedOn = GETDATE()
@@ -350,10 +366,11 @@ app.put('/admin/:id', authenticateToken, async (req, res) => {
     `;
 
     const request = new sql.Request();
-    request.input('Id', sql.Int, id); // use route param
+    request.input('Id', sql.Int, id);
     request.input('Username', sql.VarChar(100), admin.username);
     request.input('Email', sql.VarChar(200), admin.email);
     request.input('Role', sql.VarChar(50), admin.role);
+    request.input('RoleId', sql.Int, roleId);
     request.input('Active', sql.Bit, admin.active);
 
     if (hashedPassword) {
@@ -362,7 +379,6 @@ app.put('/admin/:id', authenticateToken, async (req, res) => {
 
     const result = await request.query(query);
 
-    // Optionally check rows affected
     if (result.rowsAffected && result.rowsAffected[0] === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -667,6 +683,7 @@ app.get('/vendors', async (req, res) => {
         phone: row.PrimaryContactPhone,
         email: row.PrimaryContactEmail
       },
+      vendorType: row.VendorType,
       status: row.Status,
       statusNote: row.StatusNote,
       createdBy: row.CreatedBy,
@@ -716,6 +733,7 @@ app.get('/vendors/:id', async (req, res) => {
         phone: row.PrimaryContactPhone,
         email: row.PrimaryContactEmail
       },
+      vendorType: row.VendorType,
       status: row.Status,
       statusNote: row.StatusNote,
       createdBy: row.CreatedBy,
@@ -741,11 +759,11 @@ app.post('/vendors', async (req, res) => {
       INSERT INTO Vendor (
         VendorName, Address1, Address2, City, State, Zip, County, Country, Email,
         PrimaryContactName, PrimaryContactPhone, PrimaryContactEmail,
-        Status, StatusNote, CreatedBy, CreatedOn
+        Status, StatusNote, VendorType, CreatedBy, CreatedOn
       ) VALUES (
         @VendorName, @Address1, @Address2, @City, @State, @Zip, @County, @Country, @Email,
         @PrimaryContactName, @PrimaryContactPhone, @PrimaryContactEmail,
-        @Status, @StatusNote, @CreatedBy, GETDATE()
+        @Status, @StatusNote, @VendorType, @CreatedBy, GETDATE()
       )
     `;
 
@@ -764,6 +782,7 @@ app.post('/vendors', async (req, res) => {
     request.input('PrimaryContactEmail', sql.VarChar, vendor.primaryContact.email);
     request.input('Status', sql.VarChar, vendor.status);
     request.input('StatusNote', sql.VarChar, vendor.statusNote);
+    request.input('VendorType', sql.VarChar, vendor.vendorType);
     request.input('CreatedBy', sql.VarChar, 'admin');
 
     await request.query(query);
@@ -798,6 +817,7 @@ app.put('/vendors/:id', async (req, res) => {
         PrimaryContactEmail = @PrimaryContactEmail,
         Status = @Status,
         StatusNote = @StatusNote,
+        VendorType = @VendorType,
         ModifiedBy = @ModifiedBy,
         ModifiedOn = GETDATE()
       WHERE RowID = @RowID
@@ -819,6 +839,7 @@ app.put('/vendors/:id', async (req, res) => {
     request.input('PrimaryContactEmail', sql.VarChar, vendor.primaryContact.email);
     request.input('Status', sql.VarChar, vendor.status);
     request.input('StatusNote', sql.VarChar, vendor.statusNote);
+    request.input('VendorType', sql.VarChar, vendor.vendorType);
     request.input('ModifiedBy', sql.VarChar, 'admin');
 
     await request.query(query);
@@ -863,6 +884,7 @@ app.delete('/vendors/:id', async (req, res) => {
         phone: row.PrimaryContactPhone,
         email: row.PrimaryContactEmail
       },
+      vendorType: row.VendorType,
       status: row.Status,
       statusNote: row.StatusNote,
       createdBy: row.CreatedBy,
@@ -1017,6 +1039,40 @@ app.delete('/offices/:id', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+/* ===========================
+    ACCOUNTING MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /purchase-orders (all purchase orders)
+app.get('/purchase-orders', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM PurchaseOrders');
+
+    const purchaseOrders = result.recordset.map(row => ({
+      rowId: parseInt(row.RowID, 10),
+      poNumber: row.PONumber,
+      total: row.Total,
+      customer: row.Customer,
+      vendor: row.Vendor,
+      employee: row.Employee,
+      description: row.Description,
+      cardType: row.CardType,
+      void: row.Void,
+      enteredBy: row.EnteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(purchaseOrders);
+  }
+  catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 
 /* Start the server */

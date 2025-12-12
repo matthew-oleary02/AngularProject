@@ -1,5 +1,6 @@
 
 import { Routes } from '@angular/router';
+import { POListComponent } from './purchaseOrder/purchase-order-list/purchase-order';
 import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';
 import { CustomerViewComponent } from './customers/customer-view/customer-view';
@@ -25,6 +26,7 @@ export const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'admin/new', component: AdminFormComponent, canActivate: [AuthGuard] },
   { path: 'admin/edit/:id', component: AdminFormComponent, canActivate: [AuthGuard] },
+  { path: 'purchase-orders', component: POListComponent, canActivate: [AuthGuard] },
   { path: 'customers', component: CustomerListComponent, canActivate: [AuthGuard] },
   { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/edit/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },

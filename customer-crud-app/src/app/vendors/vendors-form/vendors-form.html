@@ -56,6 +56,21 @@
     <fieldset class="fieldset-grid additional-info">
       <legend>Additional Information</legend>
 
+      <label for="vendorType" class="full-label">Vendor Type:</label>
+        <select id="vendorType" class="full-input" formControlName="vendorType">
+        <option value="" disabled selected>Select a vendor type</option>
+        <option value="Subcontractor">Subcontractor</option>
+        <option value="Supplier">Supplier</option>
+        <option value="Manager">Manager</option>
+        <option value="Union Subcontractor">Union Subcontractor</option>
+        <option value="Distributor">Project Vendor</option>
+      </select>
+      <!-- Validation message for vendor type -->
+      <div class="error" *ngIf="form.get('vendorType')?.invalid
+        && form.get('vendorType')?.touched">
+        Required
+      </div>
+
       <label for="status" class="full-label">Status:</label>
         <select id="status" class="full-input" formControlName="status">
         <option value="" disabled selected>Select a status</option>

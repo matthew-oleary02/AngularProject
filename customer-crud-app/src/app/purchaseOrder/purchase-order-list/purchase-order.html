@@ -1,0 +1,49 @@
+<!-- Purchase Order List HTML Template -->
+
+<h1> Purchase Order List</h1>
+  <!-- Toolbar with filter input and clear button 
+    <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+        <input
+        type="text"
+        placeholder="Search order number, customer, status..."
+        (input)="onFilterChange($event.target.value)"
+        [value]="filterText"
+        class="search-box"
+        style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+        />
+        <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    </div>
+    -->
+<table>
+  <tr>
+    <th>PO#</th>
+    <th>Total</th>
+    <th>Date Entered</th>
+    <th>Customer</th>
+    <th>Vendor</th>
+    <th>Employee</th>
+    <th>EnteredBy</th>
+    <th>Description</th>
+    <th>Card Type</th>
+    <th>Actions</th>
+    </tr>
+    <tr *ngFor="let po of purchaseOrders">
+      <td>{{ po.purchaseOrder.poNumber }}</td>
+      <td>{{ po.purchaseOrder.total | currency }}</td>
+      <td>{{ po.purchaseOrder.dateEntered | date:'short' }}</td>
+      <td>{{ po.purchaseOrder.customer }}</td>
+      <td>{{ po.purchaseOrder.vendor }}</td>
+      <td>{{ po.purchaseOrder.employee }}</td>
+      <td>{{ po.purchaseOrder.enteredBy }}</td>
+      <td>{{ po.purchaseOrder.description }}</td>
+      <td>{{ po.purchaseOrder.cardType }}</td>
+      <!--
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/purchase-orders/edit', po.rowId]">Edit</button>
+        <button type="button" class="btn btn-view" [routerLink]="['/purchase-orders/view', po.rowId]">View</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(po.rowId)">Delete</button>
+      </td>
+      -->
+    </tr>
+</table>
+<button type="button" [routerLink]="['/purchase-orders/new']" >Add New Purchase Order</button>

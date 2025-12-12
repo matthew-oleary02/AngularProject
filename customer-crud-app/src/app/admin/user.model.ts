@@ -8,5 +8,5 @@ export interface Users {
   roleId: number;        // maps to RoleId
   email: string;         // maps to Email
   active: boolean;       // maps to Active
-  modifiedOn?: Date;     // maps to ModifiedOn (optional)
+  modifiedOn?: Date;     // maps to ModifiedOn
 }

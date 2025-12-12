@@ -31,8 +31,10 @@
     <th>City</th>
     <th>State</th>
     <th>Zip</th>
-    <th>Country</th>
+    <th>Phone</th>
+    <th>Email</th>
     <th>Status</th>
+    <th>Vendor Type</th>
     <th>Created On</th>
     <th>Modified On</th>
     <th>Actions</th>
@@ -43,8 +45,10 @@
     <td>{{ v.billingAddress.city }} </td>
     <td>{{ v.billingAddress.state }}</td>
     <td>{{ v.billingAddress.zip }}</td>
-    <td>{{ v.billingAddress.country }}</td>
+    <td>{{ v.primaryContact.phone }}</td>
+    <td>{{ v.primaryContact.email }}</td>
     <td>{{ v.status }}</td>
+    <td>{{ v.vendorType }}</td>
     <td>{{ v.createdOn | date:'short' }}</td>
     <td>{{ v.modifiedOn | date:'short' }}</td>
     <td>

@@ -7,7 +7,7 @@
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
     <input
       type="text"
-      placeholder="Search name, city, state, zip, contact..."
+      placeholder="Search name, city, state, email, contact..."
       (input)="onFilterChange($event.target.value)"
       [value]="filterText"
       class="search-box"
@@ -28,26 +28,22 @@
 <table>
   <tr>
     <th>Name</th>
+    <th>Email</th>
     <th>Address 1</th>
+    <th>Address 2</th>
     <th>City</th>
     <th>State</th>
-    <th>Zip</th>
-    <th>Country</th>
     <th>Active</th>
-    <th>Created On</th>
-    <th>Modified On</th>
     <th>Actions</th>
   </tr>
   <tr *ngFor="let c of customers">
     <td>{{ c.customerName }}</td>
+    <td>{{ c.primaryContact.email }}</td>
     <td>{{ c.billingAddress.address1 }}</td>
+    <td>{{ c.billingAddress.address2 }}</td>
     <td>{{ c.billingAddress.city }} </td>
     <td>{{ c.billingAddress.state }}</td>
-    <td>{{ c.billingAddress.zip }}</td>
-    <td>{{ c.billingAddress.country }}</td>
     <td>{{ c.active ? 'Yes' : 'No' }}</td>
-    <td>{{ c.createdOn | date:'short' }}</td>
-    <td>{{ c.modifiedOn | date:'short' }}</td>
     <td>
       <button type="button" class="btn btn-edit" [routerLink]="['/customers/edit', c.rowId]">Edit</button>
       <button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>

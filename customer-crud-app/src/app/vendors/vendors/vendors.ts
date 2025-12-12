@@ -61,11 +61,10 @@ export class VendorListComponent implements OnInit {
         v.billingAddress?.city,
         v.billingAddress?.state,
         v.billingAddress?.zip,
-        v.billingAddress?.country,
-        v.primaryContact?.name,
         v.primaryContact?.phone,
         v.primaryContact?.email,
-        v.status
+        v.status,
+        v.vendorType
       ];
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
 

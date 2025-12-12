@@ -62,10 +62,6 @@ export class CustomerListComponent implements OnInit {
         c.billingAddress?.address2,
         c.billingAddress?.city,
         c.billingAddress?.state,
-        c.billingAddress?.zip,
-        c.billingAddress?.country,
-        c.primaryContact?.name,
-        c.primaryContact?.phone,
         c.primaryContact?.email,
         c.customerNote
       ];
