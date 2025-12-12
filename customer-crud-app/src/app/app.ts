@@ -3,8 +3,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent } from './customers/header/header';
-import { FooterComponent } from './customers/footer/footer';
+import { HeaderComponent } from './index/header/header';
+import { FooterComponent } from './index/footer/footer';
 
 @Component({
   selector: 'app-root',
