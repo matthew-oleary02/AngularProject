@@ -33,7 +33,6 @@
   <table class="office-table" aria-label="Offices table">
     <thead>
       <tr>
-        <th scope="col">ID</th>
         <th scope="col">Office Name</th>
         <th scope="col">Address1</th>
         <th scope="col">Address2</th>
@@ -47,8 +46,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let office of offices">
-        <td>{{ office.id }}</td>
-        <td>{{ office.name }}</td>
+        <td><a [routerLink]="['/offices/view', office.id]">{{ office.name }}</a></td>
         <td>{{ office.address1 }}</td>
         <td>{{ office.address2 }}</td>
         <td>{{ office.city }}</td>

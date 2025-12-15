@@ -1,0 +1,29 @@
+<h1>Office Details</h1>
+<div *ngIf="office; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ office.name || 'Office' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ office.id }}</div></div>
+
+    <div class="group-title">Location Info</div>
+    <div class="item"><div class="label">Address 1</div><div class="value">{{ office.address1 }}</div></div>
+    <div class="item"><div class="label">Address 2</div><div class="value">{{ office.address2 }}</div></div>
+    <div class="item"><div class="label">City</div><div class="value">{{ office.city }}</div></div>
+    <div class="item"><div class="label">State</div><div class="value">{{ office.state }}</div></div>
+    <div class="item"><div class="label">Zip</div><div class="value">{{ office.zip }}</div></div>
+    <div class="item"><div class="label">County</div><div class="value">{{ office.county }}</div></div>
+    <div class="item"><div class="label">Country</div><div class="value">{{ office.country }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Phone</div><div class="value">{{ office.phone }}</div></div>
+    <div class="item"><div class="label">Active</div><div class="value">{{ office.active ? 'Yes' : 'No' }}</div></div>
+  </div>
+  <button type="button" [routerLink]="['/offices']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Office not found.</p>
+    <button type="button" [routerLink]="['/offices']">Back</button>
+  </div>
+</ng-template>

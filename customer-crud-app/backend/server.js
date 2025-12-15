@@ -941,7 +941,7 @@ app.get('/offices/:id', async (req, res) => {
     }
     const row = result.recordset[0];
     const office = {
-      id: parseInt(row.Id, 10),
+      id: row.OfficeID,
       name: row.OfficeName,
       address1: row.Address1,
       address2: row.Address2,

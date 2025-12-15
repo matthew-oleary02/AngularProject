@@ -9,6 +9,7 @@ import { VendorsFormComponent } from './vendors/vendors-form/vendors-form';
 import { VendorsViewComponent } from './vendors/vendors-view/vendors-view';
 import { OfficesComponent } from './resources/resources/offices';
 import { OfficesFormComponent } from './resources/offices-form/offices-form';
+import { OfficesViewComponent } from './resources/offices-view/offices-view';
 import { LoginComponent } from './index/login/login';
 import { HomeComponent } from './index/home/home';
 import { ProfileComponent } from './profile/profile/profile';
@@ -38,4 +39,5 @@ export const routes: Routes = [
   { path : 'offices', component: OfficesComponent, canActivate: [AuthGuard] },
   { path : 'offices/new', component: OfficesFormComponent, canActivate: [AuthGuard] },
   { path : 'offices/edit/:id', component: OfficesFormComponent, canActivate: [AuthGuard] },
+  { path : 'offices/view/:id', component: OfficesViewComponent, canActivate: [AuthGuard] },
 ];

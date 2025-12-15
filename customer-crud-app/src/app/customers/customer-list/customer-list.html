@@ -37,7 +37,7 @@
     <th>Actions</th>
   </tr>
   <tr *ngFor="let c of customers">
-    <td>{{ c.customerName }}</td>
+    <td><a [routerLink]="['/customers/view', c.rowId]">{{ c.customerName }}</a></td>
     <td>{{ c.primaryContact.email }}</td>
     <td>{{ c.billingAddress.address1 }}</td>
     <td>{{ c.billingAddress.address2 }}</td>
@@ -46,7 +46,7 @@
     <td>{{ c.active ? 'Yes' : 'No' }}</td>
     <td>
       <button type="button" class="btn btn-edit" [routerLink]="['/customers/edit', c.rowId]">Edit</button>
-      <button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>
+      <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
       <button type="button" class="btn btn-delete" (click)="onDelete(c.rowId)">Delete</button>
     </td>
   </tr>
