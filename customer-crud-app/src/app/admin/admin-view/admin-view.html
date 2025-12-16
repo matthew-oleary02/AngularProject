@@ -1,0 +1,28 @@
+<h1>User Details</h1>
+<div *ngIf="user; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ user.username || 'Username' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ user.id }}</div></div>
+
+    <div class="group-title">Account</div>
+    <div class="item"><div class="label">First Name</div><div class="value">{{ user.firstName }}</div></div>
+    <div class="item"><div class="label">Last Name</div><div class="value">{{ user.lastName }}</div></div>
+    <div class="item"><div class="label">Role</div><div class="value">{{ user.role }}</div></div>
+    <div class="item"><div class="label">Email</div><div class="value">{{ user.email }}</div></div>
+    <div class="item"><div class="label">Password Hash</div><div class="value">{{ user.passwordHash }}</div></div>
+    
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Active</div><div class="value">{{ user.active ? 'Yes' : 'No' }}</div></div>
+    <div class="item"><div class="label">Created On</div><div class="value">{{ user.createdOn | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ user.modifiedOn | date:'short' }}</div></div>
+  </div>
+  <button type="button" [routerLink]="['/admin']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>User not found.</p>
+    <button type="button" [routerLink]="['/admin']">Back</button>
+  </div>
+</ng-template>

@@ -1,54 +1,55 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserService } from '../user.service';
+import { PurchaseOrderService } from '../purchase-order.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Users } from '../user.model';
+import { PurchaseOrder } from '../purchase-order.model';
 
 @Component({
-  selector: 'app-admin-form',
+  selector: 'app-po-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './admin-form.html',
-  styleUrls: ['./admin-form.css']
+  templateUrl: './purchase-order-form.html',
+  styleUrls: ['./purchase-order-form.css']
 })
-export class AdminFormComponent implements OnInit {
+export class POFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
-  userId!: number;
+  poId!: number;
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService,
+    private poService: PurchaseOrderService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
-  /* Initialize the form and load customer data if editing */
+  /* Initialize the form and load PO data if editing */
   ngOnInit() {
     this.form = this.fb.group({
-        username: ['', Validators.required],
-        firstName: [''],
-        lastName: [''],
-        email: [''],
-        password: ['', Validators.required],
-        role: ['', Validators.required],
-        active: [true],
+        poNumber: ['', Validators.required],
+        total: ['', [Validators.required, Validators.min(0)]],
+        customer: ['', Validators.required],
+        vendor: ['', Validators.required],
+        employee: ['', Validators.required],
+        description: [''],
+        cardType: ['', Validators.required],
+        void: [false],
     });
 
     /* Check if we are in edit mode based on route parameters */
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      this.userId = Number(idParam);
-      if (Number.isFinite(this.userId) && this.userId > 0) {
+      this.poId = Number(idParam);
+      if (Number.isFinite(this.poId) && this.poId > 0) {
         this.isEdit = true;
       }
     }
 
-    /* If editing, load the customer data into the form */
+    /* If editing, load the PO data into the form */
     if (this.isEdit) {
-      this.userService.getUser(this.userId).subscribe(c => {
-        if (c) this.form.patchValue(c);
+      this.poService.getPO(this.poId).subscribe(po => {
+        if (po) this.form.patchValue(po);
       });
       /* Make password optional for edit mode */
       this.form.get('password')?.setValidators([]);
@@ -65,22 +66,22 @@ export class AdminFormComponent implements OnInit {
       return;
     }
 
-    const user: Users = {
-      id: this.userId || 0,
+    const po: PurchaseOrder = {
+      id: this.poId || 0,
       ...this.form.value
     };
 
     const request = this.isEdit
-      ? this.userService.updateUser(user)
-      : this.userService.addUser(user);
+      ? this.poService.updatePO(po)
+      : this.poService.addPO(po);
 
-    /* Execute the appropriate request and navigate back to the customer list on success */
+    /* Execute the appropriate request and navigate back to the PO list on success */
     request.subscribe({
       next: () => {
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/purchase-orders']);
       },
       error: err => {
-        console.error('Error saving user:', err);
+        console.error('Error saving PO:', err);
       }
     });
   }

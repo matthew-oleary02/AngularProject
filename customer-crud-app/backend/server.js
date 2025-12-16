@@ -256,7 +256,7 @@ app.get('/admin/:id', authenticateToken, async (req, res) => {
         await sql.connect(config);
         const request = new sql.Request();
         request.input('Id', sql.Int, id);
-        const result = await request.query('SELECT Id, Username, PasswordHash, Role, CreatedOn, RoleId, Email, Active, ModifiedOn FROM Users WHERE Id = @Id');
+        const result = await request.query('SELECT Id, Username, FirstName, LastName, PasswordHash, Role, CreatedOn, RoleId, Email, Active, ModifiedOn FROM Users WHERE Id = @Id');
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ message: 'User not found' });
@@ -265,6 +265,8 @@ app.get('/admin/:id', authenticateToken, async (req, res) => {
         const user = {
             id: row.Id,
             username: row.Username,
+            firstName: row.FirstName,
+            lastName: row.LastName,
             passwordHash: row.PasswordHash,
             role: row.Role,
             createdOn: row.CreatedOn,
@@ -307,12 +309,14 @@ app.post('/admin', authenticateToken, async (req, res) => {
     const hashedPassword = await bcrypt.hash(admin.password, 10);
 
     const query = `
-      INSERT INTO Users (Username, PasswordHash, Email, Role, RoleId, Active, CreatedOn)
+      INSERT INTO Users (Username, FirstName, LastName, PasswordHash, Email, Role, RoleId, Active, CreatedOn)
       VALUES (@Username, @PasswordHash, @Email, @Role, @RoleId, @Active, GETDATE())
     `;
 
     const request = new sql.Request();
     request.input('Username', sql.VarChar(100), admin.username);
+    request.input('FirstName', sql.VarChar(100), admin.firstName);
+    request.input('LastName', sql.VarChar(100), admin.lastName);
     request.input('PasswordHash', sql.VarChar(200), hashedPassword);
     request.input('Email', sql.VarChar(200), admin.email);
     request.input('Role', sql.VarChar(50), admin.role);
@@ -356,6 +360,8 @@ app.put('/admin/:id', authenticateToken, async (req, res) => {
     const query = `
       UPDATE Users SET
         Username = @Username,
+        FirstName = @FirstName,
+        LastName = @LastName,
         Email = @Email,
         Role = @Role,
         RoleId = @RoleId,
@@ -368,6 +374,8 @@ app.put('/admin/:id', authenticateToken, async (req, res) => {
     const request = new sql.Request();
     request.input('Id', sql.Int, id);
     request.input('Username', sql.VarChar(100), admin.username);
+    request.input('FirstName', sql.VarChar(100), admin.firstName);
+    request.input('LastName', sql.VarChar(100), admin.lastName);
     request.input('Email', sql.VarChar(200), admin.email);
     request.input('Role', sql.VarChar(50), admin.role);
     request.input('RoleId', sql.Int, roleId);

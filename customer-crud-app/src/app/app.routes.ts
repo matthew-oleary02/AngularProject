@@ -1,6 +1,7 @@
 
 import { Routes } from '@angular/router';
 import { POListComponent } from './purchaseOrder/purchase-order-list/purchase-order';
+import { POFormComponent } from './purchaseOrder/purchase-order-form/purchase-order-form';
 import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';
 import { CustomerViewComponent } from './customers/customer-view/customer-view';
@@ -16,6 +17,7 @@ import { ProfileComponent } from './profile/profile/profile';
 import { ProfileFormComponent } from './profile/profile-form/profile-form';
 import { AdminComponent } from './admin/admin/admin';
 import { AdminFormComponent } from './admin/admin-form/admin-form';
+import { AdminViewComponent } from './admin/admin-view/admin-view';
 import { AuthGuard } from './core/auth-guard';
 
 export const routes: Routes = [
@@ -27,7 +29,10 @@ export const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'admin/new', component: AdminFormComponent, canActivate: [AuthGuard] },
   { path: 'admin/edit/:id', component: AdminFormComponent, canActivate: [AuthGuard] },
+  { path: 'admin/view/:id', component: AdminViewComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders', component: POListComponent, canActivate: [AuthGuard] },
+  { path: 'purchase-orders/new', component: POFormComponent, canActivate: [AuthGuard] },
+  { path: 'purchase-orders/edit/:id', component: POFormComponent, canActivate: [AuthGuard] },
   { path: 'customers', component: CustomerListComponent, canActivate: [AuthGuard] },
   { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/edit/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },

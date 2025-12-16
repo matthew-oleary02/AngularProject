@@ -1,0 +1,32 @@
+<h1>{{ isEdit ? 'Edit Purchase Order' : 'Add New Purchase Order' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="total" class="full-label">Total:</label>
+    <input id="total" class="full-input" formControlName="total" type="number" step="0.01" />
+    <!-- Validation message for total -->
+    <div class="error" *ngIf="form.get('total')?.invalid && form.get('total')?.touched">
+      Required
+    </div>
+
+    <label for ="customer" class="full-label">Customer:</label>
+    <input id="customer" class="full-input" formControlName="customer" type="text" />
+    
+    <label for ="vendor" class="full-label">Vendor:</label>
+    <input id="vendor" class="full-input" formControlName="vendor" type="text" />
+
+    <label for ="employee" class="full-label">Employee:</label>
+    <input id="employee" class="full-input" formControlName="employee" type="text" />
+
+    <label for ="description" class="full-label">Description:</label>
+    <input id="description" class="full-input" formControlName="description" type="text" />
+
+    <label for ="cardType" class="full-label">Card Type:</label>
+    <input id="cardType" class="full-input" formControlName="cardType" type="text" />
+
+    <div class="form-actions">
+        <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
+        <td><button type="button" class="btn-cancel"[routerLink]="['/purchase-orders']">Cancel</button></td>
+    </div>
+</form>
