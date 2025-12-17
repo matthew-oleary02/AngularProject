@@ -2,6 +2,7 @@
 import { Routes } from '@angular/router';
 import { POListComponent } from './purchaseOrder/purchase-order-list/purchase-order';
 import { POFormComponent } from './purchaseOrder/purchase-order-form/purchase-order-form';
+import { POViewComponent } from './purchaseOrder/purchase-order-view/purchase-order-view';
 import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';
 import { CustomerViewComponent } from './customers/customer-view/customer-view';
@@ -33,6 +34,7 @@ export const routes: Routes = [
   { path: 'purchase-orders', component: POListComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders/new', component: POFormComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders/edit/:id', component: POFormComponent, canActivate: [AuthGuard] },
+  { path: 'purchase-orders/view/:id', component: POViewComponent, canActivate: [AuthGuard] },
   { path: 'customers', component: CustomerListComponent, canActivate: [AuthGuard] },
   { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/edit/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },

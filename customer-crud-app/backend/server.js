@@ -1081,6 +1081,41 @@ app.get('/purchase-orders', async (req, res) => {
   }
 });
 
+//GET /purchase-orders/:id (single purchase order by ID)
+app.get('/purchase-orders/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM PurchaseOrders WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Purchase order not found' });
+    }
+    const row = result.recordset[0];
+    const purchaseOrder = {
+      rowId: parseInt(row.RowID, 10),
+      poNumber: row.PONumber,
+      total: row.Total,
+      customer: row.Customer,
+      vendor: row.Vendor,
+      employee: row.Employee,
+      description: row.Description,
+      cardType: row.CardType,
+      void: row.Void,
+      enteredBy: row.EnteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(purchaseOrder);
+  } catch (err) {
+    console.error('Error fetching purchase order:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+//POST /purchase-orders (add new purchase order)
 
 
 /* Start the server */

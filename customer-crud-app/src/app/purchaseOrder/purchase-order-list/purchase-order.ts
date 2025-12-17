@@ -22,15 +22,19 @@ export class POListComponent implements OnInit {
     constructor(private purchaseOrderService: PurchaseOrderService) {}
 
     /* Load all purchase orders on component initialization */
-    ngOnInit() {
-        this.purchaseOrderService.getPOs().subscribe({
-        next: po => {
-            this.allPurchaseOrders = po || [];
-            this.applyFilters();
-        },
-        error: err => console.error('Error fetching purchase orders:', err)
-        });
-    }
+ngOnInit() {
+  this.purchaseOrderService.getPOs().subscribe({
+    next: pos => {
+      // normalize: if items are nested, unwrap; if flat, keep as is
+      this.allPurchaseOrders = (pos ?? []).map((po: any) =>
+        po?.purchaseOrder ? po.purchaseOrder : po
+      );
+      this.applyFilters();
+    },
+    error: err => console.error('Error fetching purchase orders:', err)
+  });
+}
+
     /* Filter purchase orders based on user input */
     onFilterChange(query: string) {
         this.filterText = query || '';
@@ -45,29 +49,33 @@ export class POListComponent implements OnInit {
     }
 
     /* Central filter logic: text + active toggle */
-    private applyFilters() {
-        const q = this.filterText.toLowerCase().trim();
-        this.purchaseOrders = this.allPurchaseOrders.filter(po => {
-        // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
-        //const matchesActive = this.activeFilter === null ? true : (po.active === this.activeFilter);
-        // text search across multiple fields
-        const fields = [
-            po.purchaseOrder.poNumber,
-            po.purchaseOrder.total,
-            po.purchaseOrder.customer,
-            po.purchaseOrder.vendor,
-            po.purchaseOrder.employee,
-            po.purchaseOrder.enteredBy,
-            po.purchaseOrder.description,
-            po.purchaseOrder.cardType,
-            po.purchaseOrder.void,
-            po.purchaseOrder.enteredBy,
-            po.purchaseOrder.dateEntered,
-            po.purchaseOrder.modifiedBy,
-            po.purchaseOrder.modifiedOn
-        ];
-        const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
-        return matchesQuery;
-        });
-    }
+    
+private applyFilters() {
+  const q = this.filterText.toLowerCase().trim();
+  this.purchaseOrders = (this.allPurchaseOrders ?? []).filter(p => {
+    const fields = [
+      p?.poNumber, p?.total, p?.customer, p?.vendor, p?.employee,
+      p?.description, p?.cardType, p?.enteredBy,
+      p?.dateEntered, p?.modifiedBy, p?.modifiedOn,
+      p?.void !== undefined ? String(p.void) : undefined
+    ];
+    return !q || fields.some(f => f && String(f).toLowerCase().includes(q));
+  });
+}
+
+/* Delete a PO after confirmation */
+  onDelete(id: number) {
+    if (!Number.isFinite(id) || id <= 0) return;
+    if (!confirm(`Delete PO #${id}?`)) return;
+
+    this.purchaseOrderService.deletePO(id).subscribe({
+      next: () => {
+        this.purchaseOrders = this.purchaseOrders.filter(po => po.rowId !== id);
+      },
+      error: (err) => {
+        console.error('Error deleting PO:', err)
+        alert('Failed to delete PO. Please try again.');
+      }
+    });
+  }
 }

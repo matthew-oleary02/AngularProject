@@ -28,22 +28,20 @@
     <th>Actions</th>
     </tr>
     <tr *ngFor="let po of purchaseOrders">
-      <td>{{ po.purchaseOrder.poNumber }}</td>
-      <td>{{ po.purchaseOrder.total | currency }}</td>
-      <td>{{ po.purchaseOrder.dateEntered | date:'short' }}</td>
-      <td>{{ po.purchaseOrder.customer }}</td>
-      <td>{{ po.purchaseOrder.vendor }}</td>
-      <td>{{ po.purchaseOrder.employee }}</td>
-      <td>{{ po.purchaseOrder.enteredBy }}</td>
-      <td>{{ po.purchaseOrder.description }}</td>
-      <td>{{ po.purchaseOrder.cardType }}</td>
-      <!--
+      <td><a [routerLink]="['/purchase-orders/view', po.rowId]">{{ po.poNumber }}</a></td>
+      <td>{{ po.total | currency }}</td>
+      <td>{{ po.dateEntered | date:'short' }}</td>
+      <td>{{ po.customer }}</td>
+      <td>{{ po.vendor }}</td>
+      <td>{{ po.employee }}</td>
+      <td>{{ po.enteredBy }}</td>
+      <td>{{ po.description }}</td>
+      <td>{{ po.cardType }}</td>
       <td>
         <button type="button" class="btn btn-edit" [routerLink]="['/purchase-orders/edit', po.rowId]">Edit</button>
-        <button type="button" class="btn btn-view" [routerLink]="['/purchase-orders/view', po.rowId]">View</button>
+        <!--<button type="button" class="btn btn-view" [routerLink]="['/purchase-orders/view', po.rowId]">View</button>-->
         <button type="button" class="btn btn-delete" (click)="onDelete(po.rowId)">Delete</button>
       </td>
-      -->
     </tr>
 </table>
 <button type="button" [routerLink]="['/purchase-orders/new']" >Add New Purchase Order</button>

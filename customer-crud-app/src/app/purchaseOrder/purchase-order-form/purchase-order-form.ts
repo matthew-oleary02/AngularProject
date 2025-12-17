@@ -51,9 +51,6 @@ export class POFormComponent implements OnInit {
       this.poService.getPO(this.poId).subscribe(po => {
         if (po) this.form.patchValue(po);
       });
-      /* Make password optional for edit mode */
-      this.form.get('password')?.setValidators([]);
-      this.form.get('password')?.updateValueAndValidity();
     }
   }
 

@@ -1,0 +1,31 @@
+<h1>PO Details</h1>
+<div *ngIf="po; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ po.poNumber || 'PO#' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ po.rowId }}</div></div>
+
+    <div class="group-title">PO Info</div>
+    <div class="item"><div class="label">Total</div><div class="value">{{ po.total | currency }}</div></div>
+    <div class="item"><div class="label">Customer</div><div class="value">{{ po.customer }}</div></div>
+    <div class="item"><div class="label">Vendor</div><div class="value">{{ po.vendor }}</div></div>
+    <div class="item"><div class="label">Employee</div><div class="value">{{ po.employee }}</div></div>
+    <div class="item"><div class="label">Card Type</div><div class="value">{{ po.cardType }}</div></div>
+    <div class="item"><div class="label">Void?</div><div class="value">{{ po.void ? 'Yes' : 'No' }}</div></div>
+    <div class="item"><div class="label">Description</div><div class="value">{{ po.description }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Created By</div><div class="value">{{ po.enteredBy }}</div></div>
+    <div class="item"><div class="label">Date Entered</div><div class="value">{{ po.dateEntered | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ po.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ po.modifiedOn | date:'short' }}</div></div>
+  </div>
+  <button type="button" [routerLink]="['/purchase-orders']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>PO not found.</p>
+    <button type="button" [routerLink]="['/purchase-orders']">Back</button>
+  </div>
+</ng-template>
