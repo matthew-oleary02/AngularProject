@@ -3,6 +3,13 @@
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="submit()">
 
+    <label for="poNumber" class="full-label">PO Number:</label>
+    <input id="poNumber" class="full-input" formControlName="poNumber" type="text" />
+    <!-- Validation message for PO number -->
+    <div class="error" *ngIf="form.get('poNumber')?.invalid && form.get('poNumber')?.touched">
+      Required
+    </div>
+
     <label for="total" class="full-label">Total:</label>
     <input id="total" class="full-input" formControlName="total" type="number" step="0.01" />
     <!-- Validation message for total -->
@@ -24,6 +31,11 @@
 
     <label for ="cardType" class="full-label">Card Type:</label>
     <input id="cardType" class="full-input" formControlName="cardType" type="text" />
+
+    <label for="void" class="full-label">
+      <input id="void" type="checkbox" formControlName="void" />
+      Void?
+    </label>
 
     <div class="form-actions">
         <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>

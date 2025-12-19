@@ -64,7 +64,7 @@ export class POFormComponent implements OnInit {
     }
 
     const po: PurchaseOrder = {
-      id: this.poId || 0,
+      rowId: this.poId || 0,
       ...this.form.value
     };
 

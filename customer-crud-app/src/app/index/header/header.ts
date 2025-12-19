@@ -10,6 +10,8 @@ import { RouterModule, Router } from '@angular/router';
   styleUrls: ['./header.css']
 })
 export class HeaderComponent {
+  showSubButtons: boolean = false; // Add this property
+
   constructor(private router: Router) {}
 
   isLoggedIn(): boolean {
@@ -48,4 +50,23 @@ export class HeaderComponent {
       return false;
     }
 }
+
+  /*
+  toggleDropdown(event: Event): void {
+    event.preventDefault();
+    const dropdown = document.querySelector('.dropdown-content');
+    if (dropdown) {
+      dropdown.classList.toggle('show');
+    }
+  }
+
+  toggleSubButtons() {
+    this.showSubButtons = !this.showSubButtons; // Add this method
+  }
+
+  get dropdownOpen(): boolean {
+    const dropdown = document.querySelector('.dropdown-content');
+    return dropdown ? dropdown.classList.contains('show') : false;
+  }
+  */
 }

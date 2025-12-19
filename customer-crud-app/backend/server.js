@@ -1116,6 +1116,92 @@ app.get('/purchase-orders/:id', async (req, res) => {
 });
 
 //POST /purchase-orders (add new purchase order)
+app.post('/purchase-orders', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const purchaseOrder = req.body;
+    const query = `
+      INSERT INTO PurchaseOrders (
+        PONumber, Total, Customer, Vendor, Employee, Description,
+        CardType, Void, EnteredBy, DateEntered
+      ) VALUES (
+        @PONumber, @Total, @Customer, @Vendor, @Employee, @Description,
+        @CardType, @Void, @EnteredBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('PONumber', sql.VarChar, purchaseOrder.poNumber);
+    request.input('Total', sql.Decimal(18, 2), purchaseOrder.total);
+    request.input('Customer', sql.VarChar, purchaseOrder.customer);
+    request.input('Vendor', sql.VarChar, purchaseOrder.vendor);
+    request.input('Employee', sql.VarChar, purchaseOrder.employee);
+    request.input('Description', sql.VarChar, purchaseOrder.description);
+    request.input('CardType', sql.VarChar, purchaseOrder.cardType);
+    request.input('Void', sql.Bit, purchaseOrder.void);
+    request.input('EnteredBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Purchase order added successfully' });
+  }
+  catch (err) {
+    console.error('Error adding purchase order:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /purchase-orders/:id (update existing purchase order)
+app.put('/purchase-orders/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const purchaseOrder = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE PurchaseOrders SET
+        PONumber = @PONumber,
+        Total = @Total,
+        Customer = @Customer,
+        Vendor = @Vendor,
+        Employee = @Employee,
+        Description = @Description,
+        CardType = @CardType,
+        Void = @Void,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('PONumber', sql.VarChar, purchaseOrder.poNumber);
+    request.input('Total', sql.Decimal(18, 2), purchaseOrder.total);
+    request.input('Customer', sql.VarChar, purchaseOrder.customer);
+    request.input('Vendor', sql.VarChar, purchaseOrder.vendor);
+    request.input('Employee', sql.VarChar, purchaseOrder.employee);
+    request.input('Description', sql.VarChar, purchaseOrder.description);
+    request.input('CardType', sql.VarChar, purchaseOrder.cardType);
+    request.input('Void', sql.Bit, purchaseOrder.void);
+    request.input('ModifiedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.status(200).json({ message: 'Purchase order updated successfully' });
+  } catch (err) {
+    console.error('Error updating purchase order:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /purchase-orders/:id (delete purchase order)
+app.delete('/purchase-orders/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM PurchaseOrders WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting purchase order:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 
 /* Start the server */
