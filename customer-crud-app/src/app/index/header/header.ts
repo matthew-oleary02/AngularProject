@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -9,10 +11,22 @@ import { RouterModule, Router } from '@angular/router';
   templateUrl: './header.html',
   styleUrls: ['./header.css']
 })
-export class HeaderComponent {
-  showSubButtons: boolean = false; // Add this property
+export class HeaderComponent implements OnDestroy {
+  showAdminMenu = false;
+  private navSub?: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    // Close dropdown on any successful navigation
+    this.navSub = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.showAdminMenu = false;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.navSub?.unsubscribe();
+  }
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
@@ -28,16 +42,16 @@ export class HeaderComponent {
   }
 
   isAdmin(): boolean {
-  const token = localStorage.getItem('token');
-  if (!token) return false;
+    const token = localStorage.getItem('token');
+    if (!token) return false;
 
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT
-    return payload.role === 'Admin';
-  } catch {
-    return false;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT
+      return payload.role === 'Admin';
+    } catch {
+      return false;
+    }
   }
-}
 
   isManager(): boolean {
     const token = localStorage.getItem('token');
@@ -49,7 +63,28 @@ export class HeaderComponent {
     } catch {
       return false;
     }
+  }
+
+  // Dropdown controls
+  toggleAdminMenu(): void {
+    this.showAdminMenu = !this.showAdminMenu;
+  }
+
+  closeAdminMenu(): void {
+    this.showAdminMenu = false;
+  }
+
+  // Close when clicking anywhere outside the dropdown
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(evt: MouseEvent): void {
+    const target = evt.target as HTMLElement;
+    // If the click is not inside the dropdown container, close it
+    if (!target.closest('.nav-dropdown')) {
+      this.showAdminMenu = false;
+    }
+  }
 }
+
 
   /*
   toggleDropdown(event: Event): void {
@@ -69,4 +104,3 @@ export class HeaderComponent {
     return dropdown ? dropdown.classList.contains('show') : false;
   }
   */
-}

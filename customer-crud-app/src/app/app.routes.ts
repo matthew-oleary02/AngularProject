@@ -19,6 +19,9 @@ import { ProfileFormComponent } from './profile/profile-form/profile-form';
 import { AdminComponent } from './admin/admin/admin';
 import { AdminFormComponent } from './admin/admin-form/admin-form';
 import { AdminViewComponent } from './admin/admin-view/admin-view';
+import { RolesComponent } from './admin/roles/roles';
+import { RolesFormComponent } from './admin/roles-form/roles-form';
+import { RolesViewComponent } from './admin/roles-view/roles-view';
 import { AuthGuard } from './core/auth-guard';
 
 export const routes: Routes = [
@@ -31,6 +34,10 @@ export const routes: Routes = [
   { path: 'admin/new', component: AdminFormComponent, canActivate: [AuthGuard] },
   { path: 'admin/edit/:id', component: AdminFormComponent, canActivate: [AuthGuard] },
   { path: 'admin/view/:id', component: AdminViewComponent, canActivate: [AuthGuard] },
+  { path: 'roles', component: RolesComponent, canActivate: [AuthGuard] },
+  { path: 'roles/new', component: RolesFormComponent, canActivate: [AuthGuard] },
+  { path: 'roles/edit/:id', component: RolesFormComponent, canActivate: [AuthGuard] },
+  { path: 'roles/view/:id', component: RolesViewComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders', component: POListComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders/new', component: POFormComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders/edit/:id', component: POFormComponent, canActivate: [AuthGuard] },

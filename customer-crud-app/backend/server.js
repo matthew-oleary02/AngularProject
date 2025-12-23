@@ -418,6 +418,132 @@ app.delete('/admin/:id', authenticateToken, async (req, res) => {
 });
 
 /* ===========================
+    ROLE MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /roles (all roles)
+app.get('/roles', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM Roles');
+
+    const roles = result.recordset.map(row => ({
+      roleId: row.RoleID,
+      roleName: row.RoleName,
+      roleDescription: row.RoleDescription,
+    }));
+
+    res.json(roles);
+
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /roles/:id (single role by ID)
+app.get('/roles/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RoleID', sql.Int, id);
+    const result = await request.query('SELECT * FROM Roles WHERE RoleID = @RoleID');
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Role not found' });
+    }
+
+    const row = result.recordset[0];
+    const role = {
+      roleId: row.RoleID,
+      roleName: row.RoleName,
+      roleDescription: row.RoleDescription,
+    };
+
+    res.json(role);
+  } catch (err) {
+    console.error('Error fetching role:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /roles (add new role)
+app.post('/roles', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const role = req.body;
+
+    if (!role.roleName) {
+      return res.status(400).json({ message: 'Role name is required' });
+    }
+
+    const query = `
+      INSERT INTO Roles (RoleName, RoleDescription)
+      VALUES (@RoleName, @RoleDescription)
+    `;
+
+    const request = new sql.Request();
+    request.input('RoleName', sql.VarChar(100), role.roleName);
+    request.input('RoleDescription', sql.VarChar(500), role.roleDescription || '');
+
+    await request.query(query);
+    res.status(201).json({ message: 'Role added successfully' });
+  } catch (err) {
+    console.error('Error adding role:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /roles/:id (update existing role)
+app.put('/roles/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const role = req.body;
+
+    const query = `
+      UPDATE Roles SET
+        RoleName = @RoleName,
+        RoleDescription = @RoleDescription
+      WHERE RoleID = @RoleID
+    `;
+
+    const request = new sql.Request();
+    request.input('RoleID', sql.Int, id);
+    request.input('RoleName', sql.VarChar(100), role.roleName);
+    request.input('RoleDescription', sql.VarChar(500), role.roleDescription || '');
+
+    const result = await request.query(query);
+
+    if (result.rowsAffected && result.rowsAffected[0] === 0) {
+      return res.status(404).json({ message: 'Role not found' });
+    }
+
+    res.status(200).json({ message: 'Role updated successfully' });
+  } catch (err) {
+    console.error('Error updating role:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /roles/:id (delete role)
+app.delete('/roles/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RoleID', sql.Int, id);
+
+    await request.query('DELETE FROM Roles WHERE RoleID = @RoleID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting role:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
    CUSTOMER MANAGEMENT ENDPOINTS
 =========================== */
 

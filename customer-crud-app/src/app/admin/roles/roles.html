@@ -1,0 +1,25 @@
+<!-- roles.html -->
+
+<div class="roles-container">
+    <h1>Roles</h1>
+    <table class="roles-table">
+        <thead>
+            <tr>
+                <th>Role Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    <tbody>
+        <tr *ngFor="let role of roles">
+        <td><a [routerLink]="['/roles/view', role.roleId]">{{ role.roleName }}</a></td>
+        <td>{{ role.roleDescription }}</td>
+        <td>
+          <button class="btn-edit" [routerLink]="['/roles/edit', role.roleId]">Edit</button>
+          <button (click)="onDelete(role.roleId)" class="btn-delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<button class="add-new-btn" type="button" [routerLink]="['/roles/new']">Add New Role</button>

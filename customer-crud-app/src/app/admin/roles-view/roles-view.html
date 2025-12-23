@@ -1,0 +1,11 @@
+<!-- roles-view.html -->
+
+<div class="role-view-container">
+  <h1>Role Details</h1>
+  <div *ngIf="role">
+    <p><strong>Role Name:</strong> {{ role.roleName }}</p>
+    <p><strong>Description:</strong> {{ role.roleDescription }}</p>
+  </div>
+  <button [routerLink]="['/roles/edit', role?.roleId]">Edit</button>
+  <button [routerLink]="['/roles']">Back to List</button>
+</div>
