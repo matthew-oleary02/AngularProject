@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class HeaderComponent implements OnDestroy {
   showAdminMenu = false;
+  showCustomerMenu = false;
   private navSub?: Subscription;
 
   constructor(private router: Router) {
@@ -20,6 +21,7 @@ export class HeaderComponent implements OnDestroy {
     this.navSub = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showAdminMenu = false;
+        this.showCustomerMenu = false;
       }
     });
   }
@@ -65,13 +67,22 @@ export class HeaderComponent implements OnDestroy {
     }
   }
 
-  // Dropdown controls
+  // Dropdown controls for Admin Menu
   toggleAdminMenu(): void {
     this.showAdminMenu = !this.showAdminMenu;
   }
 
   closeAdminMenu(): void {
     this.showAdminMenu = false;
+  }
+
+   // Dropdown controls for Customer Menu
+  toggleCustomerMenu(): void {
+    this.showCustomerMenu = !this.showCustomerMenu;
+  }
+
+  closeCustomerMenu(): void {
+    this.showCustomerMenu = false;
   }
 
   // Close when clicking anywhere outside the dropdown
@@ -81,6 +92,7 @@ export class HeaderComponent implements OnDestroy {
     // If the click is not inside the dropdown container, close it
     if (!target.closest('.nav-dropdown')) {
       this.showAdminMenu = false;
+      this.showCustomerMenu = false;
     }
   }
 }
