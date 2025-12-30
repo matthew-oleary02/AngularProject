@@ -790,6 +790,49 @@ app.delete('/customers/:id', async (req, res) => {
 });
 
 /* ===========================
+   LOCATIONS MANAGEMENT ENDPOINTS
+=========================== */
+
+
+// GET /locations (all locations)
+app.get('/locations', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM Locations');
+
+    const locations = result.recordset.map(row => ({
+      rowId: parseInt(row.RowID, 10),
+      customer: row.Customer,
+      storeNumber: row.StoreNumber,
+      primaryContact: {
+        firstName: row.ContactFName,
+        lastName: row.ContactLName,
+        phone: row.PhoneNumber,
+        email: row.Email
+      },
+      address1: row.Address1,
+      address2: row.Address2,
+      city: row.City,
+      state: row.State,
+      zip: row.ZipCode,
+      county: row.County,
+      country: row.Country,
+      active: row.Active,
+      siteNote: row.siteNote,
+      enteredBy: row.enteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+
+    res.json(locations);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
     VENDOR MANAGEMENT ENDPOINTS
 =========================== */
 

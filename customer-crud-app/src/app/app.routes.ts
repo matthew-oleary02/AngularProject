@@ -6,6 +6,7 @@ import { POViewComponent } from './purchaseOrder/purchase-order-view/purchase-or
 import { CustomerListComponent } from './customers/customer-list/customer-list';
 import { CustomerFormComponent } from './customers/customer-form/customer-form';
 import { CustomerViewComponent } from './customers/customer-view/customer-view';
+import { LocationListComponent } from './customers/location-list/location-list';
 import { VendorListComponent } from './vendors/vendors/vendors';
 import { VendorsFormComponent } from './vendors/vendors-form/vendors-form';
 import { VendorsViewComponent } from './vendors/vendors-view/vendors-view';
@@ -46,6 +47,7 @@ export const routes: Routes = [
   { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/edit/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/view/:id', component: CustomerViewComponent, canActivate: [AuthGuard] },
+  { path: 'locations', component: LocationListComponent, canActivate: [AuthGuard]},
   { path: 'vendors', component: VendorListComponent, canActivate: [AuthGuard] },
   { path: 'vendors/new', component: VendorsFormComponent, canActivate: [AuthGuard] },
   { path: 'vendors/edit/:id', component: VendorsFormComponent, canActivate: [AuthGuard] },

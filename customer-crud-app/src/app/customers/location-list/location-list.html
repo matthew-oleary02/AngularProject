@@ -1,0 +1,56 @@
+<div class="card">
+  <h1>Location List</h1>
+  <!-- Toolbar with filter input and clear button -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search name, city, state, email, contact..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+  </div>
+<table>
+  <tr>
+    <th>Customer</th>
+    <th>Store#</th>
+    <th>Phone</th>
+    <th>Address1</th>
+    <th>City</th>
+    <th>State</th>
+    <th>Zip</th>
+    <th>Active</th>
+    <th>LastUpdate</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let loc of locations">
+    <td>{{ loc.customer }}</td>
+    <td><a [routerLink]="['/locations/view', loc.rowId]">{{ loc.storeNumber }}</a></td>
+    <td>{{ loc.primaryContact.phone }}</td>
+    <td>{{ loc.address1 }}</td>
+    <td>{{ loc.city }} </td>
+    <td>{{ loc.state }}</td>
+    <td>{{ loc.zip }}</td>
+    <td>{{ loc.active ? 'Yes' : 'No' }}</td>
+    <td>{{ loc.modifiedOn | date:'short' }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/locations/edit', loc.rowId]">Edit</button>
+      <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
+      <button type="button" class="btn btn-delete" (click)="onDelete(loc.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+<button type="button" [routerLink]="['/locations/new']" >Add New Location</button>
