@@ -57,11 +57,11 @@ export class LocationListComponent implements OnInit {
       const fields = [
         loc.customer,
         loc?.storeNumber,
-        loc?.address1,
-        loc?.address2,
-        loc?.city,
-        loc?.state,
-        loc?.zip,
+        loc.siteAddress?.address1,
+        loc.siteAddress?.address2,
+        loc.siteAddress?.city,
+        loc.siteAddress?.state,
+        loc.siteAddress?.zip,
         loc.primaryContact?.email,
         loc.primaryContact?.phone,
         loc.siteNote

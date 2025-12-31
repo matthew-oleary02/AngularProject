@@ -1,0 +1,40 @@
+<h1>Location Details</h1>
+<div *ngIf="location; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ location.storeNumber || 'Store Number' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ location.rowId }}</div></div>
+
+    <div class="group-title">Site Address</div>
+    <div class="item"><div class="label">Customer</div><div class="value">{{ location.customer }}</div></div>
+    <div class="item"><div class="label">Address 1</div><div class="value">{{ location.siteAddress.address1 }}</div></div>
+    <div class="item"><div class="label">Address 2</div><div class="value">{{ location.siteAddress.address2 }}</div></div>
+    <div class="item"><div class="label">City</div><div class="value">{{ location.siteAddress.city }}</div></div>
+    <div class="item"><div class="label">State</div><div class="value">{{ location.siteAddress.state }}</div></div>
+    <div class="item"><div class="label">Zip</div><div class="value">{{ location.siteAddress.zip }}</div></div>
+    <div class="item"><div class="label">County</div><div class="value">{{ location.siteAddress.county }}</div></div>
+    <div class="item"><div class="label">Country</div><div class="value">{{ location.siteAddress.country }}</div></div>
+
+    <div class="group-title">Primary Contact</div>
+    <div class="item"><div class="label">First Name</div><div class="value">{{ location.primaryContact.firstName }}</div></div>
+    <div class="item"><div class="label">Last Name</div><div class="value">{{ location.primaryContact.lastName }}</div></div>
+    <div class="item"><div class="label">Phone</div><div class="value">{{ location.primaryContact.phone }}</div></div>
+    <div class="item"><div class="label">Email</div><div class="value">{{ location.primaryContact.email }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Active</div><div class="value">{{ location.active ? 'Yes' : 'No' }}</div></div>
+    <div class="item"><div class="label">Site Note</div><div class="value">{{ location.siteNote }}</div></div>
+    <div class="item"><div class="label">Entered By</div><div class="value">{{ location.enteredBy }}</div></div>
+    <div class="item"><div class="label">Date Entered</div><div class="value">{{ location.dateEntered | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ location.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Last Update</div><div class="value">{{ location.modifiedOn | date:'short' }}</div></div>
+  </div>
+  <button type="button" [routerLink]="['/locations']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Location not found.</p>
+    <button type="button" [routerLink]="['/locations']">Back</button>
+  </div>
+</ng-template>

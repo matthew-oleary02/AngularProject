@@ -39,10 +39,10 @@
     <td>{{ loc.customer }}</td>
     <td><a [routerLink]="['/locations/view', loc.rowId]">{{ loc.storeNumber }}</a></td>
     <td>{{ loc.primaryContact.phone }}</td>
-    <td>{{ loc.address1 }}</td>
-    <td>{{ loc.city }} </td>
-    <td>{{ loc.state }}</td>
-    <td>{{ loc.zip }}</td>
+    <td>{{ loc.siteAddress.address1 }}</td>
+    <td>{{ loc.siteAddress.city }} </td>
+    <td>{{ loc.siteAddress.state }}</td>
+    <td>{{ loc.siteAddress.zip }}</td>
     <td>{{ loc.active ? 'Yes' : 'No' }}</td>
     <td>{{ loc.modifiedOn | date:'short' }}</td>
     <td>

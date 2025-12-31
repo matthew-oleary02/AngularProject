@@ -810,15 +810,17 @@ app.get('/locations', async (req, res) => {
         phone: row.PhoneNumber,
         email: row.Email
       },
-      address1: row.Address1,
-      address2: row.Address2,
-      city: row.City,
-      state: row.State,
-      zip: row.ZipCode,
-      county: row.County,
-      country: row.Country,
+      siteAddress: {
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zip: row.ZipCode,
+        county: row.County,
+        country: row.Country
+      },
       active: row.Active,
-      siteNote: row.siteNote,
+      siteNote: row.SiteNote,
       enteredBy: row.enteredBy,
       dateEntered: row.DateEntered,
       modifiedBy: row.ModifiedBy,
@@ -828,6 +830,163 @@ app.get('/locations', async (req, res) => {
     res.json(locations);
   } catch (err) {
     console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+// GET /locations/:id (single location by ID)
+app.get('/locations/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM Locations WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Location not found' });
+    }
+    const row = result.recordset[0];
+    const location = {
+      rowId: parseInt(row.RowID, 10),
+      customer: row.Customer,
+      storeNumber: row.StoreNumber,
+      primaryContact: {
+        firstName: row.ContactFName,
+        lastName: row.ContactLName,
+        phone: row.PhoneNumber,
+        email: row.Email
+      },
+      siteAddress: {
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zip: row.ZipCode,
+        county: row.County,
+        country: row.Country
+      },
+      active: row.Active,
+      siteNote: row.SiteNote,
+      enteredBy: row.enteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(location);
+  } catch (err) {
+    console.error('Error fetching location:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+// POST /locations (add new location)
+app.post('/locations', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const location = req.body;
+    const query = `
+      INSERT INTO Locations (
+        Customer, StoreNumber, ContactFName, ContactLName, PhoneNumber, Email,
+        Address1, Address2, City, State, ZipCode, County, Country,
+        Active, SiteNote, enteredBy, DateEntered
+      ) VALUES (
+        @Customer, @StoreNumber, @ContactFName, @ContactLName, @PhoneNumber, @Email,
+        @Address1, @Address2, @City, @State, @ZipCode, @County, @Country,
+        @Active, @SiteNote, @enteredBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, location.customer);
+    request.input('StoreNumber', sql.VarChar, location.storeNumber);
+    request.input('ContactFName', sql.VarChar, location.primaryContact.firstName);
+    request.input('ContactLName', sql.VarChar, location.primaryContact.lastName);
+    request.input('PhoneNumber', sql.VarChar, location.primaryContact.phone);
+    request.input('Email', sql.VarChar, location.primaryContact.email);
+    request.input('Address1', sql.VarChar, location.siteAddress.address1);
+    request.input('Address2', sql.VarChar, location.siteAddress.address2);
+    request.input('City', sql.VarChar, location.siteAddress.city);
+    request.input('State', sql.VarChar, location.siteAddress.state);
+    request.input('ZipCode', sql.VarChar, location.siteAddress.zip);
+    request.input('County', sql.VarChar, location.siteAddress.county);
+    request.input('Country', sql.VarChar, location.siteAddress.country);
+    request.input('Active', sql.Bit, location.active);
+    request.input('SiteNote', sql.VarChar, location.siteNote);
+    request.input('enteredBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Location added successfully' });
+  } catch (err) {
+    console.error('Error adding location:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /locations/:id (update existing location)
+app.put('/locations/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const location = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE Locations SET
+        Customer = @Customer,
+        StoreNumber = @StoreNumber,
+        ContactFName = @ContactFName,
+        ContactLName = @ContactLName,
+        PhoneNumber = @PhoneNumber,
+        Email = @Email,
+        Address1 = @Address1,
+        Address2 = @Address2,
+        City = @City,
+        State = @State,
+        ZipCode = @ZipCode,
+        County = @County,
+        Country = @Country,
+        Active = @Active,
+        SiteNote = @SiteNote,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, location.customer);
+    request.input('StoreNumber', sql.VarChar, location.storeNumber);
+    request.input('ContactFName', sql.VarChar, location.primaryContact.firstName);
+    request.input('ContactLName', sql.VarChar, location.primaryContact.lastName);
+    request.input('PhoneNumber', sql.VarChar, location.primaryContact.phone);
+    request.input('Email', sql.VarChar, location.primaryContact.email);
+    request.input('Address1', sql.VarChar, location.siteAddress.address1);
+    request.input('Address2', sql.VarChar, location.siteAddress.address2);
+    request.input('City', sql.VarChar, location.siteAddress.city);
+    request.input('State', sql.VarChar, location.siteAddress.state);
+    request.input('ZipCode', sql.VarChar, location.siteAddress.zip);
+    request.input('County', sql.VarChar, location.siteAddress.county);
+    request.input('Country', sql.VarChar, location.siteAddress.country);
+    request.input('Active', sql.Bit, location.active);
+    request.input('SiteNote', sql.VarChar, location.siteNote);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.status(200).json({ message: 'Location updated successfully' });
+  } catch (err) {
+    console.error('Error updating location:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /locations/:id (delete location)
+app.delete('/locations/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM Locations WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting location:', err);
     res.status(500).send('Server error');
   }
 });

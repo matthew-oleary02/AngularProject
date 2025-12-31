@@ -10,13 +10,15 @@ export interface Location {
     phone: string;
     email: string;
   };
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: string;
-  county: string;
-  country: string;
+  siteAddress: {
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zip: string;
+    county: string;
+    country: string;
+  };
   siteNote: string;
   active: boolean;
   enteredBy?: string;
