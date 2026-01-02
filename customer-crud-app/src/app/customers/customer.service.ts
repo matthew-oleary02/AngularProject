@@ -45,6 +45,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Customer } from './customer.model';
+import { Location } from './location.model'
 
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
@@ -70,6 +71,11 @@ addCustomer(customer: Customer): Observable<Customer> {
 /* Update an existing customer */
 updateCustomer(customer: Customer): Observable<Customer> {
   return this.http.put<Customer>(`${this.apiUrl}/${customer.rowId}`, customer);
+}
+
+/* Fetch location list per customer */
+getLocationList(customerId: number): Observable<Location[]> {
+  return this.http.get<Location[]>(`${this.apiUrl}/${customerId}/locations`);
 }
 
 /* Delete a customer by ID */

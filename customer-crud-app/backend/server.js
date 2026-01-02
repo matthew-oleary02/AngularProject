@@ -739,6 +739,87 @@ app.put('/customers/:id', async (req, res) => {
   }
 });
 
+
+// location list per customer
+app.get('/customers/:id/locations', async (req, res) => {
+  try {
+    // Validate and parse ID
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+
+    await sql.connect(config);
+
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+
+    // Fetch all locations for the given customer RowID via CustomerName match
+    const result = await request.query(`
+      SELECT
+        l.RowID,
+        l.Customer,
+        l.StoreNumber,
+        l.ContactFName,
+        l.ContactLName,
+        l.PhoneNumber,
+        l.Email,
+        l.Address1,
+        l.Address2,
+        l.City,
+        l.State,
+        l.ZipCode,
+        l.County,
+        l.Country,
+        l.Active,
+        l.SiteNote,
+        l.enteredBy,
+        l.DateEntered,
+        l.ModifiedBy,
+        l.ModifiedOn
+      FROM Locations l
+      INNER JOIN Customers c ON l.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+        -- Uncomment the next line if you only want active locations:
+        -- AND l.Active = 1
+      ORDER BY TRY_CAST(l.StoreNumber AS INT) ASC, l.StoreNumber ASC
+    `);
+
+    const locations = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      storeNumber: row.StoreNumber,
+      primaryContact: {
+        firstName: row.ContactFName,
+        lastName: row.ContactLName,
+        phone: row.PhoneNumber,
+        email: row.Email
+      },
+      siteAddress: {
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zip: row.ZipCode,
+        county: row.County,
+        country: row.Country
+      },
+      active: !!row.Active,
+      siteNote: row.SiteNote,
+      enteredBy: row.enteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+
+    res.json(locations);
+  } catch (err) {
+    console.error('Error fetching locations for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {
   try {
