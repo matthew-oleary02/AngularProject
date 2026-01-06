@@ -270,11 +270,20 @@ td button {
   border-color: rgba(0,0,0,0.08);
 }
 
+.btn-tab {
+  justify-content: center;
+  background-color: #4b5157;
+  border-color: rgba(0,0,0,0.08);
+  display: inline-block;
+  margin: 0 6px;
+}
+
 .btn-edit:hover { background-color: #2b5fbf; transform: translateY(-2px); }
 .btn-view:hover { background-color: #b78f00; transform: translateY(-2px); }
 .btn-delete:hover { background-color: #b30f2f; transform: translateY(-2px); }
 .btn-clear:hover { background-color: #6b6767; transform: translateY(-2px); }
 .btn-create:hover { background-color: #256d25; transform: translateY(-2px); }
+.btn-tab:hover { background-color: #3a3e42; transform: translateY(-2px); }
 
 td button:hover { transform: translateY(-1px); }
 
