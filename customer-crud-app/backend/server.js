@@ -819,6 +819,41 @@ app.get('/customers/:id/locations', async (req, res) => {
   }
 });
 
+// customer status messages per customer
+app.get('/customers/:id/status-messages', async (req, res) => {
+  try {
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+    const result = await request.query(`
+      SELECT csm.RowID, csm.Customer, csm.Status, csm.Message, csm.Active, csm.enteredBy, csm.DateEntered, csm.ModifiedBy, csm.ModifiedOn
+      FROM CustomerStatusMessages csm
+      INNER JOIN Customers c ON csm.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+      ORDER BY csm.DateEntered DESC
+    `);
+    const statusMessages = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      status: row.Status,
+      message: row.Message,
+      active: !!row.Active,
+      enteredBy: row.enteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(statusMessages);
+  } catch (err) {
+    console.error('Error fetching status messages for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {

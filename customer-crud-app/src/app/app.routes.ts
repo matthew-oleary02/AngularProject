@@ -54,6 +54,7 @@ export const routes: Routes = [
   { path: 'locations/view/:id', component: LocationViewComponent, canActivate: [AuthGuard]},
   { path: 'locations/new', component: LocationFormComponent, canActivate: [AuthGuard]},
   { path: 'locations/edit/:id', component: LocationFormComponent, canActivate: [AuthGuard]},
+  { path: 'customers/:id/status-messages', component: CustomerViewComponent, canActivate: [AuthGuard]},
   { path: 'vendors', component: VendorListComponent, canActivate: [AuthGuard] },
   { path: 'vendors/new', component: VendorsFormComponent, canActivate: [AuthGuard] },
   { path: 'vendors/edit/:id', component: VendorsFormComponent, canActivate: [AuthGuard] },

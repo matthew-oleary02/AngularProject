@@ -78,6 +78,11 @@ getLocationList(customerId: number): Observable<Location[]> {
   return this.http.get<Location[]>(`${this.apiUrl}/${customerId}/locations`);
 }
 
+/* Fetch status messages per customer */
+getStatusMessages(customerId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/status-messages`);
+}
+
 /* Delete a customer by ID */
 deleteCustomer(id: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/${id}`);

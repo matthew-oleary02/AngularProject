@@ -250,6 +250,7 @@ td button {
   background-color: forestgreen;
   border-color: rgba(0,0,0,0.08);
   justify-content: right;
+  margin-left: auto;
 }
 
 .btn-edit {
@@ -297,6 +298,10 @@ td button:hover { transform: translateY(-1px); }
 }
 .card::-webkit-scrollbar-thumb:hover {
   background: #a3aec2;
+}
+
+.tabs {
+  text-align: center;
 }
 
 .card + button {

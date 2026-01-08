@@ -32,22 +32,23 @@
     <div class="item"><div class="label">Modified On</div><div class="value">{{ customer.modifiedOn | date:'short' }}</div></div>
   </div>
   <button type="button" class="btn-clear" [routerLink]="['/customers']">Back</button>
+  <button type="button" class="btn-edit" [routerLink]="['/customers/edit', customer.rowId]">Edit</button>
 </div>
 
 <div class="tabs">
   <button 
     type="button" 
-    class="btn-tab" 
+    class="btn-tab"
     [class.active]="activeTab === 'sites'"
     (click)="activeTab = 'sites'">
     Sites
   </button>
-  <button 
+  <button
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'tab2'"
-    (click)="activeTab = 'tab2'">
-    Tab 2
+    [class.active]="activeTab === 'statusMessages'"
+    (click)="activeTab = 'statusMessages'">
+    Status Messages
   </button>
   <button 
     type="button" 
@@ -85,7 +86,6 @@
   </div>
 <table>
   <tr>
-    <th>Customer</th>
     <th>Store#</th>
     <th>Phone</th>
     <th>Address1</th>
@@ -97,7 +97,6 @@
     <th>Actions</th>
   </tr>
   <tr *ngFor="let loc of locations">
-    <td>{{ loc.customer }}</td>
     <td><a [routerLink]="['/locations/view', loc.rowId]">{{ loc.storeNumber }}</a></td>
     <td>{{ loc.primaryContact.phone }}</td>
     <td>{{ loc.siteAddress.address1 }}</td>
@@ -115,8 +114,50 @@
 </table>
 </div>
 
-<div *ngIf="activeTab === 'tab2'" class="card">
-  <p>Placeholder content for Tab 2</p>
+<div *ngIf="activeTab === 'statusMessages'" class="card">  <!-- Changed from activeTab2 -->
+  <h1>Status Messages</h1>
+  <!-- Toolbar with filter input and clear button -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+    <button type="button" class="btn-create" [routerLink]="['/status-messages/new']">Add New Message</button>
+  </div>
+<table>
+  <tr>
+    <th>Status</th>
+    <th>Message</th>
+    <th>Active</th>
+    <th>LastUpdate</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let csm of statusMessages">
+    <td>{{ csm.status }}</td>
+    <td>{{ csm.message }}</td>
+    <td>{{ csm.active ? 'Yes' : 'No' }}</td>
+    <td>{{ csm.modifiedOn | date:'short' }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/status-messages/edit', csm.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(csm.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
 </div>
 
 <div *ngIf="activeTab === 'tab3'" class="card">
