@@ -1108,6 +1108,138 @@ app.delete('/locations/:id', async (req, res) => {
 });
 
 /* ===========================
+    CUSTOMER STATUS MESSAGES ENDPOINTS
+=========================== */
+
+// GET /customer-status-messages (all status messages)
+app.get('/status-messages', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM CustomerStatusMessages');
+    const statusMessages = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      status: row.Status,
+      message: row.Message,
+      active: !!row.Active,
+      enteredBy: row.enteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(statusMessages);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /customer-status-messages/:id (single status message by ID)
+app.get('/status-messages/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM CustomerStatusMessages WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Status message not found' });
+    }
+    const row = result.recordset[0];
+    const statusMessage = {
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      status: row.Status,
+      message: row.Message,
+      active: !!row.Active,
+      enteredBy: row.enteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(statusMessage);
+  } catch (err) {
+    console.error('Error fetching status message:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /customer-status-messages (add new status message)
+app.post('/status-messages', async (req, res) => {
+  try {
+    await sql.connect(config);
+
+    const statusMessage = req.body;
+    const query = `
+      INSERT INTO CustomerStatusMessages (
+        Customer, Status, Message, Active, enteredBy, DateEntered
+      ) VALUES (
+        @Customer, @Status, @Message, @Active, @enteredBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, statusMessage.customer);
+    request.input('Status', sql.VarChar, statusMessage.status);
+    request.input('Message', sql.VarChar, statusMessage.message);
+    request.input('Active', sql.Bit, statusMessage.active);
+    request.input('enteredBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Status message added successfully' });
+  } catch (err) {
+    console.error('Error adding status message:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+// PUT /customer-status-messages/:id (update existing status message)
+app.put('/status-messages/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const statusMessage = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE CustomerStatusMessages SET
+        Customer = @Customer,
+        Status = @Status,
+        Message = @Message,
+        Active = @Active,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, statusMessage.customer);
+    request.input('Status', sql.VarChar, statusMessage.status);
+    request.input('Message', sql.VarChar, statusMessage.message);
+    request.input('Active', sql.Bit, statusMessage.active);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.status(200).json({ message: 'Status message updated successfully' });
+  } catch (err) {
+    console.error('Error updating status message:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /customer-status-messages/:id (delete status message)
+app.delete('/status-messages/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM CustomerStatusMessages WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting status message:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
     VENDOR MANAGEMENT ENDPOINTS
 =========================== */
 

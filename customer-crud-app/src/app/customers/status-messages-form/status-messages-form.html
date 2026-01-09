@@ -1,0 +1,34 @@
+<h1>{{ isEdit ? 'Edit Status Message' : 'Add New Status Message' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label for="customer" class="full-label">Customer:</label>
+    <select id="customer" class="full-input" formControlName="customer">
+      <option value="">Select a customer</option>
+      <option *ngFor="let cust of customers" [value]="cust.customerName">
+      {{ cust.customerName }}
+      </option>
+    </select>
+
+    <label for="status" class="full-label">Status:</label>
+    <input id="status" class="full-input" formControlName="status" type="text" />
+    <!-- Validation message for status -->
+    <div class="error" *ngIf="form.get('status')?.invalid && form.get('status')?.touched">
+      Required
+    </div>
+
+    <label for="message" class="full-label">Message:</label>
+    <textarea id="message" class="full-input" formControlName="message" rows="4"></textarea>
+    <!-- Validation message for message -->
+    <div class="error" *ngIf="form.get('message')?.invalid && form.get('message')?.touched">
+      Required
+    </div>
+
+    <label for="active" class="full-label">
+      <input id="active" type="checkbox" formControlName="active" />
+      Active
+    </label>
+    
+    <button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button>
+    </form>
+</div>

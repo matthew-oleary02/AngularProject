@@ -9,6 +9,8 @@ import { CustomerViewComponent } from './customers/customer-view/customer-view';
 import { LocationListComponent } from './customers/location-list/location-list';
 import { LocationViewComponent } from './customers/location-view/location-view';
 import { LocationFormComponent } from './customers/location-form/location-form';
+import { CSMFormComponent } from './customers/status-messages-form/status-messages-form';
+import { CSMViewComponent } from './customers/status-messages-view/status-message-view';
 import { VendorListComponent } from './vendors/vendors/vendors';
 import { VendorsFormComponent } from './vendors/vendors-form/vendors-form';
 import { VendorsViewComponent } from './vendors/vendors-view/vendors-view';
@@ -55,6 +57,9 @@ export const routes: Routes = [
   { path: 'locations/new', component: LocationFormComponent, canActivate: [AuthGuard]},
   { path: 'locations/edit/:id', component: LocationFormComponent, canActivate: [AuthGuard]},
   { path: 'customers/:id/status-messages', component: CustomerViewComponent, canActivate: [AuthGuard]},
+  { path: 'status-messages/new', component: CSMFormComponent, canActivate: [AuthGuard]},
+  { path: 'status-messages/edit/:id', component: CSMFormComponent, canActivate: [AuthGuard]},
+  { path : 'status-messages/view/:id', component: CSMViewComponent, canActivate: [AuthGuard]},
   { path: 'vendors', component: VendorListComponent, canActivate: [AuthGuard] },
   { path: 'vendors/new', component: VendorsFormComponent, canActivate: [AuthGuard] },
   { path: 'vendors/edit/:id', component: VendorsFormComponent, canActivate: [AuthGuard] },

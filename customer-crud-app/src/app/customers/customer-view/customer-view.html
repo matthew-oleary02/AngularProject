@@ -53,9 +53,9 @@
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'tab3'"
-    (click)="activeTab = 'tab3'">
-    Tab 3
+    [class.active]="activeTab === 'clientCams'"
+    (click)="activeTab = 'clientCams'">
+    CAMs
   </button>
 </div>
 
@@ -154,16 +154,60 @@
     <td>{{ csm.modifiedOn | date:'short' }}</td>
     <td>
       <button type="button" class="btn btn-edit" [routerLink]="['/status-messages/edit', csm.rowId]">Edit</button>
+      <button type="button" class="btn btn-view" [routerLink]="['/status-messages/view', csm.rowId]">View</button>
       <button type="button" class="btn btn-delete" (click)="onDelete(csm.rowId)">Delete</button>
     </td>
   </tr>
 </table>
 </div>
 
-<div *ngIf="activeTab === 'tab3'" class="card">
-  <p>Placeholder content for Tab 3</p>
+<!--
+<div *ngIf="activeTab === 'clientCams'" class="card">
+  <h1>CAMs</h1>
+  
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+    <button type="button" class="btn-create" [routerLink]="['/clientcams/new']">Add New CAM</button>
+  </div>
+<table>
+  <tr>
+    <th>User</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Trade</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let cc of clientCams">
+    <td>{{ cc.username }}</td>
+    <td>{{ cc.email }}</td>
+    <td>{{ cc.phone }}</td>
+    <td>{{ cc.trade }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/clientcams/edit', cc.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(cc.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
 </div>
-
+-->
 <ng-template #notFound>
   <div class="card">
     <p>Customer not found.</p>
