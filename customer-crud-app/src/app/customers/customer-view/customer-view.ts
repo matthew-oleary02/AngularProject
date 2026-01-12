@@ -7,6 +7,8 @@ import { Location } from '../location.model';
 import { LocationService } from '../location.service';
 import { CustomerStatusMessage } from '../status-messages.model';
 import { CustomerStatusMessageService } from '../status-messages.service';
+import { CustomerCAMs } from '../customer-cams.model';
+import { CustomerCAMsService } from '../customer-cams.service';
 
 @Component({
   selector: 'app-customer-view',
@@ -20,10 +22,13 @@ export class CustomerViewComponent implements OnInit {
   customer?: Customer;
   locations: Location[] = [];
   statusMessages: CustomerStatusMessage[] = [];
+  customerCams: CustomerCAMs[] = [];
   /* Full list of locations from the server */
   private allLocations: Location[] = [];
   /* Full list of status messages from the server */
   private allStatusMessages: CustomerStatusMessage[] = [];
+  /* Full list of customer CAMs from the server */
+  private allCustomerCams: CustomerCAMs[] = [];
   filterText = '';
   activeFilter: boolean | null = true;
   activeTab: string = 'sites';  // single tab controller
@@ -32,7 +37,8 @@ export class CustomerViewComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private locationService: LocationService,
-    private statusMessageService: CustomerStatusMessageService
+    private statusMessageService: CustomerStatusMessageService,
+    private customerCamsService: CustomerCAMsService
   ) {}
 
   /* Load customer details based on route parameter */
@@ -66,8 +72,16 @@ export class CustomerViewComponent implements OnInit {
       },
       error: err => console.error('Error fetching status messages:', err)
     });
-  }
 
+    /* Fetch customer CAMs for the customer */
+    this.customerService.getCustomerCams(id).subscribe({
+      next: cc => {
+        this.allCustomerCams = cc || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching customer CAMs:', err)
+    });
+  }
 
   /* Filter locations based on user input */
   onFilterChange(query: string) {
@@ -121,8 +135,22 @@ export class CustomerViewComponent implements OnInit {
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
       
       return matchesActive && matchesQuery;
-    }
-    );
+    });
+
+    this.customerCams = this.allCustomerCams.filter(cc => {
+      // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
+      const matchesActive = this.activeFilter === null ? true : (cc.active === this.activeFilter);
+      // text search across multiple fields
+      const fields = [
+        cc.customer,
+        cc.username,
+        cc.email,
+        cc.phone,
+        cc.trade
+      ];
+      const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
+      return matchesActive && matchesQuery;
+    });
   }
 
   /* Clear the filter input and reset location list */
@@ -157,6 +185,18 @@ export class CustomerViewComponent implements OnInit {
         error: (err) => {
           console.error('Error deleting status message:', err)
           alert('Failed to delete status message. Please try again.');
+        }
+      });
+    } else if (this.activeTab === 'customerCams') {
+      if (!confirm(`Delete customer CAM #${id}?`)) return;
+      this.customerCamsService.deleteCC(id).subscribe({
+        next: () => {
+          this.allCustomerCams = this.allCustomerCams.filter(cc => cc.rowId !== id);
+          this.applyFilters();
+        },
+        error: (err) => {
+          console.error('Error deleting customer CAM:', err)
+          alert('Failed to delete customer CAM. Please try again.');
         }
       });
     }

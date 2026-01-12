@@ -53,8 +53,8 @@
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'clientCams'"
-    (click)="activeTab = 'clientCams'">
+    [class.active]="activeTab === 'customerCams'"
+    (click)="activeTab = 'customerCams'">
     CAMs
   </button>
 </div>
@@ -161,8 +161,7 @@
 </table>
 </div>
 
-<!--
-<div *ngIf="activeTab === 'clientCams'" class="card">
+<div *ngIf="activeTab === 'customerCams'" class="card">
   <h1>CAMs</h1>
   
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
@@ -185,7 +184,7 @@
       />
       <label for="active">Active</label>
     </td>
-    <button type="button" class="btn-create" [routerLink]="['/clientcams/new']">Add New CAM</button>
+    <button type="button" class="btn-create" [routerLink]="['/customer-cams/new']">Add New CAM</button>
   </div>
 <table>
   <tr>
@@ -195,19 +194,19 @@
     <th>Trade</th>
     <th>Actions</th>
   </tr>
-  <tr *ngFor="let cc of clientCams">
+  <tr *ngFor="let cc of customerCams">
     <td>{{ cc.username }}</td>
     <td>{{ cc.email }}</td>
     <td>{{ cc.phone }}</td>
     <td>{{ cc.trade }}</td>
     <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/clientcams/edit', cc.rowId]">Edit</button>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-cams/edit', cc.rowId]">Edit</button>
       <button type="button" class="btn btn-delete" (click)="onDelete(cc.rowId)">Delete</button>
     </td>
   </tr>
 </table>
 </div>
--->
+
 <ng-template #notFound>
   <div class="card">
     <p>Customer not found.</p>

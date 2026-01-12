@@ -854,6 +854,43 @@ app.get('/customers/:id/status-messages', async (req, res) => {
   }
 });
 
+// customer cams per customer
+app.get('/customers/:id/customer-cams', async (req, res) => {
+  try {
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+    const result = await request.query(`
+      SELECT cc.RowID, cc.Customer, cc.Username, cc.Email, cc.PhoneNumber, cc.Trade, cc.Active, cc.CreatedBy, cc.CreatedOn, cc.ModifiedBy, cc.ModifiedOn
+      FROM CustomerCAMs cc
+      INNER JOIN Customers c ON cc.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+      ORDER BY cc.CreatedOn DESC
+    `);
+    const customerCams = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      username: row.Username,
+      email: row.Email,
+      phone: row.PhoneNumber,
+      trade: row.Trade,
+      active: !!row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(customerCams);
+  } catch (err) {
+    console.error('Error fetching customer CAMs for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {
