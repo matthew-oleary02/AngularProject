@@ -1277,6 +1277,147 @@ app.delete('/status-messages/:id', async (req, res) => {
 });
 
 /* ===========================
+    CUSTOMER CAMS ENDPOINTS
+=========================== */
+
+// GET /customer-cams (all customer cams)
+app.get('/customer-cams', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM CustomerCAMs');
+    const customerCams = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      username: row.Username,
+      email: row.Email,
+      phone: row.PhoneNumber,
+      trade: row.Trade,
+      active: !!row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(customerCams);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /customer-cams/:id (single customer cam by ID)
+app.get('/customer-cams/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM CustomerCAMs WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Customer CAM not found' });
+    }
+    const row = result.recordset[0];
+    const customerCam = {
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      username: row.Username,
+      email: row.Email,
+      phone: row.PhoneNumber,
+      trade: row.Trade,
+      active: !!row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(customerCam);
+  } catch (err) {
+    console.error('Error fetching customer CAM:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /customer-cams (add new customer cam)
+app.post('/customer-cams', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerCam = req.body;
+    const query = `
+      INSERT INTO CustomerCAMs (
+        Customer, Username, Email, PhoneNumber, Trade, Active, CreatedBy, CreatedOn
+      ) VALUES (
+        @Customer, @Username, @Email, @PhoneNumber, @Trade, @Active, @CreatedBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, customerCam.customer);
+    request.input('Username', sql.VarChar, customerCam.username);
+    request.input('Email', sql.VarChar, customerCam.email);
+    request.input('PhoneNumber', sql.VarChar, customerCam.phone);
+    request.input('Trade', sql.VarChar, customerCam.trade);
+    request.input('Active', sql.Bit, customerCam.active);
+    request.input('CreatedBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Customer CAM added successfully' });
+  } catch (err) {
+    console.error('Error adding customer CAM:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /customer-cams/:id (update existing customer cam)
+app.put('/customer-cams/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerCam = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE CustomerCAMs SET
+        Customer = @Customer,
+        Username = @Username,
+        Email = @Email,
+        PhoneNumber = @PhoneNumber,
+        Trade = @Trade,
+        Active = @Active,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, customerCam.customer);
+    request.input('Username', sql.VarChar, customerCam.username);
+    request.input('Email', sql.VarChar, customerCam.email);
+    request.input('PhoneNumber', sql.VarChar, customerCam.phone);
+    request.input('Trade', sql.VarChar, customerCam.trade);
+    request.input('Active', sql.Bit, customerCam.active);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.status(200).json({ message: 'Customer CAM updated successfully' });
+  } catch (err) {
+    console.error('Error updating customer CAM:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /customer-cams/:id (delete customer cam)
+app.delete('/customer-cams/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM CustomerCAMs WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting customer CAM:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+/* ===========================
     VENDOR MANAGEMENT ENDPOINTS
 =========================== */
 

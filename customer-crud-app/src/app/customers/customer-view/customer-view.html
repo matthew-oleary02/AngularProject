@@ -57,6 +57,27 @@
     (click)="activeTab = 'customerCams'">
     CAMs
   </button>
+  <button 
+    type="button" 
+    class="btn-tab"
+    [class.active]="activeTab === 'tab4'"
+    (click)="activeTab = 'tab4'">
+    tab4
+  </button>
+  <button
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'tab5'"
+    (click)="activeTab = 'tab5'">
+    tab5
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'tab6'"
+    (click)="activeTab = 'tab6'">
+    tab6
+  </button>
 </div>
 
 <div *ngIf="activeTab === 'sites'" class="card">
