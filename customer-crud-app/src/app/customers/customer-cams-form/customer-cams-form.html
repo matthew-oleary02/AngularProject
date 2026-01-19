@@ -1,7 +1,7 @@
 <h1>{{ isEdit ? 'Edit Customer CAM' : 'Add New Customer CAM' }}</h1>
 
 <div class="card">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="submit()">
 
     <label for="customer" class="full-label">Customer:</label>
     <select id="customer" class="full-input" formControlName="customer">

@@ -1356,7 +1356,7 @@ app.post('/customer-cams', async (req, res) => {
     request.input('PhoneNumber', sql.VarChar, customerCam.phone);
     request.input('Trade', sql.VarChar, customerCam.trade);
     request.input('Active', sql.Bit, customerCam.active);
-    request.input('CreatedBy', sql.VarChar, 'admin_user');
+    request.input('CreatedBy', sql.VarChar, 'admin');
     await request.query(query);
     res.setHeader('Content-Type', 'application/json');
     res.status(201).json({ message: 'Customer CAM added successfully' });

@@ -32,11 +32,10 @@ export class CustomerCamsFormComponent implements OnInit {
     ngOnInit() {
         this.form = this.fb.group({
             customer: ['', Validators.required],
-            camType: ['', Validators.required],
-            camValue: ['', Validators.required],
-            effectiveDate: ['', Validators.required],
-            expirationDate: [''],
-            notes: [''],
+            username: ['', Validators.required],
+            email: [''],
+            phone: [''],
+            trade: [''],
             active: [true]
         });
         /* Check if we are in edit mode based on route parameters */
@@ -58,22 +57,27 @@ export class CustomerCamsFormComponent implements OnInit {
         });
     }
     /* Handle form submission for creating or updating customer CAMs */
-    onSubmit() {
+    submit() {
         if (this.form.invalid) {
+            this.form.markAllAsTouched();
             return;
         }
-        const customerCams: CustomerCAMs = this.form.value;
-        if (this.isEdit) {
-            customerCams.rowId = this.customerCamsId;
-            this.customerCamsService.updateCC(customerCams).subscribe({
-                next: () => this.router.navigate(['/customers', customerCams.customer, 'cams']),
-                error: err => console.error('Error updating customer CAMs:', err)
-            });
-        } else {
-            this.customerCamsService.addCC(customerCams).subscribe({
-                next: (newCams) => this.router.navigate(['/customers', newCams.customer, 'cams']),
-                error: err => console.error('Error creating customer CAMs:', err)
-            });
-        }
+        const customerCams: CustomerCAMs = {
+            rowId: this.customerCamsId || 0,
+            ...this.form.value
+        };
+        
+        const request = this.isEdit
+            ? this.customerCamsService.updateCC(customerCams)
+            : this.customerCamsService.addCC(customerCams);
+
+        request.subscribe({
+            next: () => {
+        this.router.navigate(['/customers']);
+      },
+      error: err => {
+        console.error('Error saving location:', err);
+      }
+    });
     }
 }
