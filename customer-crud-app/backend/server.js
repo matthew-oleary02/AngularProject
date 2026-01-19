@@ -891,6 +891,38 @@ app.get('/customers/:id/customer-cams', async (req, res) => {
   }
 });
 
+// customer nte per customer
+app.get('/customers/:id/customer-nte', async (req, res) => {
+  try {
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+    const result = await request.query(`
+      SELECT nte.RowID, nte.Customer, nte.Classification, nte.ServiceType, nte.RateNTE, nte.VendorNTE, nte.Note
+      FROM CustomerNTE nte
+      INNER JOIN Customers c ON nte.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+      ORDER BY nte.DateEntered DESC
+    `);
+    const customerNTEs = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      classification: row.Classification,
+      serviceType: row.ServiceType,
+      rateNTE: row.RateNTE,
+      vendorNTE: row.VendorNTE,
+      note: row.Note
+    }));
+    res.json(customerNTEs);
+  } catch (err) {
+    console.error('Error fetching customer NTE for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {

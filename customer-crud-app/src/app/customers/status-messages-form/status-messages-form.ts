@@ -4,8 +4,8 @@ import { CustomerStatusMessageService } from '../status-messages.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CustomerStatusMessage } from '../status-messages.model';
-import { CustomerService } from '../customer.service'; // Adjust the path as necessary
-import { Customer } from '../customer.model'; // Adjust the path as necessary
+import { CustomerService } from '../customer.service';
+import { Customer } from '../customer.model';
 
 @Component({
   selector: 'app-status-messages-form',

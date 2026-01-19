@@ -9,6 +9,8 @@ import { CustomerStatusMessage } from '../status-messages.model';
 import { CustomerStatusMessageService } from '../status-messages.service';
 import { CustomerCAMs } from '../customer-cams.model';
 import { CustomerCAMsService } from '../customer-cams.service';
+import { CustomerNTE } from '../customer-nte.model';
+import { CustomerNTEService } from '../customer-nte.service';
 
 @Component({
   selector: 'app-customer-view',
@@ -23,12 +25,14 @@ export class CustomerViewComponent implements OnInit {
   locations: Location[] = [];
   statusMessages: CustomerStatusMessage[] = [];
   customerCams: CustomerCAMs[] = [];
+  customerNte: CustomerNTE[] = [];
   /* Full list of locations from the server */
   private allLocations: Location[] = [];
   /* Full list of status messages from the server */
   private allStatusMessages: CustomerStatusMessage[] = [];
   /* Full list of customer CAMs from the server */
   private allCustomerCams: CustomerCAMs[] = [];
+  private allCustomerNte: CustomerNTE[] = [];
   filterText = '';
   activeFilter: boolean | null = true;
   activeTab: string = 'sites';  // single tab controller
@@ -38,7 +42,8 @@ export class CustomerViewComponent implements OnInit {
     private route: ActivatedRoute,
     private locationService: LocationService,
     private statusMessageService: CustomerStatusMessageService,
-    private customerCamsService: CustomerCAMsService
+    private customerCamsService: CustomerCAMsService,
+    private customerNteService: CustomerNTEService
   ) {}
 
   /* Load customer details based on route parameter */
@@ -81,6 +86,15 @@ export class CustomerViewComponent implements OnInit {
       },
       error: err => console.error('Error fetching customer CAMs:', err)
     });
+
+    /* Fetch customer NTE for the customer */
+    this.customerService.getCustomerNte(id).subscribe({
+      next: cn => {
+        this.customerNte = cn || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching customer NTE:', err)
+    })
   }
 
   /* Filter locations based on user input */
@@ -151,6 +165,22 @@ export class CustomerViewComponent implements OnInit {
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
       return matchesActive && matchesQuery;
     });
+
+    this.customerNte = this.allCustomerNte.filter(cn => {
+      // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
+      //const matchesActive = this.activeFilter === null ? true : (cn.active === this.activeFilter);
+      // text search across multiple fields
+      const fields = [
+        cn.classification,
+        cn.serviceType,
+        cn.rate,
+        cn.vendorNte,
+        cn.customer,
+        cn.note
+      ];
+      const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
+      return /*matchesActive &&*/ matchesQuery;
+    });
   }
 
   /* Clear the filter input and reset location list */
@@ -199,6 +229,18 @@ export class CustomerViewComponent implements OnInit {
           alert('Failed to delete customer CAM. Please try again.');
         }
       });
+    } else if (this.activeTab === 'customerNte') {
+      if (!confirm('Delete this customer NTE?')) return;
+      this.customerNteService.deleteCustomerNte(id).subscribe({
+        next: () => {
+          this.allCustomerNte = this.allCustomerNte.filter(cn => cn.rowId !== id);
+          this.applyFilters();
+        },
+        error: (err) => {
+          console.error('Error deleting customer NTE:', err)
+          alert('Failed to delete customer NTE. Please try again.');
+        }
+    });
     }
   }
 }

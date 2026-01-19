@@ -88,6 +88,11 @@ getCustomerCams(customerId: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-cams`);
 }
 
+/* Fetch customer NTE per customer */
+getCustomerNte(customerId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-nte`);
+}
+
 /* Delete a customer by ID */
 deleteCustomer(id: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/${id}`);

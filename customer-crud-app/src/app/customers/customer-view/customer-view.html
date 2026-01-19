@@ -60,23 +60,30 @@
   <button 
     type="button" 
     class="btn-tab"
-    [class.active]="activeTab === 'tab4'"
-    (click)="activeTab = 'tab4'">
-    tab4
+    [class.active]="activeTab === 'nte'"
+    (click)="activeTab = 'nte'">
+    NTE
   </button>
   <button
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'tab5'"
-    (click)="activeTab = 'tab5'">
-    tab5
+    [class.active]="activeTab === 'eta'"
+    (click)="activeTab = 'eta'">
+    ETA
   </button>
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'tab6'"
-    (click)="activeTab = 'tab6'">
-    tab6
+    [class.active]="activeTab === 'serviceTypes'"
+    (click)="activeTab = 'serviceTypes'">
+    Service Types
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'customerRates'"
+    (click)="activeTab = 'customerRates'">
+    Rates
   </button>
 </div>
 
@@ -227,6 +234,193 @@
   </tr>
 </table>
 </div>
+
+
+<div *ngIf="activeTab === 'customerNte'" class="card">
+  <h1>Customer Not Exceeding</h1>
+  
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+    <button type="button" class="btn-create" [routerLink]="['/customer-nte/new']">Add New NTE</button>
+  </div>
+<table>
+  <tr>
+    <th>Classification</th>
+    <th>Service Type</th>
+    <th>Amount</th>
+    <th>Vendor NTE</th>
+    <th>Customer</th>
+    <th>Note</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let cn of customerNte">
+    <td>{{ cn.classification }}</td>
+    <td>{{ cn.serviceType }}</td>
+    <td>{{ cn.rate }}</td>
+    <td>{{ cn.vendorNte }}</td>
+    <td>{{ cn.customer }}</td>
+    <td>{{ cn.note }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-nte/edit', cn.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(cn.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+
+<!--
+<div *ngIf="activeTab === 'eta'" class="card">
+  <h1>Customer ETA</h1>
+  
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+    <button type="button" class="btn-create" [routerLink]="['/customer-eta/new']">Add New ETA</button>
+  </div>
+<table>
+  <tr>
+    <th>Service Type</th>
+    <th>ETA Days</th>
+    <th>Hours Bus Days</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let ce of eta">
+    <td>{{ ce.serviceType }}</td>
+    <td>{{ ce.etaDays }}</td>
+    <td>{{ ce.hoursBusDays }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-eta/edit', ce.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(ce.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+
+
+<div *ngIf="activeTab === 'serviceTypes'" class="card">
+  <h1>Customer Service Types</h1>
+  
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+    <button type="button" class="btn-create" [routerLink]="['/customer-service-types/new']">Add New Service Type</button>
+  </div>
+<table>
+  <tr>
+    <th>Service Type</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let cst of serviceTypes">
+    <td>{{ cst.serviceType }}</td>
+    <td>
+      <button type="button" class="btn btn-delete" (click)="onDelete(cst.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+
+<div *ngIf="activeTab === 'customerRates'" class="card">
+  <h1>Customer Rates</h1>
+  
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+    <button type="button" class="btn-create" [routerLink]="['/customer-rates/new']">Add New NTE</button>
+  </div>
+<table>
+  <tr>
+    <th>Trade</th>
+    <th>Rate Type</th>
+    <th>State</th>
+    <th>Rate</th>
+    <th>Created By</th>
+    <th>Created On</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let cr of customerRates">
+    <td>{{ cr.trade }}</td>
+    <td>{{ cr.rateType }}</td>
+    <td>{{ cr.state }}</td>
+    <td>{{ cr.rate }}</td>
+    <td>{{ cr.createdBy }}</td>
+    <td>{{ cr.createdOn }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-rates/edit', cr.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(cr.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+-->
 
 <ng-template #notFound>
   <div class="card">
