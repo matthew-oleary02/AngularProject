@@ -906,7 +906,6 @@ app.get('/customers/:id/customer-nte', async (req, res) => {
       FROM CustomerNTE nte
       INNER JOIN Customers c ON nte.Customer = c.CustomerName
       WHERE c.RowID = @CustomerId
-      ORDER BY nte.DateEntered DESC
     `);
     const customerNTEs = result.recordset.map(row => ({
       rowId: Number(row.RowID),
@@ -914,7 +913,7 @@ app.get('/customers/:id/customer-nte', async (req, res) => {
       classification: row.Classification,
       serviceType: row.ServiceType,
       rateNTE: row.RateNTE,
-      vendorNTE: row.VendorNTE,
+      vendorNte: row.VendorNTE,
       note: row.Note
     }));
     res.json(customerNTEs);
@@ -1444,6 +1443,134 @@ app.delete('/customer-cams/:id', async (req, res) => {
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting customer CAM:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
+    CUSTOMER NTE ENDPOINTS
+=========================== */
+
+// GET /customer-nte (all customer nte)
+app.get('/customer-nte', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM CustomerNTE');
+    const customerNTEs = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      classification: row.Classification,
+      serviceType: row.ServiceType,
+      rateNTE: row.RateNTE,
+      vendorNte: row.VendorNTE,
+      note: row.Note
+    }));
+    res.json(customerNTEs);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /customer-nte/:id (single customer nte by ID)
+app.get('/customer-nte/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM CustomerNTE WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Customer NTE not found' });
+    }
+    const row = result.recordset[0];
+    const customerNTE = {
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      classification: row.Classification,
+      serviceType: row.ServiceType,
+      rateNTE: row.RateNTE,
+      vendorNte: row.VendorNTE,
+      note: row.Note
+    };
+    res.json(customerNTE);
+  } catch (err) {
+    console.error('Error fetching customer NTE:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /customer-nte (add new customer nte)
+app.post('/customer-nte', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerNTE = req.body;
+    const query = `
+      INSERT INTO CustomerNTE (
+        Customer, Classification, ServiceType, RateNTE, VendorNTE, Note
+      ) VALUES (
+        @Customer, @Classification, @ServiceType, @RateNTE, @VendorNTE, @Note
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, customerNTE.customer);
+    request.input('Classification', sql.VarChar, customerNTE.classification);
+    request.input('ServiceType', sql.VarChar, customerNTE.serviceType);
+    request.input('RateNTE', sql.Decimal(18, 2), customerNTE.rateNTE);
+    request.input('VendorNTE', sql.Decimal(18, 2), customerNTE.vendorNte);
+    request.input('Note', sql.VarChar, customerNTE.note);
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Customer NTE added successfully' });
+  } catch (err) {
+    console.error('Error adding customer NTE:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /customer-nte/:id (update existing customer nte)
+app.put('/customer-nte/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerNTE = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE CustomerNTE SET
+        Customer = @Customer,
+        Classification = @Classification,
+        ServiceType = @ServiceType,
+        RateNTE = @RateNTE,
+        VendorNTE = @VendorNTE,
+        Note = @Note
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, customerNTE.customer);
+    request.input('Classification', sql.VarChar, customerNTE.classification);
+    request.input('ServiceType', sql.VarChar, customerNTE.serviceType);
+    request.input('RateNTE', sql.Decimal(18, 2), customerNTE.rateNTE);
+    request.input('VendorNTE', sql.Decimal(18, 2), customerNTE.vendorNte);
+    request.input('Note', sql.VarChar, customerNTE.note);
+    await request.query(query);
+    res.status(200).json({ message: 'Customer NTE updated successfully' });
+  } catch (err) {
+    console.error('Error updating customer NTE:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /customer-nte/:id (delete customer nte)
+app.delete('/customer-nte/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM CustomerNTE WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting customer NTE:', err);
     res.status(500).send('Server error');
   }
 });

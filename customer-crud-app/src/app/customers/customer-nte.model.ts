@@ -3,7 +3,7 @@ export interface CustomerNTE {
     customer: string;
     classification: string;
     serviceType: string;
-    rate: string;
+    rateNTE: string;
     vendorNte: string;
     note: string;
 }

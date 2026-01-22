@@ -60,8 +60,8 @@
   <button 
     type="button" 
     class="btn-tab"
-    [class.active]="activeTab === 'nte'"
-    (click)="activeTab = 'nte'">
+    [class.active]="activeTab === 'customerNte'"
+    (click)="activeTab = 'customerNte'">
     NTE
   </button>
   <button
@@ -249,16 +249,6 @@
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
     <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
-    <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
-      <label for="active">Active</label>
-    </td>
     <button type="button" class="btn-create" [routerLink]="['/customer-nte/new']">Add New NTE</button>
   </div>
 <table>
@@ -267,20 +257,18 @@
     <th>Service Type</th>
     <th>Amount</th>
     <th>Vendor NTE</th>
-    <th>Customer</th>
     <th>Note</th>
     <th>Actions</th>
   </tr>
-  <tr *ngFor="let cn of customerNte">
-    <td>{{ cn.classification }}</td>
-    <td>{{ cn.serviceType }}</td>
-    <td>{{ cn.rate }}</td>
-    <td>{{ cn.vendorNte }}</td>
-    <td>{{ cn.customer }}</td>
-    <td>{{ cn.note }}</td>
+  <tr *ngFor="let nte of customerNte">
+    <td>{{ nte.classification }}</td>
+    <td>{{ nte.serviceType }}</td>
+    <td>{{ nte.rateNTE }}</td>
+    <td>{{ nte.vendorNte }}</td>
+    <td>{{ nte.note }}</td>
     <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/customer-nte/edit', cn.rowId]">Edit</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(cn.rowId)">Delete</button>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-nte/edit', nte.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(nte.rowId)">Delete</button>
     </td>
   </tr>
 </table>

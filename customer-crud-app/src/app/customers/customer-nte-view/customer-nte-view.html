@@ -1,0 +1,23 @@
+<h1>Customer Not Exceeding Details</h1>
+<div *ngIf="nte; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ nte.classification || 'Classification' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ nte.rowId }}</div></div>
+
+    <div class="group-title">Customer NTE Info</div>
+    <div class="item"><div class="label">Customer</div><div class="value">{{ nte.customer }}</div></div>
+    <div class="item"><div class="label">Service Type</div><div class="value">{{ nte.serviceType }}</div></div>
+    <div class="item"><div class="label">Amount</div><div class="value">{{ nte.rateNTE }}</div></div>
+    <div class="item"><div class="label">Vendor NTE</div><div class="value">{{ nte.vendorNte }}</div></div>
+    <div class="item"><div class="label">Note</div><div class="value">{{ nte.note }}</div></div>
+  </div>
+  <button type="button" [routerLink]="['/customers']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Customer NTE not found.</p>
+    <button type="button" [routerLink]="['/customers']">Back</button>
+  </div>
+</ng-template>

@@ -13,6 +13,8 @@ import { CSMFormComponent } from './customers/status-messages-form/status-messag
 import { CSMViewComponent } from './customers/status-messages-view/status-message-view';
 import { CustomerCamsFormComponent } from './customers/customer-cams-form/customer-cams-form';
 import { CustomerCamsViewComponent } from './customers/customer-cams-view/customer-cams-view';
+import { CustomerNTEFormComponent } from './customers/customer-nte-form/customer-nte-form';
+import { CustomerNTEViewComponent } from './customers/customer-nte-view/customer-nte-view';
 import { VendorListComponent } from './vendors/vendors/vendors';
 import { VendorsFormComponent } from './vendors/vendors-form/vendors-form';
 import { VendorsViewComponent } from './vendors/vendors-view/vendors-view';
@@ -67,9 +69,9 @@ export const routes: Routes = [
   { path : 'customer-cams/edit/:id', component: CustomerCamsFormComponent, canActivate: [AuthGuard]},
   { path : 'customer-cams/view/:id', component: CustomerCamsViewComponent, canActivate: [AuthGuard]},
   { path: 'customers/:id/customer-nte', component: CustomerViewComponent, canActivate: [AuthGuard]},
-  { path : 'customer-nte/new', component: OfficesFormComponent, canActivate: [AuthGuard]},
-  { path : 'customer-nte/edit/:id', component: OfficesFormComponent, canActivate: [AuthGuard]},
-  { path : 'customer-nte/view/:id', component: CustomerViewComponent, canActivate: [AuthGuard]},
+  { path : 'customer-nte/new', component: CustomerNTEFormComponent, canActivate: [AuthGuard]},
+  { path : 'customer-nte/edit/:id', component: CustomerNTEFormComponent, canActivate: [AuthGuard]},
+  { path : 'customer-nte/view/:id', component: CustomerNTEViewComponent, canActivate: [AuthGuard]},
   { path: 'vendors', component: VendorListComponent, canActivate: [AuthGuard] },
   { path: 'vendors/new', component: VendorsFormComponent, canActivate: [AuthGuard] },
   { path: 'vendors/edit/:id', component: VendorsFormComponent, canActivate: [AuthGuard] },

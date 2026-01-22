@@ -88,9 +88,9 @@ export class CustomerViewComponent implements OnInit {
     });
 
     /* Fetch customer NTE for the customer */
-    this.customerService.getCustomerNte(id).subscribe({
-      next: cn => {
-        this.customerNte = cn || [];
+    this.customerService.getCustomerNotToExceed(id).subscribe({
+      next: nte => {
+        this.allCustomerNte = nte || [];
         this.applyFilters();
       },
       error: err => console.error('Error fetching customer NTE:', err)
@@ -166,17 +166,16 @@ export class CustomerViewComponent implements OnInit {
       return matchesActive && matchesQuery;
     });
 
-    this.customerNte = this.allCustomerNte.filter(cn => {
+    this.customerNte = this.allCustomerNte.filter(nte => {
       // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
-      //const matchesActive = this.activeFilter === null ? true : (cn.active === this.activeFilter);
+      //const matchesActive = this.activeFilter === null ? true : (nte.active === this.activeFilter);
       // text search across multiple fields
       const fields = [
-        cn.classification,
-        cn.serviceType,
-        cn.rate,
-        cn.vendorNte,
-        cn.customer,
-        cn.note
+        nte?.classification,
+        nte?.serviceType,
+        nte?.rateNTE,
+        nte?.vendorNte,
+        nte?.note
       ];
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
       return /*matchesActive &&*/ matchesQuery;
@@ -233,7 +232,7 @@ export class CustomerViewComponent implements OnInit {
       if (!confirm('Delete this customer NTE?')) return;
       this.customerNteService.deleteCustomerNte(id).subscribe({
         next: () => {
-          this.allCustomerNte = this.allCustomerNte.filter(cn => cn.rowId !== id);
+          this.allCustomerNte = this.allCustomerNte.filter(nte => nte.rowId !== id);
           this.applyFilters();
         },
         error: (err) => {

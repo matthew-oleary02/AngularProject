@@ -1,0 +1,61 @@
+<h1>{{ isEdit ? 'Edit NTE' : 'Add New NTE' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="customer" class="full-label">Customer:</label>
+    <select id="customer" class="full-input" formControlName="customer">
+      <option value="">Select a customer</option>
+      <option *ngFor="let cust of customers" [value]="cust.customerName">
+      {{ cust.customerName }}
+      </option>
+    </select>
+    <!-- Validation message for customer -->
+    <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
+      Required
+    </div>
+
+    <label for="classification" class="full-label">Classification:</label>
+    <input id="classification" class="full-input" formControlName="classification" type="text" />
+    <!-- Validation message for classification -->
+    <div class="error" *ngIf="form.get('classification')?.invalid && form.get('classification')?.touched">
+      Required
+    </div>
+
+    <label for="serviceType" class="full-label">Service Type:</label>
+    <input id="serviceType" class="full-input" formControlName="serviceType" type="text" />
+    <!-- Validation message for service type -->
+    <div class="error" *ngIf="form.get('serviceType')?.invalid && form.get('serviceType')?.touched">
+      Required
+    </div>
+
+    <label for="rateNTE" class="full-label">Rate NTE:</label>
+    <input id="rateNTE" class="full-input" formControlName="rateNTE" type="number" />
+    <!-- Validation message for rate NTE -->
+    <div class="error" *ngIf="form.get('rateNTE')?.invalid && form.get('rateNTE')?.touched">
+      Required and must be a positive number
+    </div>
+
+    <label for="vendorNte" class="full-label">Vendor NTE:</label>
+    <input id="vendorNte" class="full-input" formControlName="vendorNte" type="number" />
+    <!-- Validation message for vendor NTE -->
+    <div class="error" *ngIf="form.get('vendorNte')?.invalid && form.get('vendorNte')?.touched">
+      Required and must be a positive number
+    </div>
+
+    <fieldset class="fieldset-full">
+      <legend>Note</legend>
+      <textarea formControlName="note" rows="4"></textarea>
+
+      <!-- Validation message for note -->
+      <div class="error" *ngIf="form.get('note')?.invalid && form.get('note')?.touched">
+        Required
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <td><button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button></td>
+      <td><button type="button" class="btn-cancel"[routerLink]="['/customers']">Cancel</button></td>
+    </div>
+    </form>
+</div>

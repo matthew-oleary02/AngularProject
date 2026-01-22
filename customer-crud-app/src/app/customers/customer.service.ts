@@ -89,7 +89,7 @@ getCustomerCams(customerId: number): Observable<any[]> {
 }
 
 /* Fetch customer NTE per customer */
-getCustomerNte(customerId: number): Observable<any[]> {
+getCustomerNotToExceed(customerId: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-nte`);
 }
 
