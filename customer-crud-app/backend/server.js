@@ -923,6 +923,36 @@ app.get('/customers/:id/customer-nte', async (req, res) => {
   }
 });
 
+// customer eta per customer
+app.get('/customers/:id/customer-eta', async (req, res) => {
+  try {
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+    const result = await request.query(`
+      SELECT eta.RowID, eta.Customer, eta.ServiceType, eta.ETAHours, eta.HoursBusDays
+      FROM CustomerETA eta
+      INNER JOIN Customers c ON eta.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+    `);
+    const customerETAs = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      serviceType: row.ServiceType,
+      etaHours: row.ETAHours,
+      hoursBusDays: row.HoursBusDays
+    }));
+    res.json(customerETAs);
+  } catch (err) {
+    console.error('Error fetching customer ETA for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {
   try {
@@ -1575,6 +1605,123 @@ app.delete('/customer-nte/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    CUSTOMER ETA ENDPOINTS
+=========================== */
+
+// GET /customer-eta (all customer eta)
+app.get('/customer-eta', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM CustomerETA');
+    const customerETAs = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      serviceType: row.ServiceType,
+      etaHours: row.ETAHours,
+      hoursBusDays: row.HoursBusDays
+    }));
+    res.json(customerETAs);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /customer-eta/:id (single customer eta by ID)
+app.get('/customer-eta/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM CustomerETA WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Customer ETA not found' });
+    }
+    const row = result.recordset[0];
+    const customerETA = {
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      serviceType: row.ServiceType,
+      etaHours: row.ETAHours,
+      hoursBusDays: row.HoursBusDays
+    };
+    res.json(customerETA);
+  } catch (err) {
+    console.error('Error fetching customer ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /customer-eta (add new customer eta)
+app.post('/customer-eta', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerETA = req.body;
+    const query = `
+      INSERT INTO CustomerETA (
+        Customer, ServiceType, ETAHours, HoursBusDays
+      ) VALUES (
+        @Customer, @ServiceType, @ETAHours, @HoursBusDays
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, customerETA.customer);
+    request.input('ServiceType', sql.VarChar, customerETA.serviceType);
+    request.input('ETAHours', sql.Int, customerETA.etaHours);
+    request.input('HoursBusDays', sql.Int, customerETA.hoursBusDays);
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Customer ETA added successfully' });
+  } catch (err) {
+    console.error('Error adding customer ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /customer-eta/:id (update existing customer eta)
+app.put('/customer-eta/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerETA = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE CustomerETA SET
+        Customer = @Customer,
+        ServiceType = @ServiceType,
+        ETAHours = @ETAHours,
+        HoursBusDays = @HoursBusDays
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, customerETA.customer);
+    request.input('ServiceType', sql.VarChar, customerETA.serviceType);
+    request.input('ETAHours', sql.Int, customerETA.etaHours);
+    request.input('HoursBusDays', sql.Int, customerETA.hoursBusDays);
+    await request.query(query);
+    res.status(200).json({ message: 'Customer ETA updated successfully' });
+  } catch (err) {
+    console.error('Error updating customer ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /customer-eta/:id (delete customer eta)
+app.delete('/customer-eta/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM CustomerETA WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting customer ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 /* ===========================
     VENDOR MANAGEMENT ENDPOINTS

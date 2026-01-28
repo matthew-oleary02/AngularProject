@@ -11,6 +11,8 @@ import { CustomerCAMs } from '../customer-cams.model';
 import { CustomerCAMsService } from '../customer-cams.service';
 import { CustomerNTE } from '../customer-nte.model';
 import { CustomerNTEService } from '../customer-nte.service';
+import { CustomerETA } from '../customer-eta.model';
+import { CustomerETAService } from '../customer-eta.service';
 
 @Component({
   selector: 'app-customer-view',
@@ -26,6 +28,7 @@ export class CustomerViewComponent implements OnInit {
   statusMessages: CustomerStatusMessage[] = [];
   customerCams: CustomerCAMs[] = [];
   customerNte: CustomerNTE[] = [];
+  customerEta: CustomerETA[] = [];
   /* Full list of locations from the server */
   private allLocations: Location[] = [];
   /* Full list of status messages from the server */
@@ -33,6 +36,7 @@ export class CustomerViewComponent implements OnInit {
   /* Full list of customer CAMs from the server */
   private allCustomerCams: CustomerCAMs[] = [];
   private allCustomerNte: CustomerNTE[] = [];
+  private allCustomerEta: CustomerETA[] = [];
   filterText = '';
   activeFilter: boolean | null = true;
   activeTab: string = 'sites';  // single tab controller
@@ -43,7 +47,8 @@ export class CustomerViewComponent implements OnInit {
     private locationService: LocationService,
     private statusMessageService: CustomerStatusMessageService,
     private customerCamsService: CustomerCAMsService,
-    private customerNteService: CustomerNTEService
+    private customerNteService: CustomerNTEService,
+    private customerEtaService: CustomerETAService
   ) {}
 
   /* Load customer details based on route parameter */
@@ -95,6 +100,15 @@ export class CustomerViewComponent implements OnInit {
       },
       error: err => console.error('Error fetching customer NTE:', err)
     })
+
+    /* Fetch customer ETA for the customer */
+    this.customerService.getCustomerEstimatedTimeArrival(id).subscribe({
+      next: eta => {
+        this.allCustomerEta = eta || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching customer ETA:', err)
+    });
   }
 
   /* Filter locations based on user input */
@@ -180,6 +194,20 @@ export class CustomerViewComponent implements OnInit {
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
       return /*matchesActive &&*/ matchesQuery;
     });
+
+    this.customerEta = this.allCustomerEta.filter(eta => {
+      // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
+      //const matchesActive = this.activeFilter === null ? true : (eta.active === this.activeFilter);
+      // text search across multiple fields
+      const fields = [
+        eta?.customer,
+        eta?.serviceType,
+        eta?.etaHours,
+        eta?.hoursBusDays
+      ];
+      const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
+      return /*matchesActive &&*/ matchesQuery;
+    });
   }
 
   /* Clear the filter input and reset location list */
@@ -240,6 +268,18 @@ export class CustomerViewComponent implements OnInit {
           alert('Failed to delete customer NTE. Please try again.');
         }
     });
+    } else if (this.activeTab === 'customerEta') {
+      if (!confirm('Delete this customer ETA?')) return;
+      this.customerEtaService.deleteCustomerEta(id).subscribe({
+        next: () => {
+          this.allCustomerEta = this.allCustomerEta.filter(eta => eta.rowId !== id);
+          this.applyFilters();
+        },
+        error: (err) => {
+          console.error('Error deleting customer ETA:', err)
+          alert('Failed to delete customer ETA. Please try again.');
+        }
+      });
     }
   }
 }

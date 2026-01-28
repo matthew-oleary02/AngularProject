@@ -274,7 +274,6 @@
 </table>
 </div>
 
-<!--
 <div *ngIf="activeTab === 'eta'" class="card">
   <h1>Customer ETA</h1>
   
@@ -288,16 +287,6 @@
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
     <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
-    <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
-      <label for="active">Active</label>
-    </td>
     <button type="button" class="btn-create" [routerLink]="['/customer-eta/new']">Add New ETA</button>
   </div>
 <table>
@@ -307,19 +296,19 @@
     <th>Hours Bus Days</th>
     <th>Actions</th>
   </tr>
-  <tr *ngFor="let ce of eta">
-    <td>{{ ce.serviceType }}</td>
-    <td>{{ ce.etaDays }}</td>
-    <td>{{ ce.hoursBusDays }}</td>
+  <tr *ngFor="let eta of customerEta">
+    <td>{{ eta.serviceType }}</td>
+    <td>{{ eta.etaHours }}</td>
+    <td>{{ eta.hoursBusDays }}</td>
     <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/customer-eta/edit', ce.rowId]">Edit</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(ce.rowId)">Delete</button>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-eta/edit', eta.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(eta.rowId)">Delete</button>
     </td>
   </tr>
 </table>
 </div>
 
-
+<!--
 <div *ngIf="activeTab === 'serviceTypes'" class="card">
   <h1>Customer Service Types</h1>
   

@@ -1,0 +1,43 @@
+<h1>{{ isEdit ? 'Edit ETA' : 'Add New ETA' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="customer" class="full-label">Customer:</label>
+    <select id="customer" class="full-input" formControlName="customer">
+      <option value="">Select a customer</option>
+      <option *ngFor="let cust of customers" [value]="cust.customerName">
+      {{ cust.customerName }}
+      </option>
+    </select>
+    <!-- Validation message for customer -->
+    <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
+      Required
+    </div>
+
+    <label for="serviceType" class="full-label">Service Type:</label>
+    <input id="serviceType" type="text" class="full-input" formControlName="serviceType" />
+    <!-- Validation message for serviceType -->
+    <div class="error" *ngIf="form.get('serviceType')?.invalid && form.get('serviceType')?.touched">
+      Required
+    </div>
+
+    <label for="etaHours" class="full-label">ETA Hours:</label>
+    <input id="etaHours" type="number" class="full-input" formControlName="etaHours" />
+    <!-- Validation message for etaHours -->
+    <div class="error" *ngIf="form.get('etaHours')?.invalid && form.get('etaHours')?.touched">
+      Required and must be a non-negative number
+    </div>
+    <label for="hoursBusDays" class="full-label">Hours Bus Days:</label>
+    <input id="hoursBusDays" type="number" class="full-input" formControlName="hoursBusDays" />
+    <!-- Validation message for hoursBusDays -->
+    <div class="error" *ngIf="form.get('hoursBusDays')?.invalid && form.get('hoursBusDays')?.touched">
+      Required and must be a non-negative number
+    </div>
+
+    <div class="form-actions">
+      <td><button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button></td>
+      <td><button type="button" class="btn-cancel"[routerLink]="['/customers']">Cancel</button></td>
+    </div>
+    </form>
+</div>

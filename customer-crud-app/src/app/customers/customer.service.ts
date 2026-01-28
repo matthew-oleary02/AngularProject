@@ -93,6 +93,11 @@ getCustomerNotToExceed(customerId: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-nte`);
 }
 
+/* Fetch customer ETA per customer */
+getCustomerEstimatedTimeArrival(customerId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-eta`);
+}
+
 /* Delete a customer by ID */
 deleteCustomer(id: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/${id}`);
