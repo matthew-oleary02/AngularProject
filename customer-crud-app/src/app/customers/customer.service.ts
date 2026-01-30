@@ -98,6 +98,11 @@ getCustomerEstimatedTimeArrival(customerId: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-eta`);
 }
 
+/* Fetch customer Rates per customer */
+getCustomerRates(customerId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-rates`);
+}
+
 /* Delete a customer by ID */
 deleteCustomer(id: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/${id}`);

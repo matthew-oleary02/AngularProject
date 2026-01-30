@@ -13,6 +13,8 @@ import { CustomerNTE } from '../customer-nte.model';
 import { CustomerNTEService } from '../customer-nte.service';
 import { CustomerETA } from '../customer-eta.model';
 import { CustomerETAService } from '../customer-eta.service';
+import { CustomerRates } from '../customer-rates.model';
+import { CustomerRatesService } from '../customer-rates.service';
 
 @Component({
   selector: 'app-customer-view',
@@ -29,6 +31,7 @@ export class CustomerViewComponent implements OnInit {
   customerCams: CustomerCAMs[] = [];
   customerNte: CustomerNTE[] = [];
   customerEta: CustomerETA[] = [];
+  customerRates: CustomerRates[] = [];
   /* Full list of locations from the server */
   private allLocations: Location[] = [];
   /* Full list of status messages from the server */
@@ -37,6 +40,7 @@ export class CustomerViewComponent implements OnInit {
   private allCustomerCams: CustomerCAMs[] = [];
   private allCustomerNte: CustomerNTE[] = [];
   private allCustomerEta: CustomerETA[] = [];
+  private allCustomerRates: CustomerRates[] = [];
   filterText = '';
   activeFilter: boolean | null = true;
   activeTab: string = 'sites';  // single tab controller
@@ -48,7 +52,8 @@ export class CustomerViewComponent implements OnInit {
     private statusMessageService: CustomerStatusMessageService,
     private customerCamsService: CustomerCAMsService,
     private customerNteService: CustomerNTEService,
-    private customerEtaService: CustomerETAService
+    private customerEtaService: CustomerETAService,
+    private customerRatesService: CustomerRatesService
   ) {}
 
   /* Load customer details based on route parameter */
@@ -99,7 +104,7 @@ export class CustomerViewComponent implements OnInit {
         this.applyFilters();
       },
       error: err => console.error('Error fetching customer NTE:', err)
-    })
+    });
 
     /* Fetch customer ETA for the customer */
     this.customerService.getCustomerEstimatedTimeArrival(id).subscribe({
@@ -108,6 +113,15 @@ export class CustomerViewComponent implements OnInit {
         this.applyFilters();
       },
       error: err => console.error('Error fetching customer ETA:', err)
+    });
+
+    /* Fetch customer Rates for the customer */
+    this.customerService.getCustomerRates(id).subscribe({
+      next: rates => {
+        this.allCustomerRates = rates || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching customer Rates:', err)
     });
   }
 
@@ -208,6 +222,21 @@ export class CustomerViewComponent implements OnInit {
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
       return /*matchesActive &&*/ matchesQuery;
     });
+
+    this.customerRates = this.allCustomerRates.filter(rate => {
+      // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
+      //const matchesActive = this.activeFilter === null ? true : (rate.active === this.activeFilter);
+      // text search across multiple fields
+      const fields = [
+        rate?.customer,
+        rate?.trade,
+        rate?.rateType,
+        rate?.state,
+        rate?.rate
+      ];
+      const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
+      return /*matchesActive &&*/ matchesQuery;
+    });
   }
 
   /* Clear the filter input and reset location list */
@@ -278,6 +307,18 @@ export class CustomerViewComponent implements OnInit {
         error: (err) => {
           console.error('Error deleting customer ETA:', err)
           alert('Failed to delete customer ETA. Please try again.');
+        }
+      });
+    } else if (this.activeTab === 'customerRates') {
+      if (!confirm('Delete this customer Rate?')) return;
+      this.customerRatesService.deleteCustomerRate(id).subscribe({
+        next: () => {
+          this.allCustomerRates = this.allCustomerRates.filter(rate => rate.rowId !== id);
+          this.applyFilters();
+        },
+        error: (err) => {
+          console.error('Error deleting customer Rate:', err)
+          alert('Failed to delete customer Rate. Please try again.');
         }
       });
     }

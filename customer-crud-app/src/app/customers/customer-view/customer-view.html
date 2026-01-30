@@ -347,6 +347,7 @@
   </tr>
 </table>
 </div>
+-->
 
 <div *ngIf="activeTab === 'customerRates'" class="card">
   <h1>Customer Rates</h1>
@@ -361,17 +362,7 @@
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
     <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
-    <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
-      <label for="active">Active</label>
-    </td>
-    <button type="button" class="btn-create" [routerLink]="['/customer-rates/new']">Add New NTE</button>
+    <button type="button" class="btn-create" [routerLink]="['/customer-rates/new']">Add New Rate</button>
   </div>
 <table>
   <tr>
@@ -383,21 +374,20 @@
     <th>Created On</th>
     <th>Actions</th>
   </tr>
-  <tr *ngFor="let cr of customerRates">
-    <td>{{ cr.trade }}</td>
-    <td>{{ cr.rateType }}</td>
-    <td>{{ cr.state }}</td>
-    <td>{{ cr.rate }}</td>
-    <td>{{ cr.createdBy }}</td>
-    <td>{{ cr.createdOn }}</td>
+  <tr *ngFor="let rate of customerRates">
+    <td>{{ rate.trade }}</td>
+    <td>{{ rate.rateType }}</td>
+    <td>{{ rate.state }}</td>
+    <td>{{ rate.rate }}</td>
+    <td>{{ rate.createdBy }}</td>
+    <td>{{ rate.createdOn }}</td>
     <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/customer-rates/edit', cr.rowId]">Edit</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(cr.rowId)">Delete</button>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-rates/edit', rate.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(rate.rowId)">Delete</button>
     </td>
   </tr>
 </table>
 </div>
--->
 
 <ng-template #notFound>
   <div class="card">

@@ -1,0 +1,23 @@
+<h1>Customer Rates Details</h1>
+<div *ngIf="rate; else notFound" class="card">
+    <div class="detail-grid">
+        <h2 class="title">{{ rate.rateType || 'Rate Type' }}</h2>
+    
+        <div class="item"><div class="label">ID</div><div class="value">{{ rate.rowId }}</div></div>
+    
+        <div class="group-title">Customer Rate Info</div>
+        <div class="item"><div class="label">Customer</div><div class="value">{{ rate.customer }}</div></div>
+        <div class="item"><div class="label">Trade</div><div class="value">{{ rate.trade }}</div></div>
+        <div class="item"><div class="label">Rate Type</div><div class="value">{{ rate.rateType }}</div></div>
+        <div class="item"><div class="label">State</div><div class="value">{{ rate.state }}</div></div>
+        <div class="item"><div class="label">Rate</div><div class="value">{{ rate.rate }}</div></div>
+    </div>
+    <button type="button" [routerLink]="['/customers']">Back</button>
+</div>
+
+<ng-template #notFound>
+    <div class="card">
+        <p>Customer Rate not found.</p>
+        <button type="button" [routerLink]="['/customers']">Back</button>
+    </div>
+</ng-template>

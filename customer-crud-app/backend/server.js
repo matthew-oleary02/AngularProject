@@ -953,6 +953,41 @@ app.get('/customers/:id/customer-eta', async (req, res) => {
   }
 });
 
+// customer rates per customer
+app.get('/customers/:id/customer-rates', async (req, res) => {
+  try {
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+    const result = await request.query(`
+      SELECT cr.RowID, cr.Customer, cr.Trade, cr.RateType, cr.State, cr.Rate, cr.CreatedBy, cr.CreatedOn, cr.ModifiedBy, cr.ModifiedOn
+      FROM CustomerRates cr
+      INNER JOIN Customers c ON cr.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+    `);
+    const customerRates = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      trade: row.Trade,
+      rateType: row.RateType,
+      state: row.State,
+      rate: row.Rate,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(customerRates);
+  } catch (err) {
+    console.error('Error fetching customer rates for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {
   try {
@@ -1719,6 +1754,141 @@ app.delete('/customer-eta/:id', async (req, res) => {
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting customer ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
+    CUSTOMER RATES ENDPOINTS
+=========================== */
+
+// GET /customer-rates (all customer rates)
+app.get('/customer-rates', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM CustomerRates');
+    const customerRates = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      trade: row.Trade,
+      rateType: row.RateType,
+      state: row.State,
+      rate: row.Rate,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(customerRates);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /customer-rates/:id (single customer rate by ID)
+app.get('/customer-rates/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM CustomerRates WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Customer rate not found' });
+    }
+    const row = result.recordset[0];
+    const customerRate = {
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      trade: row.Trade,
+      rateType: row.RateType,
+      state: row.State,
+      rate: row.Rate,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(customerRate);
+  } catch (err) {
+    console.error('Error fetching customer rate:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /customer-rates (add new customer rate)
+app.post('/customer-rates', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerRate = req.body;
+    const query = `
+      INSERT INTO CustomerRates (
+        Customer, Trade, RateType, State, Rate, CreatedBy, CreatedOn
+      ) VALUES (
+        @Customer, @Trade, @RateType, @State, @Rate, @CreatedBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, customerRate.customer);
+    request.input('Trade', sql.VarChar, customerRate.trade);
+    request.input('RateType', sql.VarChar, customerRate.rateType);
+    request.input('State', sql.VarChar, customerRate.state);
+    request.input('Rate', sql.Decimal(18, 2), customerRate.rate);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Customer rate added successfully' });
+  } catch (err) {
+    console.error('Error adding customer rate:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /customer-rates/:id (update existing customer rate)
+app.put('/customer-rates/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerRate = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE CustomerRates SET
+        Customer = @Customer,
+        Trade = @Trade,
+        RateType = @RateType,
+        State = @State,
+        Rate = @Rate,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, customerRate.customer);
+    request.input('Trade', sql.VarChar, customerRate.trade);
+    request.input('RateType', sql.VarChar, customerRate.rateType);
+    request.input('State', sql.VarChar, customerRate.state);
+    request.input('Rate', sql.Decimal(18, 2), customerRate.rate);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.status(200).json({ message: 'Customer rate updated successfully' });
+  } catch (err) {
+    console.error('Error updating customer rate:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /customer-rates/:id (delete customer rate)
+app.delete('/customer-rates/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM CustomerRates WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting customer rate:', err);
     res.status(500).send('Server error');
   }
 });

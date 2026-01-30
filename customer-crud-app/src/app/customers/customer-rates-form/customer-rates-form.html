@@ -1,0 +1,51 @@
+<h1>{{ isEdit ? 'Edit Customer Rate' : 'Add New Customer Rate' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <label for="customer" class="full-label">Customer:</label>
+    <select id="customer" class="full-input" formControlName="customer">
+      <option value="">Select a customer</option>
+      <option *ngFor="let cust of customers" [value]="cust.customerName">
+      {{ cust.customerName }}
+      </option>
+    </select>
+    <!-- Validation message for customer -->
+    <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
+      Required
+    </div>
+
+    <label for="trade" class="full-label">Trade:</label>
+    <input id="trade" class="full-input" formControlName="trade" type="text" />
+    <!-- Validation message for trade -->
+    <div class="error" *ngIf="form.get('trade')?.invalid && form.get('trade')?.touched">
+      Required
+    </div>
+
+    <label for="rateType" class="full-label">Rate Type:</label>
+    <input id="rateType" class="full-input" formControlName="rateType" type="text" />
+    <!-- Validation message for rate type -->
+    <div class="error" *ngIf="form.get('rateType')?.invalid && form.get('rateType')?.touched">
+      Required
+    </div>
+
+    <label for="state" class="full-label">State:</label>
+    <input id="state" class="full-input" formControlName="state" type="text" />
+    <!-- Validation message for state -->
+    <div class="error" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">
+      Required
+    </div>
+
+    <label for="rate" class="full-label">Rate:</label>
+    <input id="rate" class="full-input" formControlName="rate" type="number" />
+    <!-- Validation message for rate -->
+    <div class="error" *ngIf="form.get('rate')?.invalid && form.get('rate')?.touched">
+      Required and must be a positive number
+    </div>
+
+    <div class="form-actions">
+      <td><button type="onSubmit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button></td>
+      <td><button type="button" class="btn-cancel"[routerLink]="['/customers']">Cancel</button></td>
+    </div>
+    </form>
+</div>
