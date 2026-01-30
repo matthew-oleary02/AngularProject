@@ -953,7 +953,7 @@ app.get('/customers/:id/customer-eta', async (req, res) => {
   }
 });
 
-// customer rates per customer
+// Customer Rates per customer
 app.get('/customers/:id/customer-rates', async (req, res) => {
   try {
     const customerId = parseInt(req.params.id, 10);

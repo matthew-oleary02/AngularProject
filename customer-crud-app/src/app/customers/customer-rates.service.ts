@@ -5,6 +5,8 @@ import { CustomerRates } from './customer-rates.model'
 
 @Injectable({ providedIn: 'root' })
 export class CustomerRatesService {
+
+    // Base URL for the Customer Rates API
     private apiUrl = 'http://localhost:3000/customer-rates';
     
     constructor(private http: HttpClient) {}

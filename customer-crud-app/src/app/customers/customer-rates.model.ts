@@ -1,3 +1,5 @@
+// customer-crud-app/src/app/customers/customer-rates.model.ts
+
 export interface CustomerRates {
     rowId: number;
     customer: string;
