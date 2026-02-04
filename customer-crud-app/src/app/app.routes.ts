@@ -19,6 +19,8 @@ import { CustomerETAFormComponent } from './customers/customer-eta-form/customer
 import { CustomerETAViewComponent } from './customers/customer-eta-view/customer-eta-view';
 import { CustomerRatesFormComponent } from './customers/customer-rates-form/customer-rates-form';
 import { CustomerRatesViewComponent } from './customers/customer-rates-view/customer-rates-view';
+import { ServiceTypesViewComponent } from './customers/service-types-view/service-types-view';
+import { ServiceTypesFormComponent } from './customers/service-types-form/service-types-form';
 import { VendorListComponent } from './vendors/vendors/vendors';
 import { VendorsFormComponent } from './vendors/vendors-form/vendors-form';
 import { VendorsViewComponent } from './vendors/vendors-view/vendors-view';
@@ -84,6 +86,10 @@ export const routes: Routes = [
   { path : 'customer-rates/new', component: CustomerRatesFormComponent, canActivate: [AuthGuard]},
   { path : 'customer-rates/edit/:id', component: CustomerRatesFormComponent, canActivate: [AuthGuard]},
   { path : 'customer-rates/view/:id', component: CustomerRatesViewComponent, canActivate: [AuthGuard]},
+  { path : 'customers/:id/service-types', component: CustomerViewComponent, canActivate: [AuthGuard]},
+  { path : 'service-types/view/:id', component: ServiceTypesViewComponent, canActivate: [AuthGuard]},
+  { path : 'service-types/new', component: ServiceTypesFormComponent, canActivate: [AuthGuard]},
+  { path : 'service-types/edit/:id', component: ServiceTypesFormComponent, canActivate: [AuthGuard]},
   { path: 'vendors', component: VendorListComponent, canActivate: [AuthGuard] },
   { path: 'vendors/new', component: VendorsFormComponent, canActivate: [AuthGuard] },
   { path: 'vendors/edit/:id', component: VendorsFormComponent, canActivate: [AuthGuard] },

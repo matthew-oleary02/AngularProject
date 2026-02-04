@@ -988,6 +988,39 @@ app.get('/customers/:id/customer-rates', async (req, res) => {
   }
 });
 
+// customer service types per customer
+app.get('/customers/:id/service-types', async (req, res) => {
+  try {
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+    const result = await request.query(`
+      SELECT st.RowID, st.Customer, st.ServiceType, st.CreatedBy, st.CreatedOn, st.ModifiedBy, st.ModifiedOn
+      FROM ServiceTypes st
+      INNER JOIN Customers c ON st.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+    `);
+    const serviceTypes = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      serviceType: row.ServiceType,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(serviceTypes);
+  } catch (err) {
+    console.error('Error fetching service types for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {
   try {
@@ -1892,6 +1925,126 @@ app.delete('/customer-rates/:id', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+/* ===========================
+    CUSTOMER SERVICE TYPES ENDPOINTS
+=========================== */
+
+// GET /service-types (all customer service types)
+app.get('/service-types', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM ServiceTypes');
+    const serviceTypes = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      serviceType: row.ServiceType
+    }));
+    res.json(serviceTypes);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /service-types/:id (single service type by ID)
+app.get('/service-types/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM ServiceTypes WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Service type not found' });
+    }
+    const row = result.recordset[0];
+    const serviceType = {
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      serviceType: row.ServiceType,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(serviceType);
+  } catch (err) {
+    console.error('Error fetching service type:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /service-types (add new service type)
+app.post('/service-types', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const serviceType = req.body;
+    const query = `
+      INSERT INTO ServiceTypes (
+        Customer, ServiceType, CreatedBy, CreatedOn
+      ) VALUES (
+        @Customer, @ServiceType, @CreatedBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, serviceType.customer);
+    request.input('ServiceType', sql.VarChar, serviceType.serviceType);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+    request.input('CreatedOn', sql.DateTime, new Date());
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Service type added successfully' });
+  } catch (err) {
+    console.error('Error adding service type:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /service-types/:id (update existing service type)
+app.put('/service-types/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const serviceType = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE ServiceTypes SET
+        Customer = @Customer,
+        ServiceType = @ServiceType,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, serviceType.customer);
+    request.input('ServiceType', sql.VarChar, serviceType.serviceType);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    request.input('ModifiedOn', sql.DateTime, new Date());
+    await request.query(query);
+    res.status(200).json({ message: 'Service type updated successfully' });
+  }
+  catch (err) {
+    console.error('Error updating service type:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /service-types/:id (delete service type)
+app.delete('/service-types/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM ServiceTypes WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting service type:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 /* ===========================
     VENDOR MANAGEMENT ENDPOINTS

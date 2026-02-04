@@ -1,0 +1,24 @@
+<h1>Customer Service Types Details</h1>
+<div *ngIf="st; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ st.serviceType || 'Service Type' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ st.rowId }}</div></div>
+
+    <div class="group-title">Service Type Info</div>
+    <div class="item"><div class="label">Customer</div><div class="value">{{ st.customer }}</div></div>
+    <div class="item"><div class="label">Created On</div><div class="value">{{ st.createdOn }}</div></div>
+    <div class="item"><div class="label">Created By</div><div class="value">{{ st.createdBy }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ st.modifiedOn }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ st.modifiedBy }}</div></div>
+
+  </div>
+  <button type="button" [routerLink]="['/customers']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Customer Service Type not found.</p>
+    <button type="button" [routerLink]="['/customers']">Back</button>
+  </div>
+</ng-template>

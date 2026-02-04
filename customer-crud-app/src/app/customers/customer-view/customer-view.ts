@@ -15,6 +15,8 @@ import { CustomerETA } from '../customer-eta.model';
 import { CustomerETAService } from '../customer-eta.service';
 import { CustomerRates } from '../customer-rates.model';
 import { CustomerRatesService } from '../customer-rates.service';
+import { ServiceTypes } from '../service-types.model';
+import { ServiceTypesService } from '../service-types.service';
 
 @Component({
   selector: 'app-customer-view',
@@ -32,6 +34,7 @@ export class CustomerViewComponent implements OnInit {
   customerNte: CustomerNTE[] = [];
   customerEta: CustomerETA[] = [];
   customerRates: CustomerRates[] = [];
+  serviceTypes: ServiceTypes[] = [];
   /* Full list of locations from the server */
   private allLocations: Location[] = [];
   /* Full list of status messages from the server */
@@ -41,6 +44,7 @@ export class CustomerViewComponent implements OnInit {
   private allCustomerNte: CustomerNTE[] = [];
   private allCustomerEta: CustomerETA[] = [];
   private allCustomerRates: CustomerRates[] = [];
+  private allServiceTypes: ServiceTypes[] = [];
   filterText = '';
   activeFilter: boolean | null = true;
   activeTab: string = 'sites';  // single tab controller
@@ -53,7 +57,8 @@ export class CustomerViewComponent implements OnInit {
     private customerCamsService: CustomerCAMsService,
     private customerNteService: CustomerNTEService,
     private customerEtaService: CustomerETAService,
-    private customerRatesService: CustomerRatesService
+    private customerRatesService: CustomerRatesService,
+    private serviceTypesService: ServiceTypesService
   ) {}
 
   /* Load customer details based on route parameter */
@@ -122,6 +127,15 @@ export class CustomerViewComponent implements OnInit {
         this.applyFilters();
       },
       error: err => console.error('Error fetching customer Rates:', err)
+    });
+
+     /* Fetch customer Service Types for the customer */
+    this.customerService.getCustomerServiceTypes(id).subscribe({
+      next: st => {
+        this.allServiceTypes = st || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching customer Service Types:', err)
     });
   }
 
@@ -237,6 +251,18 @@ export class CustomerViewComponent implements OnInit {
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
       return /*matchesActive &&*/ matchesQuery;
     });
+
+    this.serviceTypes = this.allServiceTypes.filter(st => {
+      // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
+      //const matchesActive = this.activeFilter === null ? true : (st.active === this.activeFilter);
+      // text search across multiple fields
+      const fields = [
+        st?.customer,
+        st?.serviceType
+      ];
+      const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
+      return /*matchesActive &&*/ matchesQuery;
+    });
   }
 
   /* Clear the filter input and reset location list */
@@ -319,6 +345,18 @@ export class CustomerViewComponent implements OnInit {
         error: (err) => {
           console.error('Error deleting customer Rate:', err)
           alert('Failed to delete customer Rate. Please try again.');
+        }
+      });
+    } else if (this.activeTab === 'serviceTypes') {
+      if (!confirm('Delete this customer Service Type?')) return;
+      this.serviceTypesService.deleteServiceType(id).subscribe({
+        next: () => {
+          this.allServiceTypes = this.allServiceTypes.filter(st => st.rowId !== id);
+          this.applyFilters();
+        },
+        error: (err) => {
+          console.error('Error deleting customer Service Type:', err)
+          alert('Failed to delete customer Service Type. Please try again.');
         }
       });
     }

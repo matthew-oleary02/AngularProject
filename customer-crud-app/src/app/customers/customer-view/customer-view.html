@@ -308,7 +308,6 @@
 </table>
 </div>
 
-<!--
 <div *ngIf="activeTab === 'serviceTypes'" class="card">
   <h1>Customer Service Types</h1>
   
@@ -322,32 +321,23 @@
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
     <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
-    <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
-      <label for="active">Active</label>
-    </td>
-    <button type="button" class="btn-create" [routerLink]="['/customer-service-types/new']">Add New Service Type</button>
+    <button type="button" class="btn-create" [routerLink]="['/service-types/new']">Add New Service Type</button>
   </div>
 <table>
   <tr>
     <th>Service Type</th>
     <th>Actions</th>
   </tr>
-  <tr *ngFor="let cst of serviceTypes">
-    <td>{{ cst.serviceType }}</td>
+  <tr *ngFor="let st of serviceTypes">
+    <td>{{ st.serviceType }}</td>
     <td>
-      <button type="button" class="btn btn-delete" (click)="onDelete(cst.rowId)">Delete</button>
+      <button type="button" class="btn btn-edit" [routerLink]="['/service-types/edit', st.rowId]">Edit</button>
+      <button type="button" class="btn btn-view" [routerLink]="['/service-types/view', st.rowId]">View</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(st.rowId)">Delete</button>
     </td>
   </tr>
 </table>
 </div>
--->
 
 <!-- Customer Rates Tab Content -->
 <div *ngIf="activeTab === 'customerRates'" class="card">
