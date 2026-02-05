@@ -223,7 +223,7 @@
     <th>Actions</th>
   </tr>
   <tr *ngFor="let cc of customerCams">
-    <td>{{ cc.username }}</td>
+    <td><a [routerLink] ="['/customer-cams/view', cc.rowId]">{{ cc.username }}</a></td>
     <td>{{ cc.email }}</td>
     <td>{{ cc.phone }}</td>
     <td>{{ cc.trade }}</td>
@@ -268,6 +268,7 @@
     <td>{{ nte.note }}</td>
     <td>
       <button type="button" class="btn btn-edit" [routerLink]="['/customer-nte/edit', nte.rowId]">Edit</button>
+      <button type="button" class="btn btn-view" [routerLink]="['/customer-nte/view', nte.rowId]">View</button>
       <button type="button" class="btn btn-delete" (click)="onDelete(nte.rowId)">Delete</button>
     </td>
   </tr>
@@ -302,6 +303,7 @@
     <td>{{ eta.hoursBusDays }}</td>
     <td>
       <button type="button" class="btn btn-edit" [routerLink]="['/customer-eta/edit', eta.rowId]">Edit</button>
+      <button type="button" class="btn btn-view" [routerLink]="['/customer-eta/view', eta.rowId]">View</button>
       <button type="button" class="btn btn-delete" (click)="onDelete(eta.rowId)">Delete</button>
     </td>
   </tr>
@@ -374,6 +376,7 @@
     <td>{{ rate.createdOn }}</td>
     <td>
       <button type="button" class="btn btn-edit" [routerLink]="['/customer-rates/edit', rate.rowId]">Edit</button>
+      <button type="button" class="btn btn-view" [routerLink]="['/customer-rates/view', rate.rowId]">View</button>
       <button type="button" class="btn btn-delete" (click)="onDelete(rate.rowId)">Delete</button>
     </td>
   </tr>
