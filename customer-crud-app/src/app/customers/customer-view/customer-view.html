@@ -36,6 +36,15 @@
 </div>
 
 <div class="tabs">
+  <!--
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'openCalls'"
+    (click)="activeTab = 'openCalls'">
+    Open Calls
+  </button>
+  -->
   <button 
     type="button" 
     class="btn-tab"
@@ -43,12 +52,12 @@
     (click)="activeTab = 'sites'">
     Sites
   </button>
-  <button
+  <button 
     type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'statusMessages'"
-    (click)="activeTab = 'statusMessages'">
-    Status Messages
+    class="btn-tab"
+    [class.active]="activeTab === 'equipment'"
+    (click)="activeTab = 'equipment'">
+    Equipment
   </button>
   <button 
     type="button" 
@@ -71,6 +80,22 @@
     (click)="activeTab = 'eta'">
     ETA
   </button>
+   <!--
+  <button 
+    type="button" 
+    class="btn-tab"
+    [class.active]="activeTab === 'files'"
+    (click)="activeTab = 'files'">
+    Files
+  </button>
+  -->
+  <button
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'statusMessages'"
+    (click)="activeTab = 'statusMessages'">
+    Status Messages
+  </button>
   <button 
     type="button" 
     class="btn-tab" 
@@ -78,6 +103,15 @@
     (click)="activeTab = 'serviceTypes'">
     Service Types
   </button>
+  <!--
+  <button
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'notifications'"
+    (click)="activeTab = 'notifications'">
+    Notifications
+  </button>
+  -->
   <button 
     type="button" 
     class="btn-tab" 

@@ -1,0 +1,52 @@
+<div class="card">
+  <h1>Equipment List</h1>
+  <!-- Toolbar with filter input and clear button -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search name, city, state, email, contact..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+  </div>
+<table>
+  <tr>
+    <th>Customer</th>
+    <th>Location</th>
+    <th>Entry Status</th>
+    <th>Manufacturer</th>
+    <th>Model</th>
+    <th>Serial#</th>
+    <th>Tonnage</th>
+    <th>Age</th>
+    <th>Condition</th>
+    <th>Comments</th>
+    <th>TypeOfUnit</th>
+    <th>DateLoaded</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let loc of locations">
+    <td><a [routerLink]="['/equipment/view', eq.rowId]">{{ eq.customer }}</a></td>
+    <td>{{ eq.location }}</td>
+    <td>{{ eq.entryStatus }}</td>
+    <td>{{ eq.manufacturer }}</td>
+    <td>{{ eq.model }} </td>
+    <td>{{ eq.serialNumber }}</td>
+    <td>{{ eq.tonnage }}</td>
+    <td>{{ eq.age }} </td>
+    <td>{{ eq.condition }}</td>
+    <td>{{ eq.comments }}</td>
+    <td>{{ eq.typeOfUnit }} </td>
+    <td>{{ eq.dateLoaded | date:'short' }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/equipment/edit', eq.rowId]">Edit</button>
+      <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
+      <button type="button" class="btn btn-delete" (click)="onDelete(eq.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+<button type="button" [routerLink]="['/equipment/new']" >Add New Equipment</button>
