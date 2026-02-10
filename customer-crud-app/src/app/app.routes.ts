@@ -21,6 +21,8 @@ import { CustomerRatesFormComponent } from './customers/customer-rates-form/cust
 import { CustomerRatesViewComponent } from './customers/customer-rates-view/customer-rates-view';
 import { ServiceTypesViewComponent } from './customers/service-types-view/service-types-view';
 import { ServiceTypesFormComponent } from './customers/service-types-form/service-types-form';
+import { EquipmentFormComponent } from './customers/equipment-form/equipment-form';
+import { EquipmentViewComponent } from './customers/equipment-view/equipment-view';
 import { VendorListComponent } from './vendors/vendors/vendors';
 import { VendorsFormComponent } from './vendors/vendors-form/vendors-form';
 import { VendorsViewComponent } from './vendors/vendors-view/vendors-view';

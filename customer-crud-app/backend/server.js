@@ -2045,6 +2045,40 @@ app.delete('/service-types/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    EQUIPMENT ENDPOINTS
+=========================== */
+
+// GET /equipment (all equipment)
+app.get('/equipment', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM Equipment');
+    const equipment = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      location: row.Location,
+      entryStatus: row.EntryStatus,
+      manufacturer: row.Manufacturer,
+      model: row.Model,
+      serialNumber: row.SerialNumber,
+      tonnage: row.Tonnage,
+      age: row.Age,
+      condition: row.Condition,
+      typeOfUnit: row.TypeOfUnit,
+      dateLoaded: row.DateLoaded,
+      enteredBy: row.EnteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(equipment);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});   
+
 
 /* ===========================
     VENDOR MANAGEMENT ENDPOINTS
