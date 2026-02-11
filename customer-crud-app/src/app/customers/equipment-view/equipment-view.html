@@ -1,36 +1,35 @@
 <h1>Equipment Details</h1>
 <div *ngIf="equipment; else notFound" class="card">
   <div class="detail-grid">
-    <h2 class="title">{{ eq.model || 'Model' }}</h2>
+    <h2 class="title">{{ equipment.model || 'Model' }}</h2>
 
-    <div class="item"><div class="label">ID</div><div class="value">{{ eq.rowId }}</div></div>
+    <div class="item"><div class="label">ID</div><div class="value">{{ equipment.rowId }}</div></div>
 
     <div class="group-title">Equipment Info</div>
-    <div class="item"><div class="label">Customer</div><div class="value">{{ eq.customer }}</div></div>
-    <div class="item"><div class="label">Location</div><div class="value">{{ eq.location }}</div></div>
-    <div class="item"><div class="label">Entry Status</div><div class="value">{{ eq.entryStatus }}</div></div>
-    <div class="item"><div class="label">Manufacturer</div><div class="value">{{ eq.manufacturer }}</div></div>
-    <div class="item"><div class="label">Model</div><div class="value">{{ eq.model }}</div></div>
-    <div class="item"><div class="label">Serial Number</div><div class="value">{{ eq.serialNumber }}</div></div>
-    <div class="item"><div class="label">Tonnage</div><div class="value">{{ eq.tonnage }}</div></div>
-    <div class="item"><div class="label">Age</div><div class="value">{{ eq.age }}</div></div>
-    <div class="item"><div class="label">Condition</div><div class="value">{{ eq.condition }}</div></div>
-    <div class="item"><div class="label">Comments</div><div class="value">{{ eq.comments }}</div></div>
-    <div class="item"><div class="label">Type Of Unit</div><div class="value">{{ eq.typeOfUnit }}</div></div>
-    <div class="item"><div class="label">Date Loaded</div><div class="value">{{ eq.dateLoaded | date:'short' }}</div></div>
+    <div class="item"><div class="label">Customer</div><div class="value">{{ equipment.customer }}</div></div>
+    <div class="item"><div class="label">Location</div><div class="value">{{ equipment.location }}</div></div>
+    <div class="item"><div class="label">Entry Status</div><div class="value">{{ equipment.entryStatus }}</div></div>
+    <div class="item"><div class="label">Manufacturer</div><div class="value">{{ equipment.manufacturer }}</div></div>
+    <div class="item"><div class="label">Model</div><div class="value">{{ equipment.model }}</div></div>
+    <div class="item"><div class="label">Serial Number</div><div class="value">{{ equipment.serialNumber }}</div></div>
+    <div class="item"><div class="label">Tonnage</div><div class="value">{{ equipment.tonnage }}</div></div>
+    <div class="item"><div class="label">Age</div><div class="value">{{ equipment.age }}</div></div>
+    <div class="item"><div class="label">Condition</div><div class="value">{{ equipment.condition }}</div></div>
+    <div class="item"><div class="label">Type Of Unit</div><div class="value">{{ equipment.typeOfUnit }}</div></div>
+    <div class="item"><div class="label">Date Loaded</div><div class="value">{{ equipment.dateLoaded | date:'short' }}</div></div>
 
     <div class="group-title">Additional Info</div>
-    <div class="item"><div class="label">Entered By</div><div class="value">{{ eq.enteredBy }}</div></div>
-    <div class="item"><div class="label">Date Entered</div><div class="value">{{ eq.dateEntered | date:'short' }}</div></div>
-    <div class="item"><div class="label">Modified By</div><div class="value">{{ eq.modifiedBy }}</div></div>
-    <div class="item"><div class="label">Last Update</div><div class="value">{{ eq.modifiedOn | date:'short' }}</div></div>
+    <div class="item"><div class="label">Entered By</div><div class="value">{{ equipment.enteredBy }}</div></div>
+    <div class="item"><div class="label">Date Entered</div><div class="value">{{ equipment.dateEntered | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ equipment.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Last Update</div><div class="value">{{ equipment.modifiedOn | date:'short' }}</div></div>
   </div>
   <button type="button" [routerLink]="['/equipment']">Back</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
-    <p>Location not found.</p>
+    <p>Equipment not found.</p>
     <button type="button" [routerLink]="['/equipment']">Back</button>
   </div>
 </ng-template>

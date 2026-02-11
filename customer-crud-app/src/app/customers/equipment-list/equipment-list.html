@@ -23,12 +23,11 @@
     <th>Tonnage</th>
     <th>Age</th>
     <th>Condition</th>
-    <th>Comments</th>
     <th>TypeOfUnit</th>
     <th>DateLoaded</th>
     <th>Actions</th>
   </tr>
-  <tr *ngFor="let loc of locations">
+  <tr *ngFor="let eq of equipment">
     <td><a [routerLink]="['/equipment/view', eq.rowId]">{{ eq.customer }}</a></td>
     <td>{{ eq.location }}</td>
     <td>{{ eq.entryStatus }}</td>
@@ -38,7 +37,6 @@
     <td>{{ eq.tonnage }}</td>
     <td>{{ eq.age }} </td>
     <td>{{ eq.condition }}</td>
-    <td>{{ eq.comments }}</td>
     <td>{{ eq.typeOfUnit }} </td>
     <td>{{ eq.dateLoaded | date:'short' }}</td>
     <td>

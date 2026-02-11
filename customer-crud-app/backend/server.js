@@ -1020,6 +1020,43 @@ app.get('/customers/:id/service-types', async (req, res) => {
   }
 });
 
+// equipment list per customer
+app.get('/customers/:id/equipment', async (req, res) => {
+  try {
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+    const result = await request.query(`
+      SELECT eq.RowID, eq.Customer, eq.Location, eq.EntryStatus, eq.Manufacturer, eq.Model, eq.SerialNumber, eq.Tonnage, eq.Age, eq.Condition, eq.TypeOfUnit, eq.DateLoaded
+      FROM Equipment eq
+      INNER JOIN Customers c ON eq.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+    `);
+    const equipmentList = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      location: row.Location,
+      entryStatus: row.EntryStatus,
+      manufacturer: row.Manufacturer,
+      model: row.Model,
+      serialNumber: row.SerialNumber,
+      tonnage: row.Tonnage,
+      age: row.Age,
+      condition: row.Condition,
+      typeOfUnit: row.TypeOfUnit,
+      dateLoaded: row.DateLoaded
+    }));  
+    res.json(equipmentList);
+  } catch (err) {
+    console.error('Error fetching equipment list for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {
@@ -2077,7 +2114,140 @@ app.get('/equipment', async (req, res) => {
     console.error('SQL error', err);
     res.status(500).send('Server error');
   }
-});   
+});
+
+// GET /equipment/:id (single equipment by ID)
+app.get('/equipment/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM Equipment WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Equipment not found' });
+    }
+    const row = result.recordset[0];
+    const equipment = {
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      location: row.Location,
+      entryStatus: row.EntryStatus,
+      manufacturer: row.Manufacturer,
+      model: row.Model,
+      serialNumber: row.SerialNumber,
+      tonnage: row.Tonnage,
+      age: row.Age,
+      condition: row.Condition,
+      typeOfUnit: row.TypeOfUnit,
+      dateLoaded: row.DateLoaded,
+      enteredBy: row.EnteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(equipment);
+  } catch (err) {
+    console.error('Error fetching equipment:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /equipment (add new equipment)
+app.post('/equipment', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const equipment = req.body;
+    const query = `
+      INSERT INTO Equipment (
+        Customer, Location, EntryStatus, Manufacturer, Model, SerialNumber,
+        Tonnage, Age, Condition, TypeOfUnit, DateLoaded, EnteredBy, DateEntered
+      ) VALUES (
+        @Customer, @Location, @EntryStatus, @Manufacturer, @Model, @SerialNumber,
+        @Tonnage, @Age, @Condition, @TypeOfUnit, @DateLoaded, @EnteredBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, equipment.customer);
+    request.input('Location', sql.VarChar, equipment.location);
+    request.input('EntryStatus', sql.VarChar, equipment.entryStatus);
+    request.input('Manufacturer', sql.VarChar, equipment.manufacturer);
+    request.input('Model', sql.VarChar, equipment.model);
+    request.input('SerialNumber', sql.VarChar, equipment.serialNumber);
+    request.input('Tonnage', sql.Decimal(18, 2), equipment.tonnage);
+    request.input('Age', sql.Int, equipment.age);
+    request.input('Condition', sql.VarChar, equipment.condition);
+    request.input('TypeOfUnit', sql.VarChar, equipment.typeOfUnit);
+    request.input('DateLoaded', sql.Date, equipment.dateLoaded);
+    request.input('EnteredBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Equipment added successfully' });
+  } catch (err) {
+    console.error('Error adding equipment:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /equipment/:id (update existing equipment)
+app.put('/equipment/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const equipment = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE Equipment SET
+        Customer = @Customer,
+        Location = @Location,
+        EntryStatus = @EntryStatus,
+        Manufacturer = @Manufacturer,
+        Model = @Model,
+        SerialNumber = @SerialNumber,
+        Tonnage = @Tonnage,
+        Age = @Age,
+        Condition = @Condition,
+        TypeOfUnit = @TypeOfUnit,
+        DateLoaded = @DateLoaded,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, equipment.customer);
+    request.input('Location', sql.VarChar, equipment.location);
+    request.input('EntryStatus', sql.VarChar, equipment.entryStatus);
+    request.input('Manufacturer', sql.VarChar, equipment.manufacturer);
+    request.input('Model', sql.VarChar, equipment.model);
+    request.input('SerialNumber', sql.VarChar, equipment.serialNumber);
+    request.input('Tonnage', sql.Decimal(18, 2), equipment.tonnage);
+    request.input('Age', sql.Int, equipment.age);
+    request.input('Condition', sql.VarChar, equipment.condition);
+    request.input('TypeOfUnit', sql.VarChar, equipment.typeOfUnit);
+    request.input('DateLoaded', sql.Date, equipment.dateLoaded);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.status(200).json({ message: 'Equipment updated successfully' });
+  } catch (err) {
+    console.error('Error updating equipment:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /equipment/:id (delete equipment)
+app.delete('/equipment/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM Equipment WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting equipment:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 
 /* ===========================

@@ -21,6 +21,7 @@ import { CustomerRatesFormComponent } from './customers/customer-rates-form/cust
 import { CustomerRatesViewComponent } from './customers/customer-rates-view/customer-rates-view';
 import { ServiceTypesViewComponent } from './customers/service-types-view/service-types-view';
 import { ServiceTypesFormComponent } from './customers/service-types-form/service-types-form';
+import { EquipmentListComponent } from './customers/equipment-list/equipment-list';
 import { EquipmentFormComponent } from './customers/equipment-form/equipment-form';
 import { EquipmentViewComponent } from './customers/equipment-view/equipment-view';
 import { VendorListComponent } from './vendors/vendors/vendors';
@@ -92,6 +93,10 @@ export const routes: Routes = [
   { path : 'service-types/view/:id', component: ServiceTypesViewComponent, canActivate: [AuthGuard]},
   { path : 'service-types/new', component: ServiceTypesFormComponent, canActivate: [AuthGuard]},
   { path : 'service-types/edit/:id', component: ServiceTypesFormComponent, canActivate: [AuthGuard]},
+  { path : 'equipment', component: EquipmentListComponent, canActivate: [AuthGuard]},
+  { path : 'equipment/new', component: EquipmentFormComponent, canActivate: [AuthGuard]},
+  { path : 'equipment/edit/:id', component: EquipmentFormComponent, canActivate: [AuthGuard]},
+  { path : 'equipment/view/:id', component: EquipmentViewComponent, canActivate: [AuthGuard]},
   { path: 'vendors', component: VendorListComponent, canActivate: [AuthGuard] },
   { path: 'vendors/new', component: VendorsFormComponent, canActivate: [AuthGuard] },
   { path: 'vendors/edit/:id', component: VendorsFormComponent, canActivate: [AuthGuard] },

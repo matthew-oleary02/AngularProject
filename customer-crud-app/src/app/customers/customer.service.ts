@@ -108,6 +108,11 @@ getCustomerServiceTypes(customerId: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/${customerId}/service-types`);
 }
 
+/* Fetch customer Equipment per customer */
+getCustomerEquipment(customerId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/equipment`);
+}
+
 /* Delete a customer by ID */
 deleteCustomer(id: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/${id}`);
