@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CustomerService } from '../customer.service';
 import { Customer } from '../customer.model';
+import { Jobs } from '../../jobs/jobs.model';
+import { JobsService } from '../../jobs/jobs.service';
 import { Location } from '../location.model';
 import { LocationService } from '../location.service';
 import { CustomerStatusMessage } from '../status-messages.model';
@@ -30,6 +32,7 @@ import { EquipmentService } from '../equipment.service';
 
 export class CustomerViewComponent implements OnInit {
   customer?: Customer;
+  jobs: Jobs[] = [];
   locations: Location[] = [];
   statusMessages: CustomerStatusMessage[] = [];
   customerCams: CustomerCAMs[] = [];
@@ -38,6 +41,7 @@ export class CustomerViewComponent implements OnInit {
   customerRates: CustomerRates[] = [];
   serviceTypes: ServiceTypes[] = [];
   equipment: Equipment[] = [];
+  private allJobs: Jobs[] = [];
   /* Full list of locations from the server */
   private allLocations: Location[] = [];
   /* Full list of status messages from the server */
@@ -56,6 +60,7 @@ export class CustomerViewComponent implements OnInit {
   constructor(private customerService: CustomerService,
     private router: Router,
     private route: ActivatedRoute,
+    private jobsService: JobsService,
     private locationService: LocationService,
     private statusMessageService: CustomerStatusMessageService,
     private customerCamsService: CustomerCAMsService,
@@ -78,6 +83,15 @@ export class CustomerViewComponent implements OnInit {
     this.customerService.getCustomer(id).subscribe({
       next: c => this.customer = c,
       error: err => console.error('Error fetching customers:', err)
+    });
+
+    /* Fetch jobs for the customer */
+    this.customerService.getJobsByCustomer(id).subscribe({
+      next: jobs => {
+        this.allJobs = jobs || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching jobs:', err)
     });
 
     /* Fetch location list for the customer */
@@ -298,6 +312,27 @@ export class CustomerViewComponent implements OnInit {
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
       return /*matchesActive &&*/ matchesQuery;
     });
+
+    this.jobs = this.allJobs.filter(job => {
+      // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
+      const matchesActive = this.activeFilter === null ? true : (job.active === this.activeFilter);
+      // text search across multiple fields
+      const fields = [
+        job?.jobNumber,
+        job?.customer,
+        job?.location,
+        job?.clientTrackingNumber,
+        job?.serviceType,
+        job?.jobStatus,
+        job?.trade,
+        job?.vendor,
+        job?.jobOwner,
+        job?.caller,
+        job?.jobNote
+      ];
+      const matchesQuery = !q || fields.some(f => f?.toLowerCase().includes(q));
+      return matchesActive && matchesQuery;
+    });
   }
 
   /* Clear the filter input and reset location list */
@@ -404,6 +439,18 @@ export class CustomerViewComponent implements OnInit {
         error: (err) => {
           console.error('Error deleting customer Equipment:', err)
           alert('Failed to delete customer Equipment. Please try again.');
+        }
+      });
+    } else if (this.activeTab === 'jobs') {
+      if (!confirm('Delete this job?')) return;
+      this.jobsService.deleteJob(id).subscribe({
+        next: () => {
+          this.allJobs = this.allJobs.filter(job => job.rowId !== id);
+          this.applyFilters();
+        },
+        error: (err) => {
+          console.error('Error deleting job:', err)
+          alert('Failed to delete job. Please try again.');
         }
       });
     }

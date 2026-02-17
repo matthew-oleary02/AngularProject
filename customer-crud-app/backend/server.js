@@ -543,6 +543,207 @@ app.delete('/roles/:id', authenticateToken, async (req, res) => {
   }
 });
 
+/* ==========================
+    JOBS MANAGEMENT ENDPOINTS
+========================== */
+
+// GET /jobs (all jobs)
+app.get('/jobs', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM Jobs');
+    const jobs = result.recordset.map(row => ({
+      rowId: parseInt(row.RowID, 10),
+      customer: row.Customer,
+      location: row.Location,
+      clientTrackingNumber: row.ClientTrackingNumber,
+      serviceType: row.ServiceType,
+      jobStatus: row.JobStatus,
+      trade: row.Trade,
+      vendor: row.Vendor,
+      jobOwner: row.JobOwner,
+      dateReceived: row.DateReceived,
+      state: row.State,
+      eta: row.ETA,
+      caller: row.Caller,
+      nte: row.NTE,
+      vendorNTE: row.VendorNTE,
+      quote: row.Quote,
+      jobNote: row.JobNote,
+      active: row.Active,
+      enteredBy: row.EnteredBy,
+      enteredOn: row.EnteredOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(jobs);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /jobs/:id (single job by ID)
+app.get('/jobs/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM Jobs WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Job not found' });
+    }
+    const row = result.recordset[0];
+    const job = {
+      rowId: parseInt(row.RowID, 10),
+      customer: row.Customer,
+      location: row.Location,
+      clientTrackingNumber: row.ClientTrackingNumber,
+      serviceType: row.ServiceType,
+      jobStatus: row.JobStatus,
+      trade: row.Trade,
+      vendor: row.Vendor,
+      jobOwner: row.JobOwner,
+      dateReceived: row.DateReceived,
+      state: row.State,
+      eta: row.ETA,
+      caller: row.Caller,
+      nte: row.NTE,
+      vendorNTE: row.VendorNTE,
+      quote: row.Quote,
+      jobNote: row.JobNote,
+      active: row.Active,
+      enteredBy: row.EnteredBy,
+      enteredOn: row.EnteredOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(job);
+  } catch (err) {
+    console.error('Error fetching job:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /jobs (add new job)
+app.post('/jobs', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const job = req.body;
+    const query = `
+      INSERT INTO Jobs (
+        Customer, Location, ClientTrackingNumber, ServiceType, JobStatus, Trade, Vendor, JobOwner,
+        DateReceived, State, ETA, Caller, NTE, VendorNTE, Quote, JobNote, Active, EnteredBy, DateEntered
+      ) VALUES (
+        @Customer, @Location, @ClientTrackingNumber, @ServiceType, @JobStatus, @Trade, @Vendor, @JobOwner,  
+        @DateReceived, @State, @ETA, @Caller, @NTE, @VendorNTE, @Quote, @JobNote, @Active, @EnteredBy, GETDATE()
+      )
+    `;
+
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, job.customer);
+    request.input('Location', sql.VarChar, job.location);
+    request.input('ClientTrackingNumber', sql.VarChar, job.clientTrackingNumber);
+    request.input('ServiceType', sql.VarChar, job.serviceType);
+    request.input('JobStatus', sql.VarChar, job.jobStatus);
+    request.input('Trade', sql.VarChar, job.trade);
+    request.input('Vendor', sql.VarChar, job.vendor);
+    request.input('JobOwner', sql.VarChar, job.jobOwner);
+    request.input('DateReceived', sql.DateTime, job.dateReceived);
+    request.input('State', sql.VarChar, job.state);
+    request.input('ETA', sql.DateTime, job.eta);
+    request.input('Caller', sql.VarChar, job.caller);
+    request.input('NTE', sql.Decimal(18, 2), job.nte);
+    request.input('VendorNTE', sql.Decimal(18, 2), job.vendorNTE);
+    request.input('Quote', sql.Decimal(18, 2), job.quote);
+    request.input('JobNote', sql.VarChar, job.jobNote);
+    request.input('Active', sql.Bit, job.active);
+    request.input('EnteredBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.status(201).json({ message: 'Job added successfully' });
+  } catch (err) {
+    console.error('Error adding job:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /jobs/:id (update existing job)
+app.put('/jobs/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const job = req.body;
+    const query = `
+      UPDATE Jobs SET
+        Customer = @Customer,
+        Location = @Location,
+        ClientTrackingNumber = @ClientTrackingNumber,
+        ServiceType = @ServiceType,
+        JobStatus = @JobStatus,
+        Trade = @Trade,
+        Vendor = @Vendor,
+        JobOwner = @JobOwner,
+        DateReceived = @DateReceived,
+        State = @State,
+        ETA = @ETA,
+        Caller = @Caller,
+        NTE = @NTE,
+        VendorNTE = @VendorNTE,
+        Quote = @Quote,
+        JobNote = @JobNote,
+        Active = @Active,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, job.customer);
+    request.input('Location', sql.VarChar, job.location);
+    request.input('ClientTrackingNumber', sql.VarChar, job.clientTrackingNumber);
+    request.input('ServiceType', sql.VarChar, job.serviceType);
+    request.input('JobStatus', sql.VarChar, job.jobStatus);
+    request.input('Trade', sql.VarChar, job.trade);
+    request.input('Vendor', sql.VarChar, job.vendor);
+    request.input('JobOwner', sql.VarChar, job.jobOwner);
+    request.input('DateReceived', sql.DateTime, job.dateReceived);
+    request.input('State', sql.VarChar, job.state);
+    request.input('ETA', sql.DateTime, job.eta);
+    request.input('Caller', sql.VarChar, job.caller);
+    request.input('NTE', sql.Decimal(18, 2), job.nte);
+    request.input('VendorNTE', sql.Decimal(18, 2), job.vendorNTE);
+    request.input('Quote', sql.Decimal(18, 2), job.quote);
+    request.input('JobNote', sql.VarChar, job.jobNote);
+    request.input('Active', sql.Bit, job.active);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    const result = await request.query(query);
+    if (result.rowsAffected && result.rowsAffected[0] === 0) {
+      return res.status(404).json({ message: 'Job not found' });
+    }
+    res.status(200).json({ message: 'Job updated successfully' });
+  } catch (err) {
+    console.error('Error updating job:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /jobs/:id (delete job)
+app.delete('/jobs/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM Jobs WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting job:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
 /* ===========================
    CUSTOMER MANAGEMENT ENDPOINTS
 =========================== */
@@ -739,6 +940,54 @@ app.put('/customers/:id', async (req, res) => {
   }
 });
 
+// jobs list per customer
+app.get('/customers/:id/jobs', async (req, res) => {
+  try {
+    const customerId = parseInt(req.params.id, 10);
+    if (Number.isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('CustomerId', sql.Int, customerId);
+    const result = await request.query(`
+      SELECT j.RowID, j.Customer, j.Location, j.ClientTrackingNumber, j.ServiceType, j.JobStatus, j.Trade, j.Vendor, 
+      j.JobOwner, j.DateReceived, j.State, j.ETA, j.Caller, j.NTE, j.VendorNTE, j.Quote, 
+      j.JobNote, j.Active, j.EnteredBy, j.EnteredOn, j.ModifiedBy, j.ModifiedOn
+      FROM Jobs j
+      INNER JOIN Customers c ON j.Customer = c.CustomerName
+      WHERE c.RowID = @CustomerId
+    `);
+    const jobs = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      location: row.Location,
+      clientTrackingNumber: row.ClientTrackingNumber,
+      serviceType: row.ServiceType,
+      jobStatus: row.JobStatus,
+      trade: row.Trade,
+      vendor: row.Vendor,
+      jobOwner: row.JobOwner,
+      dateReceived: row.DateReceived,
+      state: row.State,
+      eta: row.ETA,
+      caller: row.Caller,
+      nte: row.NTE,
+      vendorNTE: row.VendorNTE,
+      quote: row.Quote,
+      jobNote: row.JobNote,
+      active: !!row.Active,
+      enteredBy: row.EnteredBy,
+      enteredOn: row.EnteredOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(jobs);
+  } catch (err) {
+    console.error('Error fetching jobs for customer:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 // location list per customer
 app.get('/customers/:id/locations', async (req, res) => {

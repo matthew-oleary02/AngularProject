@@ -73,6 +73,11 @@ updateCustomer(customer: Customer): Observable<Customer> {
   return this.http.put<Customer>(`${this.apiUrl}/${customer.rowId}`, customer);
 }
 
+/* Fetch jobs for a specific customer */
+getJobsByCustomer(customerId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/jobs`);
+}
+
 /* Fetch location list per customer */
 getLocationList(customerId: number): Observable<Location[]> {
   return this.http.get<Location[]>(`${this.apiUrl}/${customerId}/locations`);

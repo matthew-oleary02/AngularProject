@@ -1,5 +1,8 @@
 
 import { Routes } from '@angular/router';
+import { JobsListComponent } from './jobs/jobs-list/jobs-list';
+import { JobsFormComponent } from './jobs/jobs-form/jobs-form';
+import { JobsViewComponent } from './jobs/jobs-view/jobs-view';
 import { POListComponent } from './purchaseOrder/purchase-order-list/purchase-order';
 import { POFormComponent } from './purchaseOrder/purchase-order-form/purchase-order-form';
 import { POViewComponent } from './purchaseOrder/purchase-order-view/purchase-order-view';
@@ -56,6 +59,10 @@ export const routes: Routes = [
   { path: 'roles/new', component: RolesFormComponent, canActivate: [AuthGuard] },
   { path: 'roles/edit/:id', component: RolesFormComponent, canActivate: [AuthGuard] },
   { path: 'roles/view/:id', component: RolesViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs', component: JobsListComponent, canActivate: [AuthGuard] },
+  { path: 'jobs/new', component: JobsFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs/edit/:id', component: JobsFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs/view/:id', component: JobsViewComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders', component: POListComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders/new', component: POFormComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders/edit/:id', component: POFormComponent, canActivate: [AuthGuard] },
@@ -64,6 +71,7 @@ export const routes: Routes = [
   { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/edit/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/view/:id', component: CustomerViewComponent, canActivate: [AuthGuard] },
+  { path: 'customers/:id/jobs', component: CustomerViewComponent, canActivate: [AuthGuard] },
   { path: 'customers/:id/locations', component: LocationListComponent, canActivate: [AuthGuard]},
   { path: 'locations', component: LocationListComponent, canActivate: [AuthGuard]},
   { path: 'locations/view/:id', component: LocationViewComponent, canActivate: [AuthGuard]},

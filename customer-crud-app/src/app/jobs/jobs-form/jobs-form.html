@@ -1,0 +1,73 @@
+<!-- job-form.html - Template for creating and editing job records -->
+<div class="card" *ngIf="form">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <label for="customer" class="full-label">Customer:</label>
+        <select id="customer" class="full-input" formControlName="customer">
+        <option value="">Select a customer</option>
+        <option *ngFor="let cust of customers" [value]="cust.customerName">
+            {{ cust.customerName }}
+        </option>
+        </select>
+        <!-- Validation message for customer -->
+        <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
+        Required
+        </div>
+
+        <label for="location" class="full-label">Location:</label>
+        <select id="location" class="full-input" formControlName="location">
+        <option value="">Select a location</option>
+        <option *ngFor="let loc of locations" [value]="loc.storeNumber">
+            {{ loc.storeNumber }} - {{ loc.siteAddress.city }}, {{ loc.siteAddress.state }}
+        </option>
+        </select>
+        <!-- Validation message for location -->
+        <div class="error" *ngIf="form.get('location')?.invalid && form.get('location')?.touched">
+        Required
+        </div>
+    
+        <label for="jobNumber" class="full-label">Job Number:</label>
+        <input id="jobNumber" class="full-input" formControlName="jobNumber" type="text" />
+        <!-- Validation message for job number -->
+        <div class="error" *ngIf="form.get('jobNumber')?.invalid && form.get('jobNumber')?.touched">
+        Required
+        </div>
+    
+        <!-- Additional form fields for job details would go here -->
+         <label for="serviceType" class="full-label">Service Type:</label>
+        <input id="serviceType" class="full-input" formControlName="serviceType" type="text" />
+        <label for="jobStatus" class="full-label">Job Status:</label>
+        <input id="jobStatus" class="full-input" formControlName="jobStatus" type="text" />
+        <label for="trade" class="full-label">Trade:</label>
+        <input id="trade" class="full-input" formControlName="trade" type="text" />
+        <label for="vendor" class="full-label">Vendor:</label>
+        <input id="vendor" class="full-input" formControlName="vendor" type="text" />
+        <label for="jobOwner" class="full-label">Job Owner:</label>
+        <input id="jobOwner" class="full-input" formControlName="jobOwner" type="text" />
+        <label for="dateReceived" class="full-label">Date Received:</label>
+        <input id="dateReceived" class="full-input" formControlName="dateReceived" type="date" />
+        <label for="state" class="full-label">State:</label>
+        <input id="state" class="full-input" formControlName="state" type="text" />
+        <label for="eta" class="full-label">ETA:</label>
+        <input id="eta" class="full-input" formControlName="eta" type="date" />
+        <label for="caller" class="full-label">Caller:</label>
+        <input id="caller" class="full-input" formControlName="caller" type="text" />
+        <label for="nte" class="full-label">NTE:</label>
+        <input id="nte" class="full-input" formControlName="nte" type="number" />
+        <label for="vendorNTE" class="full-label">Vendor NTE:</label>
+        <input id="vendorNTE" class="full-input" formControlName="vendorNTE" type="number" />
+        <label for="quote" class="full-label">Quote:</label>
+        <input id="quote" class="full-input" formControlName="quote" type="number" />
+        <label for="jobNote" class="full-label">Job Note:</label>
+        <textarea id="jobNote" class="full-input" formControlName="jobNote"></textarea>
+        <label for="active" class="full-label">Active:</label>
+        <input id="active" type="checkbox" formControlName="active" />
+    
+        <button type="submit" [disabled]="form.invalid">Save</button>
+        <button type="button" [routerLink]="['/jobs']">Cancel</button>
+    </form>
+</div>
+<ng-template #loading>
+    <div class="card">
+        <p>Loading...</p>
+    </div>
+</ng-template>

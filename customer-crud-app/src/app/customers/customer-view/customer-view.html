@@ -36,7 +36,6 @@
 </div>
 
 <div class="tabs">
-  <!--
   <button 
     type="button" 
     class="btn-tab" 
@@ -44,7 +43,6 @@
     (click)="activeTab = 'openCalls'">
     Open Calls
   </button>
-  -->
   <button 
     type="button" 
     class="btn-tab"
@@ -119,6 +117,79 @@
     (click)="activeTab = 'customerRates'">
     Rates
   </button>
+</div>
+
+<div *ngIf="activeTab === 'openCalls'" class="card">
+  <h1>Open Calls List</h1>
+  <!-- Toolbar with filter input and clear button -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </td>
+    <button type="button" class="btn-create" [routerLink]="['/jobs/new']">Add New Job</button>
+  </div>
+<table>
+  <tr>
+    <th>Job#</th>
+    <th>Customer</th>
+    <th>Location</th>
+    <th>ClientTracking#</th>
+    <th>ServiceType</th>
+    <th>JobStatus</th>
+    <th>Trade</th>
+    <th>Vendor</th>
+    <th>JobOwner</th>
+    <th>DateReceived</th>
+    <th>State</th>
+    <th>ETA</th>
+    <th>Caller</th>
+    <th>NTE</th>
+    <th>VendorNTE</th>
+    <th>Quote</th>
+    <th>Active</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let j of jobs">
+    <td><a [routerLink]="['/jobs/view', j.rowId]">{{ j.jobNumber }}</a></td>
+    <td>{{ j.customer }}</td>
+    <td>{{ j.location }}</td>
+    <td>{{ j.clientTrackingNumber }}</td>
+    <td>{{ j.serviceType }}</td>
+    <td>{{ j.jobStatus }}</td>
+    <td>{{ j.trade }}</td>
+    <td>{{ j.vendor }}</td>
+    <td>{{ j.jobOwner }}</td>
+    <td>{{ j.dateReceived | date:'short' }}</td>
+    <td>{{ j.state }}</td>
+    <td>{{ j.eta }}</td>
+    <td>{{ j.caller }}</td>
+    <td>{{ j.nte }}</td>
+    <td>{{ j.vendorNTE }}</td>
+    <td>{{ j.quote }}</td>
+    <td>{{ j.active ? 'Yes' : 'No' }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/jobs/edit', j.rowId]">Edit</button>
+      <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
+      <button type="button" class="btn btn-delete" (click)="onDelete(j.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
 </div>
 
 <div *ngIf="activeTab === 'sites'" class="card">

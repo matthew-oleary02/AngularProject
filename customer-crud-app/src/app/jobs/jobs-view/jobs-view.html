@@ -1,0 +1,39 @@
+<h1>Job Details</h1>
+<div *ngIf="jobs; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ jobs.jobNumber || 'Job #' }}</h2>
+
+    <div class="group-title">Job Info</div>
+    <div class="item"><div class="label">ID</div><div class="value">{{ jobs.rowId }}</div></div>
+    <div class="item"><div class="label">Customer</div><div class="value">{{ jobs.customer }}</div></div>
+    <div class="item"><div class="label">Location</div><div class="value">{{ jobs.location }}</div></div>
+    <div class="item"><div class="label">Service Type</div><div class="value">{{ jobs.serviceType }}</div></div>
+    <div class="item"><div class="label">Job Status</div><div class="value">{{ jobs.jobStatus }}</div></div>
+    <div class="item"><div class="label">Trade</div><div class="value">{{ jobs.trade }}</div></div>
+    <div class="item"><div class="label">Vendor</div><div class="value">{{ jobs.vendor }}</div></div>
+    <div class="item"><div class="label">Job Owner</div><div class="value">{{ jobs.jobOwner }}</div></div>
+    <div class="item"><div class="label">Date Received</div><div class="value">{{ jobs.dateReceived }}</div></div>
+    <div class="item"><div class="label">State</div><div class="value">{{ jobs.state }}</div></div>
+    <div class="item"><div class="label">ETA</div><div class="value">{{ jobs.eta }}</div></div>
+    <div class="item"><div class="label">Caller</div><div class="value">{{ jobs.caller }}</div></div>
+    <div class="item"><div class="label">NTE</div><div class="value">{{ jobs.nte }}</div></div>
+    <div class="item"><div class="label">Vendor NTE</div><div class="value">{{ jobs.vendorNTE }}</div></div>
+    <div class="item"><div class="label">Quote</div><div class="value">{{ jobs.quote }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Active</div><div class="value">{{ jobs.active ? 'Yes' : 'No' }}</div></div>
+    <div class="item"><div class="label">Job Note</div><div class="value">{{ jobs.jobNote }}</div></div>
+    <div class="item"><div class="label">Entered By</div><div class="value">{{ jobs.enteredBy }}</div></div>
+    <div class="item"><div class="label">Date Entered</div><div class="value">{{ jobs.dateEntered | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ jobs.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Last Update</div><div class="value">{{ jobs.modifiedOn | date:'short' }}</div></div>
+  </div>
+    <button type="button" [routerLink]="['/jobs']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Job not found.</p>
+    <button type="button" [routerLink]="['/jobs']">Back</button>
+  </div>
+</ng-template>
