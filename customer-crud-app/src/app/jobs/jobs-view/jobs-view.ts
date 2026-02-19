@@ -14,6 +14,7 @@ import { Jobs } from '../jobs.model';
 
 export class JobsViewComponent implements OnInit {
   jobs?: Jobs;
+  activeTab: string = 'jobStatusNotes';  // single tab controller
 
   constructor(private jobsService: JobsService,
     private router: Router,

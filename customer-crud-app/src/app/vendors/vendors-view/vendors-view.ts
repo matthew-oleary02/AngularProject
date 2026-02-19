@@ -14,6 +14,7 @@ import { Vendor } from '../vendors.model';
 
 export class VendorsViewComponent implements OnInit {
   vendor?: Vendor;
+  activeTab: string = 'vendorRates';  // single tab controller
 
   constructor(private vendorService: VendorService,
     private router: Router,

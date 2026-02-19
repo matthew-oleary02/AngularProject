@@ -55,7 +55,7 @@ export class CustomerViewComponent implements OnInit {
   private allEquipment: Equipment[] = [];
   filterText = '';
   activeFilter: boolean | null = true;
-  activeTab: string = 'sites';  // single tab controller
+  activeTab: string = 'openCalls';  // single tab controller
 
   constructor(private customerService: CustomerService,
     private router: Router,

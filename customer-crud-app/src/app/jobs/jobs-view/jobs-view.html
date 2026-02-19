@@ -1,7 +1,7 @@
 <h1>Job Details</h1>
 <div *ngIf="jobs; else notFound" class="card">
   <div class="detail-grid">
-    <h2 class="title">{{ jobs.jobNumber || 'Job #' }}</h2>
+    <h2 class="title">Job#{{ jobs.jobNumber || 'Job #' }}</h2>
 
     <div class="group-title">Job Info</div>
     <div class="item"><div class="label">ID</div><div class="value">{{ jobs.rowId }}</div></div>
@@ -29,6 +29,58 @@
     <div class="item"><div class="label">Last Update</div><div class="value">{{ jobs.modifiedOn | date:'short' }}</div></div>
   </div>
     <button type="button" [routerLink]="['/jobs']">Back</button>
+</div>
+
+<div class="tabs">
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'jobStatusNotes'"
+    (click)="activeTab = 'jobStatusNotes'">
+    Notes
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'purchaseOrders'"
+    (click)="activeTab = 'purchaseOrders'">
+    Purchase Orders
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'jobEquipment'"
+    (click)="activeTab = 'jobEquipment'">
+    Equipment
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'invoiceItems'"
+    (click)="activeTab = 'invoiceItems'">
+    Invoice Items
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorAssignment'"
+    (click)="activeTab = 'vendorAssignment'">
+    Vendor Assignment
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'workTickets'"
+    (click)="activeTab = 'workTickets'">
+    Work Tickets
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'jobETA'"
+    (click)="activeTab = 'jobETA'">
+    ETA
+  </button>
 </div>
 
 <ng-template #notFound>

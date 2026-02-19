@@ -554,6 +554,7 @@ app.get('/jobs', authenticateToken, async (req, res) => {
     const result = await sql.query('SELECT * FROM Jobs');
     const jobs = result.recordset.map(row => ({
       rowId: parseInt(row.RowID, 10),
+      jobNumber: row.JobNumber,
       customer: row.Customer,
       location: row.Location,
       clientTrackingNumber: row.ClientTrackingNumber,
@@ -597,6 +598,7 @@ app.get('/jobs/:id', authenticateToken, async (req, res) => {
     const row = result.recordset[0];
     const job = {
       rowId: parseInt(row.RowID, 10),
+      jobNumber: row.JobNumber,
       customer: row.Customer,
       location: row.Location,
       clientTrackingNumber: row.ClientTrackingNumber,
@@ -633,15 +635,16 @@ app.post('/jobs', authenticateToken, async (req, res) => {
     const job = req.body;
     const query = `
       INSERT INTO Jobs (
-        Customer, Location, ClientTrackingNumber, ServiceType, JobStatus, Trade, Vendor, JobOwner,
-        DateReceived, State, ETA, Caller, NTE, VendorNTE, Quote, JobNote, Active, EnteredBy, DateEntered
+        JobNumber, Customer, Location, ClientTrackingNumber, ServiceType, JobStatus, Trade, Vendor, JobOwner,
+        DateReceived, State, ETA, Caller, NTE, VendorNTE, Quote, JobNote, Active, EnteredBy, EnteredOn
       ) VALUES (
-        @Customer, @Location, @ClientTrackingNumber, @ServiceType, @JobStatus, @Trade, @Vendor, @JobOwner,  
+        @JobNumber, @Customer, @Location, @ClientTrackingNumber, @ServiceType, @JobStatus, @Trade, @Vendor, @JobOwner,  
         @DateReceived, @State, @ETA, @Caller, @NTE, @VendorNTE, @Quote, @JobNote, @Active, @EnteredBy, GETDATE()
       )
     `;
 
     const request = new sql.Request();
+    request.input('JobNumber', sql.VarChar, job.jobNumber);
     request.input('Customer', sql.VarChar, job.customer);
     request.input('Location', sql.VarChar, job.location);
     request.input('ClientTrackingNumber', sql.VarChar, job.clientTrackingNumber);
@@ -676,6 +679,7 @@ app.put('/jobs/:id', authenticateToken, async (req, res) => {
     const job = req.body;
     const query = `
       UPDATE Jobs SET
+        JobNumber = @JobNumber,
         Customer = @Customer,
         Location = @Location,
         ClientTrackingNumber = @ClientTrackingNumber,
@@ -699,6 +703,7 @@ app.put('/jobs/:id', authenticateToken, async (req, res) => {
     `;
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
+    request.input('JobNumber', sql.VarChar, job.jobNumber);
     request.input('Customer', sql.VarChar, job.customer);
     request.input('Location', sql.VarChar, job.location);
     request.input('ClientTrackingNumber', sql.VarChar, job.clientTrackingNumber);
@@ -951,7 +956,7 @@ app.get('/customers/:id/jobs', async (req, res) => {
     const request = new sql.Request();
     request.input('CustomerId', sql.Int, customerId);
     const result = await request.query(`
-      SELECT j.RowID, j.Customer, j.Location, j.ClientTrackingNumber, j.ServiceType, j.JobStatus, j.Trade, j.Vendor, 
+      SELECT j.RowID, j.JobNumber, j.Customer, j.Location, j.ClientTrackingNumber, j.ServiceType, j.JobStatus, j.Trade, j.Vendor, 
       j.JobOwner, j.DateReceived, j.State, j.ETA, j.Caller, j.NTE, j.VendorNTE, j.Quote, 
       j.JobNote, j.Active, j.EnteredBy, j.EnteredOn, j.ModifiedBy, j.ModifiedOn
       FROM Jobs j
@@ -960,6 +965,7 @@ app.get('/customers/:id/jobs', async (req, res) => {
     `);
     const jobs = result.recordset.map(row => ({
       rowId: Number(row.RowID),
+      jobNumber: row.JobNumber,
       customer: row.Customer,
       location: row.Location,
       clientTrackingNumber: row.ClientTrackingNumber,

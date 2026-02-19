@@ -34,6 +34,58 @@
   <button type="button" [routerLink]="['/vendors']">Back</button>
 </div>
 
+<div class="tabs">
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorRates'"
+    (click)="activeTab = 'vendorRates'">
+    Rates
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorCoverage'"
+    (click)="activeTab = 'vendorCoverage'">
+    Coverage
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorClassification'"
+    (click)="activeTab = 'vendorClassification'">
+    Trades
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorUsers'"
+    (click)="activeTab = 'vendorUsers'">
+    Portal Users
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorContractStatus'"
+    (click)="activeTab = 'vendorContractStatus'">
+    Contract Status
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'workTickets'"
+    (click)="activeTab = 'workTickets'">
+    Work Tickets
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorJobs'"
+    (click)="activeTab = 'vendorJobs'">
+    Jobs
+  </button>
+</div>
+
 <ng-template #notFound>
   <div class="card">
     <p>Vendor not found.</p>
