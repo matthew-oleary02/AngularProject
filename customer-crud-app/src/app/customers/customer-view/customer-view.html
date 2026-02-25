@@ -78,7 +78,7 @@
     (click)="activeTab = 'eta'">
     ETA
   </button>
-   <!--
+  <!--
   <button 
     type="button" 
     class="btn-tab"
@@ -464,6 +464,38 @@
 </table>
 </div>
 
+<!--
+<div *ngIf="activeTab === 'customerFiles'" class="card">
+  <h1>Customer Files</h1>
+  
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <button type="button" class="btn-create" [routerLink]="['/customer-files/new']">Add New File</button>
+  </div>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let fi of customerFiles">
+    <td><a [routerLink] ="['/customer-files/view', fi.rowId]">{{ fi.fileName }}</a></td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-files/edit', fi.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(fi.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+-->
+
 <div *ngIf="activeTab === 'serviceTypes'" class="card">
   <h1>Customer Service Types</h1>
   
@@ -494,6 +526,43 @@
   </tr>
 </table>
 </div>
+<!--
+<div *ngIf="activeTab === 'customerNotifs'" class="card">
+  <h1>Customer Notifications</h1>
+  
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <button type="button" class="btn-create" [routerLink]="['/customer-notifs/new']">Add New Notification</button>
+  </div>
+<table>
+  <tr>
+    <th>Status</th>
+    <th>Service Type</th>
+    <th>Service Class</th>
+    <th>Email</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let notif of customerNotifs">
+    <td><a [routerLink] ="['/customer-notifs/view', notif.rowId]">{{ notif.customerNotifStatus }}</a></td>
+    <td>{{ notif.customerNotifST }}</td>
+    <td>{{ notif.customerNotifSC }}</td>
+    <td>{{ notif.customerNotifEmail }}</td>
+    <td>
+      <button type="button" class="btn btn-edit" [routerLink]="['/customer-notifs/edit', notif.rowId]">Edit</button>
+      <button type="button" class="btn btn-delete" (click)="onDelete(notif.rowId)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+-->
 
 <!-- Customer Rates Tab Content -->
 <div *ngIf="activeTab === 'customerRates'" class="card">

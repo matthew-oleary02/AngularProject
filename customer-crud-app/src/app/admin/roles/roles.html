@@ -1,17 +1,18 @@
 <!-- roles.html -->
 
-<div class="roles-container">
-    <h1>Roles</h1>
-    <table class="roles-table">
-        <thead>
-            <tr>
-                <th>Role Name</th>
-                <th>Description</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+
+<div class="list-container">
+  <h1>Roles</h1>
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Role Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
     <tbody>
-        <tr *ngFor="let role of roles">
+      <tr *ngFor="let role of roles">
         <td><a [routerLink]="['/roles/view', role.roleId]">{{ role.roleName }}</a></td>
         <td>{{ role.roleDescription }}</td>
         <td>

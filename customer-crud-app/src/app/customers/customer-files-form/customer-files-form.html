@@ -1,0 +1,43 @@
+<!--
+<h1>{{ isEdit ? 'Edit Uploaded Document' : 'Upload New Document' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="customer" class="full-label">Customer:</label>
+    <input id="customer" type="text" class="full-input" formControlName="customer">
+
+    <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
+      Required
+    </div>
+
+    <label for="file" class="full-label">Upload Image or PDF:</label>
+    <input
+      id="file"
+      type="file"
+      accept=".png,.jpg,.jpeg,.pdf"
+      class="full-input"
+      (change)="onFileSelect($event)"
+    />
+
+    <div *ngIf="selectedFileName">
+      <strong>Selected:</strong> {{ selectedFileName }}
+    </div>
+
+    <div class="error" *ngIf="form.get('file')?.invalid && form.get('file')?.touched">
+      File is required (PNG, JPG, or PDF)
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="form.invalid">
+        {{ isEdit ? 'Update' : 'Upload' }}
+      </button>
+
+      <button type="button" class="btn-cancel" [routerLink]="['/customer']">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+</div>
+-->

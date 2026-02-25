@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './admin.html',
-  styleUrls: ['./admin.css'],
+  styleUrls: ['../../styles/list.css'],
 })
 export class AdminComponent implements OnInit {
   users: Users[] = [];

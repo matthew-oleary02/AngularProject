@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './roles.html',
-  styleUrls: ['./roles.css'],
+  styleUrls: ['../../styles/list.css'],
 })
 export class RolesComponent implements OnInit {
   roles: Roles[] = [];
