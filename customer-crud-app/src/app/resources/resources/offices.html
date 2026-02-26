@@ -1,7 +1,7 @@
 
 <!-- offices.html -->
 
-<div class="card">
+<div class="list-container">
   <h1>Office Management</h1>
   <!-- Search & Filter Toolbar -->
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
@@ -30,7 +30,7 @@
   </div>
 
   <!-- Office Table -->
-  <table class="office-table" aria-label="Offices table">
+  <table class="list-table" aria-label="Offices table">
     <thead>
       <tr>
         <th scope="col">Office Name</th>
@@ -64,4 +64,4 @@
 </div>
 
 <!-- Primary action positioned after the card: your CSS targets `.card + button` -->
-<button type="button" [routerLink]="['/offices/new']">Add New Office</button>
+<button class="add-new-btn" type="button" [routerLink]="['/offices/new']">Add New Office</button>

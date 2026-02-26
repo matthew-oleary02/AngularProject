@@ -1,4 +1,4 @@
-<div class="card">
+<div class="list-container">
   <h1>Jobs List</h1>
   <!-- Toolbar with filter input and clear button -->
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
@@ -22,7 +22,7 @@
       <label for="active">Active</label>
     </td>
   </div>
-<table>
+<table class="list-table">
   <tr>
     <th>Job#</th>
     <th>Customer</th>
@@ -69,4 +69,4 @@
   </tr>
 </table>
 </div>
-<button type="button" [routerLink]="['/jobs/new']" >Add New Job</button>
+<button class="add-new-btn" type="button" [routerLink]="['/jobs/new']" >Add New Job</button>

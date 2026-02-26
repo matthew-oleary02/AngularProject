@@ -1,4 +1,4 @@
-<div class="card">
+<div class="list-container">
   <h1>Vendor List</h1>
   <!-- Toolbar with filter input and clear button -->
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
@@ -24,7 +24,7 @@
     </td>
     -->
   </div>
-<table>
+<table class="list-table">
   <tr>
     <th>Name</th>
     <th>Address 1</th>
@@ -59,4 +59,4 @@
   </tr>
 </table>
 </div>
-<button type="button" [routerLink]="['/vendors/new']" >Add New Vendor</button>
+<button class="add-new-btn" type="button" [routerLink]="['/vendors/new']" >Add New Vendor</button>

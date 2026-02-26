@@ -14,7 +14,8 @@
         <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
     </div>
     -->
-<table>
+<div class="list-container">
+<table class="list-table">
   <tr>
     <th>PO#</th>
     <th>Total</th>
@@ -44,4 +45,5 @@
       </td>
     </tr>
 </table>
-<button type="button" [routerLink]="['/purchase-orders/new']" >Add New Purchase Order</button>
+</div>
+<button class="add-new-btn" type="button" [routerLink]="['/purchase-orders/new']" >Add New Purchase Order</button>

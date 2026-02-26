@@ -9,7 +9,7 @@ import { Vendor } from '../vendors.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './vendors.html',
-  styleUrls: ['./vendors.css']
+  styleUrls: ['../../styles/list.css'],
 })
 export class VendorListComponent implements OnInit {
   /* List of vendors to display */

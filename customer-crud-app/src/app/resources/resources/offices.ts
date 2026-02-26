@@ -11,7 +11,7 @@ import { Office } from '../offices.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './offices.html',
-  styleUrls: ['./offices.css'],
+  styleUrls: ['../../styles/list.css'],
 })
 export class OfficesComponent implements OnInit {
   offices: Office[] = [];

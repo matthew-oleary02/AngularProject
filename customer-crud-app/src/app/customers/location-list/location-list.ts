@@ -9,7 +9,7 @@ import { Location } from '../location.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './location-list.html',
-  styleUrls: ['./location-list.css']
+  styleUrls: ['../../styles/list.css'],
 })
 export class LocationListComponent implements OnInit {
   /* List of locations to display */

@@ -9,7 +9,7 @@ import { Equipment } from '../equipment.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './equipment-list.html',
-  styleUrls: ['./equipment-list.css']
+  styleUrls: ['../../styles/list.css'],
 })
 export class EquipmentListComponent implements OnInit {
   /* List of locations to display */

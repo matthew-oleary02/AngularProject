@@ -11,7 +11,7 @@ import { Customer } from '../customer.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './customer-list.html',
-  styleUrls: ['./customer-list.css']
+  styleUrls: ['../../styles/list.css'],
 })
 export class CustomerListComponent implements OnInit {
   /* List of customers to display */

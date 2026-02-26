@@ -9,7 +9,7 @@ import { PurchaseOrder } from '../purchase-order.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './purchase-order.html',
-  styleUrls: ['./purchase-order.css']
+  styleUrls: ['../../styles/list.css'],
 })
 export class POListComponent implements OnInit {
     /* List of purchase orders to display */
