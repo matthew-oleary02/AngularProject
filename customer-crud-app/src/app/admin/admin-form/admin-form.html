@@ -7,7 +7,7 @@
 
     <label for="username" class="full-label">Username:</label>
     <input id="username" class="full-input" formControlName="username" type="text" />
-    <!-- Validation message for customer name -->
+
     <div class="error" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
       Required
     </div>
@@ -21,14 +21,14 @@
 
     <label for="email" class="full-label">Email:</label>
     <input id="email" class="full-input" formControlName="email" type="email" />
-    <!-- Validation message for email -->
+
     <div class="error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
       Valid email required
     </div>
 
     <label for="password" class="full-label">Password:</label>
     <input id="password" class="full-input" formControlName="password" type="password" />
-    <!-- Validation message for password -->
+
     <div class="error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
       {{ isEdit ? 'Password is optional' : 'Password required' }}
     </div>
@@ -40,7 +40,7 @@
       <option value="Manager">Manager</option>
       <option value="Admin">Admin</option>
     </select>
-    <!-- Validation message for role -->
+
     <div class="error" *ngIf="form.get('role')?.invalid && form.get('role')?.touched">
       Required
     </div>

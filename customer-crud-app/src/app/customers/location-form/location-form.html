@@ -10,13 +10,13 @@
       {{ cust.customerName }}
       </option>
     </select>
-    <!-- Validation message for customer -->
+
     <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
       Required
     </div>
     <label for="storeNumber" class="full-label">Store Number:</label>
     <input id="storeNumber" class="full-input" formControlName="storeNumber" type="text" />
-    <!-- Validation message for store number -->
+
     <div class="error" *ngIf="form.get('storeNumber')?.invalid && form.get('storeNumber')?.touched">
       Required
     </div>
@@ -26,7 +26,7 @@
 
       <label for="address1">Address 1:</label>
       <input id="address1" formControlName="address1" type="text" />
-      <!-- Validation message for address1 -->
+
       <div class="error" *ngIf="form.get('siteAddress.address1')?.invalid && form.get('siteAddress.address1')?.touched">
         Required
       </div>

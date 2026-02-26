@@ -10,7 +10,7 @@ import { Roles } from '../roles.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './roles-form.html',
-  styleUrls: ['./roles-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class RolesFormComponent implements OnInit {
   form!: FormGroup;

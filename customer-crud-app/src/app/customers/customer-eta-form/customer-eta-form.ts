@@ -4,15 +4,15 @@ import { CustomerETAService } from '../customer-eta.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CustomerETA } from '../customer-eta.model';
-import { CustomerService } from '../customer.service'; // Adjust the path as necessary
-import { Customer } from '../customer.model'; // Adjust the path as necessary
+import { CustomerService } from '../customer.service';
+import { Customer } from '../customer.model'; 
 
 @Component({
   selector: 'app-customer-eta-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './customer-eta-form.html',
-  styleUrls: ['./customer-eta-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class CustomerETAFormComponent implements OnInit {
   form!: FormGroup;

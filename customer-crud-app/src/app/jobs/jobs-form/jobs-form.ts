@@ -15,7 +15,7 @@ import { Jobs } from '../jobs.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './jobs-form.html',
-  styleUrls: ['./jobs-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class JobsFormComponent implements OnInit {
   form!: FormGroup;

@@ -12,7 +12,7 @@ import { Customer } from '../customer.model';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, RouterModule],
     templateUrl: './customer-cams-form.html',
-    styleUrls: ['./customer-cams-form.css']
+    styleUrls: ['../../styles/form.css'],
 })
 
 export class CustomerCamsFormComponent implements OnInit {

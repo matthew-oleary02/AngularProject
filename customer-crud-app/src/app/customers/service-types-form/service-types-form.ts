@@ -4,15 +4,15 @@ import { ServiceTypes } from '../service-types.model';
 import { ServiceTypesService } from '../service-types.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { CustomerService } from '../customer.service'; // Adjust the path as necessary
-import { Customer } from '../customer.model'; // Adjust the path as necessary
+import { CustomerService } from '../customer.service';
+import { Customer } from '../customer.model';
 
 @Component({
   selector: 'app-service-types-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './service-types-form.html',
-  styleUrls: ['./service-types-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class ServiceTypesFormComponent implements OnInit {
   form!: FormGroup;

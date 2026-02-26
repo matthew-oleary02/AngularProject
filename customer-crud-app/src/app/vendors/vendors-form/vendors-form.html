@@ -7,7 +7,7 @@
 
     <label for="vendorName" class="full-label">Name:</label>
     <input id="vendorName" class="full-input" formControlName="vendorName" type="text" />
-    <!-- Validation message for vendor name -->
+
     <div class="error" *ngIf="form.get('vendorName')?.invalid && form.get('vendorName')?.touched">
       Required
     </div>
@@ -65,7 +65,7 @@
         <option value="Union Subcontractor">Union Subcontractor</option>
         <option value="Distributor">Project Vendor</option>
       </select>
-      <!-- Validation message for vendor type -->
+
       <div class="error" *ngIf="form.get('vendorType')?.invalid
         && form.get('vendorType')?.touched">
         Required
@@ -80,7 +80,7 @@
         <option value="Retired Due To Inactivity">Retired Due To Inactivity</option>
         <option value="Non-Compliant">Non-Compliant</option>
       </select>
-      <!-- Validation message for status -->
+
       <div class="error" *ngIf="form.get('status')?.invalid && form.get('status')?.touched">
         Required
       </div>

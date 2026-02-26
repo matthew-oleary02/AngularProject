@@ -8,7 +8,7 @@
             {{ cust.customerName }}
         </option>
         </select>
-        <!-- Validation message for customer -->
+
         <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
         Required
         </div>
@@ -20,19 +20,18 @@
             {{ loc.storeNumber }} - {{ loc.siteAddress.city }}, {{ loc.siteAddress.state }}
         </option>
         </select>
-        <!-- Validation message for location -->
+
         <div class="error" *ngIf="form.get('location')?.invalid && form.get('location')?.touched">
         Required
         </div>
     
         <label for="jobNumber" class="full-label">Job Number:</label>
         <input id="jobNumber" class="full-input" formControlName="jobNumber" type="text" />
-        <!-- Validation message for job number -->
+
         <div class="error" *ngIf="form.get('jobNumber')?.invalid && form.get('jobNumber')?.touched">
         Required
         </div>
     
-        <!-- Additional form fields for job details would go here -->
         <label for="clientTrackingNumber" class="full-label">ClientTracking#:</label>
         <input id="clientTrackingNumber" class="full-input" formControlName="clientTrackingNumber" type="text" />
         <label for="serviceType" class="full-label">Service Type:</label>
@@ -65,7 +64,7 @@
         <input id="active" type="checkbox" formControlName="active" />
     
         <button type="submit" [disabled]="form.invalid">Save</button>
-        <button type="button" [routerLink]="['/jobs']">Cancel</button>
+        <button type="button" class="btn-cancel" [routerLink]="['/jobs']">Cancel</button>
     </form>
 </div>
 <ng-template #loading>

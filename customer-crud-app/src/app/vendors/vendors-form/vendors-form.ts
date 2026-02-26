@@ -12,7 +12,7 @@ import { VendorService } from '../vendors.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './vendors-form.html',
-  styleUrls: ['./vendors-form.css']
+  styleUrls: ['../../styles/form.css']
 })
 export class VendorsFormComponent implements OnInit {
   form!: FormGroup;

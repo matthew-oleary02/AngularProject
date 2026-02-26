@@ -10,31 +10,31 @@
       {{ cust.customerName }}
       </option>
     </select>
-    <!-- Validation message for customer -->
+
     <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
       Required
     </div>
     <label for="username" class="full-label">Username:</label>
     <input id="username" class="full-input" formControlName="username" type="text" />
-    <!-- Validation message for username -->
+
     <div class="error" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
       Required
     </div>
     <label for="email" class="full-label">Email:</label>
     <input id="email" class="full-input" formControlName="email" type="email" />
-    <!-- Validation message for email -->
+
     <div class="error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
       Valid email required
     </div>
     <label for="phone" class="full-label">Phone:</label>
     <input id="phone" class="full-input" formControlName="phone" type="text" />
-    <!-- Validation message for phone -->
+
     <div class="error" *ngIf="form.get('phone')?.invalid && form.get('phone')?.touched">
       Required
     </div>
     <label for="trade" class="full-label">Trade:</label>
     <input id="trade" class="full-input" formControlName="trade" type="text" />
-    <!-- Validation message for trade -->
+
     <div class="error" *ngIf="form.get('trade')?.invalid && form.get('trade')?.touched">
       Required
     </div>
@@ -55,4 +55,3 @@
     <button type="button" [routerLink]="['/customers']">Back</button>
   </div>
 </ng-template>
-

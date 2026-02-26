@@ -10,13 +10,13 @@
       {{ cust.customerName }}
       </option>
     </select>
-    <!-- Validation message for customer -->
+
     <div class="error" *ngIf="form.get('customer')?.invalid && form.get('customer')?.touched">
       Required
     </div>
     <label for="location" class="full-label">Store Number:</label>
     <input id="location" class="full-input" formControlName="location" type="text" />
-    <!-- Validation message for store number -->
+
     <div class="error" *ngIf="form.get('location')?.invalid && form.get('location')?.touched">
       Required
     </div>
@@ -49,6 +49,6 @@
     <input id="dateLoaded" class="full-input" formControlName="dateLoaded" type="date" />
 
     <button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button>
-    <button type="button" [routerLink]="['/equipment']">Cancel</button>
+    <button class="btn-cancel" type="button" [routerLink]="['/equipment']">Cancel</button>
     </form>
 </div>

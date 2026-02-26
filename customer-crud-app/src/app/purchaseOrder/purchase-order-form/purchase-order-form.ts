@@ -10,7 +10,7 @@ import { PurchaseOrder } from '../purchase-order.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './purchase-order-form.html',
-  styleUrls: ['./purchase-order-form.css']
+  styleUrls: ['../../styles/form.css']
 })
 export class POFormComponent implements OnInit {
   form!: FormGroup;

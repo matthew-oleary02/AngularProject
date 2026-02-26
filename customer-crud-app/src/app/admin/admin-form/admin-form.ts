@@ -10,7 +10,7 @@ import { Users } from '../user.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './admin-form.html',
-  styleUrls: ['./admin-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class AdminFormComponent implements OnInit {
   form!: FormGroup;

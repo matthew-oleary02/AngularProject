@@ -7,60 +7,60 @@
 
     <label for="name" class="full-label">Office Name:</label>
     <input id="name" class="full-input" formControlName="name" type="text" />
-    <!-- Validation message for office name -->
+
     <div class="error" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
       Required
     </div>
 
     <label for="address1" class="full-label">Address 1:</label>
     <input id="address1" class="full-input" formControlName="address1" type="text" />
-    <!-- Validation message for address1 -->
+
     <div class="error" *ngIf="form.get('address1')?.invalid && form.get('address1')?.touched">
       Required
     </div>
 
     <label for="address2" class="full-label">Address 2:</label>
     <input id="address2" class="full-input" formControlName="address2" type="text" />
-    <!-- No validation message for address2 as it's optional -->
+
     
     <label for="city" class="full-label">City:</label>
     <input id="city" class="full-input" formControlName="city" type="text" />
-    <!-- Validation message for city -->
+
     <div class="error" *ngIf="form.get('city')?.invalid && form.get('city')?.touched">
       Required
     </div>
 
     <label for="state" class="full-label">State:</label>
     <input id="state" class="full-input" formControlName="state" type="text" />
-    <!-- Validation message for state -->
+
     <div class="error" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">
       Required
     </div>
 
     <label for="zip" class="full-label">Zip:</label>
     <input id="zip" class="full-input" formControlName="zip" type="text" />
-    <!-- Validation message for zip -->
+
     <div class="error" *ngIf="form.get('zip')?.invalid && form.get('zip')?.touched">
       Required
     </div>
 
     <label for="county" class="full-label">County:</label>
     <input id="county" class="full-input" formControlName="county" type="text" />
-    <!-- Validation message for county -->
+
     <div class="error" *ngIf="form.get('county')?.invalid && form.get('county')?.touched">
       Required
     </div>
 
     <label for="country" class="full-label">Country:</label>
     <input id="country" class="full-input" formControlName="country" type="text" />
-    <!-- Validation message for country -->
+
     <div class="error" *ngIf="form.get('country')?.invalid && form.get('country')?.touched">
       Required
     </div>
 
     <label for="phone" class="full-label">Phone:</label>
     <input id="phone" class="full-input" formControlName="phone" type="text" />
-    <!-- Validation message for phone -->
+
     <div class="error" *ngIf="form.get('phone')?.invalid && form.get('phone')?.touched">
       Required
     </div>

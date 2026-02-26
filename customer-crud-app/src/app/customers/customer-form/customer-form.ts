@@ -12,7 +12,7 @@ import { Customer } from '../customer.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './customer-form.html',
-  styleUrls: ['./customer-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class CustomerFormComponent implements OnInit {
   form!: FormGroup;

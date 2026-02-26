@@ -4,15 +4,15 @@ import { LocationService } from '../location.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Location } from '../location.model';
-import { CustomerService } from '../customer.service'; // Adjust the path as necessary
-import { Customer } from '../customer.model'; // Adjust the path as necessary
+import { CustomerService } from '../customer.service';
+import { Customer } from '../customer.model';
 
 @Component({
   selector: 'app-location-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './location-form.html',
-  styleUrls: ['./location-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class LocationFormComponent implements OnInit {
   form!: FormGroup;

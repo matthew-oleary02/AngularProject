@@ -12,7 +12,7 @@ import { Office } from '../offices.model';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, RouterModule],
     templateUrl: './offices-form.html',
-    styleUrls: ['./offices-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class OfficesFormComponent implements OnInit {
     form!: FormGroup;

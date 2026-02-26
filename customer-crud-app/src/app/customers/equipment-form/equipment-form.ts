@@ -13,7 +13,7 @@ import { Customer } from '../customer.model'; // Adjust the path as necessary
     standalone: true,
     imports: [CommonModule, RouterModule, ReactiveFormsModule],
     templateUrl: './equipment-form.html',
-    styleUrls: ['./equipment-form.css']
+    styleUrls: ['../../styles/form.css'],
 })
 
 export class EquipmentFormComponent implements OnInit {

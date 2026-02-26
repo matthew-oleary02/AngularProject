@@ -12,7 +12,7 @@ import { Customer } from '../customer.model'; // Adjust the path as necessary
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './customer-nte-form.html',
-  styleUrls: ['./customer-nte-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class CustomerNTEFormComponent implements OnInit {
   form!: FormGroup;

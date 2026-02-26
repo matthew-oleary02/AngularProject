@@ -12,7 +12,7 @@ import { Customer } from '../customer.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './status-messages-form.html',
-  styleUrls: ['./status-messages-form.css']
+  styleUrls: ['../../styles/form.css'],
 })
 export class CSMFormComponent implements OnInit {
   form!: FormGroup;
