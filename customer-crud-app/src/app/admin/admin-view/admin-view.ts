@@ -9,7 +9,7 @@ import { Users } from '../user.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './admin-view.html',
-  styleUrls: ['./admin-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class AdminViewComponent implements OnInit {

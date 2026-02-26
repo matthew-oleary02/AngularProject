@@ -12,12 +12,12 @@
     <div class="item"><div class="label">Vendor NTE</div><div class="value">{{ nte.vendorNte }}</div></div>
     <div class="item"><div class="label">Note</div><div class="value">{{ nte.note }}</div></div>
   </div>
-  <button type="button" [routerLink]="['/customers']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>Customer NTE not found.</p>
-    <button type="button" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
   </div>
 </ng-template>

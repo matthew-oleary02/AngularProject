@@ -9,7 +9,7 @@ import { Jobs } from '../jobs.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './jobs-view.html',
-  styleUrls: ['./jobs-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class JobsViewComponent implements OnInit {

@@ -17,13 +17,13 @@
     <div class="item"><div class="label">Modified By</div><div class="value">{{ statusMessage.modifiedBy }}</div></div>
     <div class="item"><div class="label">Last Update</div><div class="value">{{ statusMessage.modifiedOn | date:'short' }}</div></div>
   </div>
-  <button type="button" class="btn-clear" [routerLink]="['/customers']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
   <button type="button" class="btn-edit" [routerLink]="['/status-messages/edit', statusMessage.rowId]">Edit</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>Status message not found.</p>
-    <button type="button" class="btn-clear" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
   </div>
 </ng-template>

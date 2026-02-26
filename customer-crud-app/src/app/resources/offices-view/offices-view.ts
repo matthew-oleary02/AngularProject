@@ -9,7 +9,7 @@ import { Office } from '../offices.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './offices-view.html',
-  styleUrls: ['./offices-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class OfficesViewComponent implements OnInit {

@@ -13,12 +13,12 @@
         <div class="item"><div class="label">State</div><div class="value">{{ rate.state }}</div></div>
         <div class="item"><div class="label">Rate</div><div class="value">{{ rate.rate }}</div></div>
     </div>
-    <button type="button" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
 </div>
 
 <ng-template #notFound>
     <div class="card">
         <p>Customer Rate not found.</p>
-        <button type="button" [routerLink]="['/customers']">Back</button>
+        <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
     </div>
 </ng-template>

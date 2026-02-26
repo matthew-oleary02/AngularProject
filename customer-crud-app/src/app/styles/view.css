@@ -266,7 +266,7 @@ td button {
   border-color: rgba(0,0,0,0.08);
 }
 
-.btn-clear {
+.btn-return {
   background-color: rgb(138, 138, 138);
   border-color: rgba(0,0,0,0.08);
 }
@@ -282,7 +282,7 @@ td button {
 .btn-edit:hover { background-color: #2b5fbf; transform: translateY(-2px); }
 .btn-view:hover { background-color: #b78f00; transform: translateY(-2px); }
 .btn-delete:hover { background-color: #b30f2f; transform: translateY(-2px); }
-.btn-clear:hover { background-color: #6b6767; transform: translateY(-2px); }
+.btn-return:hover { background-color: #6b6767; transform: translateY(-2px); }
 .btn-create:hover { background-color: #256d25; transform: translateY(-2px); }
 .btn-tab:hover { background-color: #3a3e42; transform: translateY(-2px); }
 
@@ -334,3 +334,4 @@ td button:hover { transform: translateY(-1px); }
     font-size: 13px;
   }
 }
+

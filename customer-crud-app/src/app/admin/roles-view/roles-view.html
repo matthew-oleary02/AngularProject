@@ -1,11 +1,21 @@
 <!-- roles-view.html -->
 
-<div class="role-view-container">
-  <h1>Role Details</h1>
-  <div *ngIf="role">
-    <p><strong>Role Name:</strong> {{ role.roleName }}</p>
-    <p><strong>Description:</strong> {{ role.roleDescription }}</p>
+<h1>Role Details</h1>
+<div *ngIf="role; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ role.roleName || 'Role Name' }}</h2>
+    <div class="item"><div class="label">ID</div><div class="value">{{ role.roleId }}</div></div>
+
+    <div class="group-title">Role Info</div>
+    <div class="item"><div class="label">Description</div><div class="value">{{ role.roleDescription }}</div></div>
   </div>
-  <button [routerLink]="['/roles/edit', role?.roleId]">Edit</button>
-  <button [routerLink]="['/roles']">Back to List</button>
+  <button type="button" class="btn-edit" [routerLink]="['/roles/edit', role.roleId]">Edit</button>
+  <button type="button" class="btn-return" [routerLink]="['/roles']">Back to List</button>
 </div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>User not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/roles']">Back</button>
+  </div>
+</ng-template>

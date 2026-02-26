@@ -9,7 +9,7 @@ import { Equipment } from '../equipment.model';
     standalone: true,
     imports: [CommonModule, RouterModule],
     templateUrl: './equipment-view.html',
-    styleUrls: ['./equipment-view.css']
+    styleUrls: ['../../styles/view.css'],
 })
 export class EquipmentViewComponent implements OnInit {
     equipment?: Equipment;

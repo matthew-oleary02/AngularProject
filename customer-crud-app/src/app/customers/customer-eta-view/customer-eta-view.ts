@@ -9,7 +9,7 @@ import { CustomerETAService } from '../customer-eta.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './customer-eta-view.html',
-  styleUrls: ['./customer-eta-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class CustomerETAViewComponent implements OnInit {

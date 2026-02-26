@@ -27,7 +27,7 @@ import { EquipmentService } from '../equipment.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './customer-view.html',
-  styleUrls: ['./customer-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class CustomerViewComponent implements OnInit {

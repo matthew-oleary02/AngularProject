@@ -29,12 +29,12 @@
     <div class="item"><div class="label">Modified By</div><div class="value">{{ location.modifiedBy }}</div></div>
     <div class="item"><div class="label">Last Update</div><div class="value">{{ location.modifiedOn | date:'short' }}</div></div>
   </div>
-  <button type="button" [routerLink]="['/locations']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/locations']">Back</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>Location not found.</p>
-    <button type="button" [routerLink]="['/locations']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/locations']">Back</button>
   </div>
 </ng-template>

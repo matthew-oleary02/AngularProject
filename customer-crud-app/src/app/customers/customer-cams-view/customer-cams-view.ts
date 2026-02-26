@@ -9,7 +9,7 @@ import { CustomerCAMsService } from '../customer-cams.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './customer-cams-view.html',
-  styleUrls: ['./customer-cams-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class CustomerCamsViewComponent implements OnInit {

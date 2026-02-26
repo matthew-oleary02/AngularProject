@@ -9,7 +9,7 @@ import { CustomerStatusMessage } from '../status-messages.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './status-message-view.html',
-  styleUrls: ['./status-message-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class CSMViewComponent implements OnInit {

@@ -17,12 +17,12 @@
     <div class="item"><div class="label">Created On</div><div class="value">{{ user.createdOn | date:'short' }}</div></div>
     <div class="item"><div class="label">Modified On</div><div class="value">{{ user.modifiedOn | date:'short' }}</div></div>
   </div>
-  <button type="button" [routerLink]="['/admin']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/admin']">Back</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>User not found.</p>
-    <button type="button" [routerLink]="['/admin']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/admin']">Back</button>
   </div>
 </ng-template>

@@ -9,7 +9,7 @@ import { Roles } from '../roles.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './roles-view.html',
-  styleUrls: ['./roles.view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class RolesViewComponent implements OnInit {

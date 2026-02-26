@@ -31,7 +31,7 @@
     <div class="item"><div class="label">Modified By</div><div class="value">{{ customer.modifiedBy }}</div></div>
     <div class="item"><div class="label">Modified On</div><div class="value">{{ customer.modifiedOn | date:'short' }}</div></div>
   </div>
-  <button type="button" class="btn-clear" [routerLink]="['/customers']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
   <button type="button" class="btn-edit" [routerLink]="['/customers/edit', customer.rowId]">Edit</button>
 </div>
 
@@ -131,7 +131,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <td>
       <input
         type="checkbox"
@@ -204,7 +204,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <td>
       <input
         type="checkbox"
@@ -259,7 +259,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/equipment/new']">Add New Equipment</button>
   </div>
 <table>
@@ -308,7 +308,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <td>
       <input
         type="checkbox"
@@ -355,7 +355,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <td>
       <input
         type="checkbox"
@@ -402,7 +402,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/customer-nte/new']">Add New NTE</button>
   </div>
 <table>
@@ -441,7 +441,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/customer-eta/new']">Add New ETA</button>
   </div>
 <table>
@@ -477,7 +477,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/customer-files/new']">Add New File</button>
   </div>
 <table>
@@ -508,7 +508,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/service-types/new']">Add New Service Type</button>
   </div>
 <table>
@@ -539,7 +539,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/customer-notifs/new']">Add New Notification</button>
   </div>
 <table>
@@ -577,7 +577,7 @@
       class="search-box"
       style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
     />
-    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/customer-rates/new']">Add New Rate</button>
   </div>
 <table>
@@ -609,6 +609,6 @@
 <ng-template #notFound>
   <div class="card">
     <p>Customer not found.</p>
-    <button type="button" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
   </div>
 </ng-template>

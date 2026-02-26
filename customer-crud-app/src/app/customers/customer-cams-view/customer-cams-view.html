@@ -2,8 +2,8 @@
 <div *ngIf="customerCams; else notFound" class="card">
   <div class="detail-grid">
     <h2 class="title">{{ customerCams.username || 'Username' }}</h2>
-
     <div class="item"><div class="label">ID</div><div class="value">{{ customerCams.rowId }}</div></div>
+    <div class="group-title">CAM Info</div>
     <div class="item"><div class="label">Customer</div><div class="value">{{ customerCams.customer }}</div></div>
     <div class="item"><div class="label">Username</div><div class="value">{{ customerCams.username }}</div></div>
     <div class="item"><div class="label">Email</div><div class="value">{{ customerCams.email }}</div></div>
@@ -15,13 +15,13 @@
     <div class="item"><div class="label">Modified By</div><div class="value">{{ customerCams.modifiedBy }}</div></div>
     <div class="item"><div class="label">Modified On</div><div class="value">{{ customerCams.modifiedOn | date:'short' }}</div></div>
     </div>
-    <button type="button" class="btn-clear" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
     <button type="button" class="btn-edit" [routerLink]="['/customer-cams/edit', customerCams.rowId]">Edit</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>Customer CAM not found.</p>
-    <button type="button" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
   </div>
 </ng-template>

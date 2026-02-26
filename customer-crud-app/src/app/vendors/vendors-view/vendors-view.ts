@@ -9,12 +9,12 @@ import { Vendor } from '../vendors.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './vendors-view.html',
-  styleUrls: ['./vendors-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class VendorsViewComponent implements OnInit {
   vendor?: Vendor;
-  activeTab: string = 'vendorRates';  // single tab controller
+  activeTab: string = 'vendorRates';
 
   constructor(private vendorService: VendorService,
     private router: Router,

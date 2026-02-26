@@ -20,12 +20,12 @@
     <div class="item"><div class="label">Modified By</div><div class="value">{{ po.modifiedBy }}</div></div>
     <div class="item"><div class="label">Modified On</div><div class="value">{{ po.modifiedOn | date:'short' }}</div></div>
   </div>
-  <button type="button" [routerLink]="['/purchase-orders']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/purchase-orders']">Back</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>PO not found.</p>
-    <button type="button" [routerLink]="['/purchase-orders']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/purchase-orders']">Back</button>
   </div>
 </ng-template>

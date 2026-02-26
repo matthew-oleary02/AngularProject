@@ -9,7 +9,7 @@ import { Location } from '../location.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './location-view.html',
-  styleUrls: ['./location-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class LocationViewComponent implements OnInit {

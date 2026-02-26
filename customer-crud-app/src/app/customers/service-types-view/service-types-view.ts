@@ -9,7 +9,7 @@ import { ServiceTypesService } from '../service-types.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './service-types-view.html',
-  styleUrls: ['./service-types-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class ServiceTypesViewComponent implements OnInit {

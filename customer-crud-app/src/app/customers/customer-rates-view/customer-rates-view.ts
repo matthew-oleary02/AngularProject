@@ -9,7 +9,7 @@ import { CustomerRatesService } from '../customer-rates.service';
     standalone: true,
     imports: [CommonModule, RouterModule],
     templateUrl: './customer-rates-view.html',
-    styleUrls: ['./customer-rates-view.css']
+    styleUrls: ['../../styles/view.css'],
 })
 
 export class CustomerRatesViewComponent implements OnInit {

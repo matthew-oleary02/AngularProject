@@ -9,7 +9,7 @@ import { PurchaseOrder } from '../purchase-order.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './purchase-order-view.html',
-  styleUrls: ['./purchase-order-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class POViewComponent implements OnInit {

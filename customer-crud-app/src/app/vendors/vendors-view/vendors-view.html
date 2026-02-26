@@ -31,7 +31,7 @@
     <div class="item"><div class="label">Modified By</div><div class="value">{{ vendor.modifiedBy }}</div></div>
     <div class="item"><div class="label">Modified On</div><div class="value">{{ vendor.modifiedOn | date:'short' }}</div></div>
   </div>
-  <button type="button" [routerLink]="['/vendors']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
 </div>
 
 <div class="tabs">
@@ -89,6 +89,6 @@
 <ng-template #notFound>
   <div class="card">
     <p>Vendor not found.</p>
-    <button type="button" [routerLink]="['/vendors']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
   </div>
 </ng-template>

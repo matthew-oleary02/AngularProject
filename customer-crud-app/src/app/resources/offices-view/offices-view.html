@@ -18,12 +18,12 @@
     <div class="item"><div class="label">Phone</div><div class="value">{{ office.phone }}</div></div>
     <div class="item"><div class="label">Active</div><div class="value">{{ office.active ? 'Yes' : 'No' }}</div></div>
   </div>
-  <button type="button" [routerLink]="['/offices']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/offices']">Back</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>Office not found.</p>
-    <button type="button" [routerLink]="['/offices']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/offices']">Back</button>
   </div>
 </ng-template>

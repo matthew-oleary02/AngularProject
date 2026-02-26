@@ -11,12 +11,12 @@
     <div class="item"><div class="label">HoursBusDays</div><div class="value">{{ eta.hoursBusDays }}</div></div>
 
   </div>
-  <button type="button" [routerLink]="['/customers']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>Customer ETA not found.</p>
-    <button type="button" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
   </div>
 </ng-template>

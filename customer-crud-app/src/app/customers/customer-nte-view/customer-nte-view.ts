@@ -9,7 +9,7 @@ import { CustomerNTEService } from '../customer-nte.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './customer-nte-view.html',
-  styleUrls: ['./customer-nte-view.css']
+  styleUrls: ['../../styles/view.css'],
 })
 
 export class CustomerNTEViewComponent implements OnInit {

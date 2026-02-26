@@ -24,12 +24,12 @@
     <div class="item"><div class="label">Modified By</div><div class="value">{{ equipment.modifiedBy }}</div></div>
     <div class="item"><div class="label">Last Update</div><div class="value">{{ equipment.modifiedOn | date:'short' }}</div></div>
   </div>
-  <button type="button" [routerLink]="['/equipment']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/equipment']">Back</button>
 </div>
 
 <ng-template #notFound>
   <div class="card">
     <p>Equipment not found.</p>
-    <button type="button" [routerLink]="['/equipment']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/equipment']">Back</button>
   </div>
 </ng-template>

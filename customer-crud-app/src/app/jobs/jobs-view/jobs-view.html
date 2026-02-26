@@ -28,7 +28,7 @@
     <div class="item"><div class="label">Modified By</div><div class="value">{{ jobs.modifiedBy }}</div></div>
     <div class="item"><div class="label">Last Update</div><div class="value">{{ jobs.modifiedOn | date:'short' }}</div></div>
   </div>
-    <button type="button" [routerLink]="['/jobs']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/jobs']">Back</button>
 </div>
 
 <div class="tabs">
@@ -86,6 +86,6 @@
 <ng-template #notFound>
   <div class="card">
     <p>Job not found.</p>
-    <button type="button" [routerLink]="['/jobs']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/jobs']">Back</button>
   </div>
 </ng-template>
