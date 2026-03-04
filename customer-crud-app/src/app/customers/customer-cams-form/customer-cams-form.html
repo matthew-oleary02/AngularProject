@@ -44,7 +44,7 @@
     </label>
     <div class="form-actions">
       <td><button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button></td>
-      <td><button type="button" class="btn-cancel"[routerLink]="['/customers']">Cancel</button></td>
+      <td><button type="button" class="btn-cancel"[routerLink]="['/customer-cams']">Cancel</button></td>
     </div>
     </form>
 </div>
@@ -52,6 +52,6 @@
 <ng-template #notFound>
   <div class="card">
     <p>Customer CAM not found.</p>
-    <button type="button" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-cancel" [routerLink]="['/customer-cams']">Back</button>
   </div>
 </ng-template>

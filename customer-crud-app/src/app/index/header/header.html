@@ -23,10 +23,12 @@
         <a routerLink="/customers" (click)="closeCustomerMenu()">Customers</a>
         <a routerLink="/locations" (click)="closeCustomerMenu()">Locations</a>
         <a routerLink="/equipment" (click)="closeCustomerMenu()">Equipment</a>
+        <a routerLink="/customer-cams" (click)="closeCustomerMenu()">CAMs</a>
       </div>
     </div>
 
     <a *ngIf="isLoggedIn() && isManager() || isAdmin()" routerLink="/vendors">Vendors</a>
+
     <a *ngIf="isLoggedIn()" routerLink="/offices">Resources</a>
 
     <!-- Admin dropdown -->

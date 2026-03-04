@@ -14,6 +14,7 @@ import { LocationViewComponent } from './customers/location-view/location-view';
 import { LocationFormComponent } from './customers/location-form/location-form';
 import { CSMFormComponent } from './customers/status-messages-form/status-messages-form';
 import { CSMViewComponent } from './customers/status-messages-view/status-message-view';
+import { CustomerCamsListComponent } from './customers/customer-cams-list/customer-cams-list';
 import { CustomerCamsFormComponent } from './customers/customer-cams-form/customer-cams-form';
 import { CustomerCamsViewComponent } from './customers/customer-cams-view/customer-cams-view';
 import { CustomerNTEFormComponent } from './customers/customer-nte-form/customer-nte-form';
@@ -81,11 +82,12 @@ export const routes: Routes = [
   { path: 'status-messages/new', component: CSMFormComponent, canActivate: [AuthGuard]},
   { path: 'status-messages/edit/:id', component: CSMFormComponent, canActivate: [AuthGuard]},
   { path : 'status-messages/view/:id', component: CSMViewComponent, canActivate: [AuthGuard]},
-  { path: 'customers/:id/customer-cams', component: CustomerViewComponent, canActivate: [AuthGuard]},
+  { path : 'customers/:id/customer-cams', component: CustomerViewComponent, canActivate: [AuthGuard]},
+  { path : 'customer-cams', component: CustomerCamsListComponent, canActivate: [AuthGuard]},
   { path : 'customer-cams/new', component: CustomerCamsFormComponent, canActivate: [AuthGuard]},
   { path : 'customer-cams/edit/:id', component: CustomerCamsFormComponent, canActivate: [AuthGuard]},
   { path : 'customer-cams/view/:id', component: CustomerCamsViewComponent, canActivate: [AuthGuard]},
-  { path: 'customers/:id/customer-nte', component: CustomerViewComponent, canActivate: [AuthGuard]},
+  { path : 'customers/:id/customer-nte', component: CustomerViewComponent, canActivate: [AuthGuard]},
   { path : 'customer-nte/new', component: CustomerNTEFormComponent, canActivate: [AuthGuard]},
   { path : 'customer-nte/edit/:id', component: CustomerNTEFormComponent, canActivate: [AuthGuard]},
   { path : 'customer-nte/view/:id', component: CustomerNTEViewComponent, canActivate: [AuthGuard]},
