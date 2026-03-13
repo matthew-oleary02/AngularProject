@@ -1,0 +1,43 @@
+<h1>Vehicle Details</h1>
+<div *ngIf="vehicles; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ vehicles.vehicleCode || 'Vehicle' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ vehicles.rowId }}</div></div>
+
+    <div class="group-title">Vehicle Info</div>
+    <div class="item"><div class="label">Status</div><div class="value">{{ vehicles.status }}</div></div>
+    <div class="item"><div class="label">GPS Type</div><div class="value">{{ vehicles.gpsType }}</div></div>
+    <div class="item"><div class="label">Status Note</div><div class="value">{{ vehicles.statusNote }}</div></div>
+    <div class="item"><div class="label">Vehicle Type</div><div class="value">{{ vehicles.vehicleType }}</div></div>
+    <div class="item"><div class="label">Year</div><div class="value">{{ vehicles.year }}</div></div>
+    <div class="item"><div class="label">Make</div><div class="value">{{ vehicles.make }}</div></div>
+    <div class="item"><div class="label">Model</div><div class="value">{{ vehicles.model }}</div></div>
+    <div class="item"><div class="label">Color</div><div class="value">{{ vehicles.color }}</div></div>
+    <div class="item"><div class="label">VIN</div><div class="value">{{ vehicles.vin }}</div></div>
+    <div class="item"><div class="label">Plate</div><div class="value">{{ vehicles.plate }}</div></div>
+    <div class="item"><div class="label">State</div><div class="value">{{ vehicles.state }}</div></div>
+    <div class="item"><div class="label">Manager</div><div class="value">{{ vehicles.manager }}</div></div>
+    <div class="item"><div class="label">Assigned To</div><div class="value">{{ vehicles.assignedTo }}</div></div>
+    <div class="item"><div class="label">Department</div><div class="value">{{ vehicles.department }}</div></div>
+    <div class="item"><div class="label">Registration</div><div class="value">{{ vehicles.registration }}</div></div>
+    <div class="item"><div class="label">Inspection</div><div class="value">{{ vehicles.inspection }}</div></div>
+    <div class="item"><div class="label">VendorVehicleID</div><div class="value">{{ vehicles.vendorVehicleID }}</div></div>
+    <div class="item"><div class="label">Pass Type</div><div class="value">{{ vehicles.passType }}</div></div>
+    <div class="item"><div class="label">Pass Number</div><div class="value">{{ vehicles.passNumber }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Created By</div><div class="value">{{ vehicles.createdBy }}</div></div>
+    <div class="item"><div class="label">Created On</div><div class="value">{{ vehicles.createdOn }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ vehicles.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ vehicles.modifiedOn }}</div></div>
+  </div>
+  <button type="button" class="btn-return" [routerLink]="['/vehicles']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Office not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/vehicles']">Back</button>
+  </div>
+</ng-template>

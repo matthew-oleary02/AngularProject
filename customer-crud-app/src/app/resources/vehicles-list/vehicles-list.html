@@ -1,0 +1,86 @@
+<div class="list-container">
+  <h1>Vehicle Management</h1>
+  <!-- Search & Filter Toolbar -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+      aria-label="Search vehicles"
+    />
+
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <input
+        type="checkbox"
+        id="activeOnly"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+        aria-checked="{{ activeFilter === true }}"
+      />
+      <label for="activeOnly" title="Show only active vehicles">Active</label>
+    </div>
+  </div>
+
+  <!-- Vehicles Table -->
+  <table class="list-table" aria-label="Vehicles table">
+    <thead>
+      <tr>
+        <th scope="col">Vehicle Code</th>
+        <th scope="col">Status</th>
+        <th scope="col">GPS Type</th>
+        <th scope="col">Status Note</th>
+        <th scope="col">Vehicle Type</th>
+        <th scope="col">Year</th>
+        <th scope="col">Make</th>
+        <th scope="col">Model</th>
+        <th scope="col">Color</th>
+        <th scope="col">VIN</th>
+        <th scope="col">Plate</th>
+        <th scope="col">State</th>
+        <th scope="col">Manager</th>
+        <th scope="col">Assigned To</th>
+        <th scope="col">Department</th>
+        <th scope="col">Registration</th>
+        <th scope="col">Inspection</th>
+        <th scope="col">Vendor Vehicle ID</th>
+        <th scope="col">Pass Type</th>
+        <th scope="col">Pass Number</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vehicles of vehicles">
+        <td><a [routerLink]="['/vehicles/view', vehicles.id]">{{ vehicles.vehicleCode }}</a></td>
+        <td>{{ vehicles.vehicleCode }}</td>
+        <td>{{ vehicles.status }}</td>
+        <td>{{ vehicles.gpsType }}</td>
+        <td>{{ vehicles.statusNote }}</td>
+        <td>{{ vehicles.vehicleType }}</td>
+        <td>{{ vehicles.year }}</td>
+        <td>{{ vehicles.make }}</td>
+        <td>{{ vehicles.model }}</td>
+        <td>{{ vehicles.color }}</td>
+        <td>{{ vehicles.vin }}</td>
+        <td>{{ vehicles.plate }}</td>
+        <td>{{ vehicles.state }}</td>
+        <td>{{ vehicles.manager }}</td>
+        <td>{{ vehicles.assignedTo }}</td>
+        <td>{{ vehicles.department }}</td>
+        <td>{{ vehicles.registration }}</td>
+        <td>{{ vehicles.inspection }}</td>
+        <td>{{ vehicles.vendorVehicleID }}</td>
+        <td>{{ vehicles.passType }}</td>
+        <td>{{ vehicles.passNumber }}</td>
+        <td>
+          <button class="btn-edit" [routerLink]="['/vehicles/edit', office.id]">Edit</button>
+          <button (click)="onDelete(vehicles.id)" class="btn-delete" >Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

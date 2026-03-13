@@ -31,9 +31,12 @@ import { EquipmentViewComponent } from './customers/equipment-view/equipment-vie
 import { VendorListComponent } from './vendors/vendors/vendors';
 import { VendorsFormComponent } from './vendors/vendors-form/vendors-form';
 import { VendorsViewComponent } from './vendors/vendors-view/vendors-view';
-import { OfficesComponent } from './resources/resources/offices';
+import { OfficesComponent } from './resources/office-list/offices';
 import { OfficesFormComponent } from './resources/offices-form/offices-form';
 import { OfficesViewComponent } from './resources/offices-view/offices-view';
+import { VehiclesFormComponent } from './resources/vehicles-form/vehicles-form';
+import { VehiclesListComponent } from './resources/vehicles-list/vehicles-list';
+import { VehiclesViewComponent } from './resources/vehicles-view/vehicles-view';
 import { LoginComponent } from './index/login/login';
 import { HomeComponent } from './index/home/home';
 import { ProfileComponent } from './profile/profile/profile';
@@ -115,4 +118,8 @@ export const routes: Routes = [
   { path : 'offices/new', component: OfficesFormComponent, canActivate: [AuthGuard] },
   { path : 'offices/edit/:id', component: OfficesFormComponent, canActivate: [AuthGuard] },
   { path : 'offices/view/:id', component: OfficesViewComponent, canActivate: [AuthGuard] },
+  { path : 'vehicles', component: VehiclesListComponent, canActivate: [AuthGuard] },
+  { path : 'vehicles/new', component: VehiclesFormComponent, canActivate: [AuthGuard] },
+  { path : 'vehicles/edit/:id', component: VehiclesFormComponent, canActivate: [AuthGuard] },
+  { path : 'vehicles/view/:id', component: VehiclesViewComponent, canActivate: [AuthGuard] },
 ];

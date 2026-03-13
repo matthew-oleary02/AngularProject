@@ -1,0 +1,144 @@
+<h1>{{ isEdit ? 'Edit Vehicle' : 'Add New Vehicle' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="vehicleCode" class="full-label">Vehicle Code:</label>
+    <input id="vehicleCode" class="full-input" formControlName="vehicleCode" type="text" />
+
+    <div class="error" *ngIf="form.get('vehicleCode')?.invalid && form.get('vehicleCode')?.touched">
+      Required
+    </div>
+
+    <label for="status">Status:</label>
+    <input id="status" type="checkbox" formControlName="status" />
+
+    <label for="gpsType" class="full-label">GPS Type:</label>
+    <input id="gpsType" class="full-input" formControlName="gpsType" type="text" />
+
+    <label for="statusNote" class="full-label">Status Note:</label>
+    <input id="statusNote" class="full-input" formControlName="statusNote" type="text" />
+
+    <div class="error" *ngIf="form.get('statusNote')?.invalid && form.get('statusNote')?.touched">
+      Required
+    </div>
+    
+    <label for="vehicleType" class="full-label">Vehicle Type:</label>
+    <input id="vehicleType" class="full-input" formControlName="vehicleType" type="text" />
+
+    <div class="error" *ngIf="form.get('vehicleType')?.invalid && form.get('vehicleType')?.touched">
+      Required
+    </div>
+
+    <label for="year" class="full-label">year:</label>
+    <input id="year" class="full-input" formControlName="year" type="text" />
+
+    <div class="error" *ngIf="form.get('year')?.invalid && form.get('year')?.touched">
+      Required
+    </div>
+
+    <label for="make" class="full-label">make:</label>
+    <input id="make" class="full-input" formControlName="make" type="text" />
+
+    <div class="error" *ngIf="form.get('make')?.invalid && form.get('make')?.touched">
+      Required
+    </div>
+
+    <label for="model" class="full-label">model:</label>
+    <input id="model" class="full-input" formControlName="model" type="text" />
+
+    <div class="error" *ngIf="form.get('model')?.invalid && form.get('model')?.touched">
+      Required
+    </div>
+
+    <label for="color" class="full-label">color:</label>
+    <input id="color" class="full-input" formControlName="color" type="text" />
+
+    <div class="error" *ngIf="form.get('color')?.invalid && form.get('color')?.touched">
+      Required
+    </div>
+
+    <label for="vin" class="full-label">vin:</label>
+    <input id="vin" class="full-input" formControlName="vin" type="text" />
+
+    <div class="error" *ngIf="form.get('vin')?.invalid && form.get('vin')?.touched">
+      Required
+    </div>
+
+    <label for="plate" class="full-label">plate:</label>
+    <input id="plate" class="full-input" formControlName="plate" type="text" />
+
+    <div class="error" *ngIf="form.get('plate')?.invalid && form.get('plate')?.touched">
+      Required
+    </div>
+
+    <label for="state" class="full-label">State:</label>
+    <input id="state" class="full-input" formControlName="state" type="text" />
+
+    <div class="error" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">
+      Required
+    </div>
+    
+    <label for="manager" class="full-label">manager:</label>
+    <input id="manager" class="full-input" formControlName="manager" type="text" />
+
+    <div class="error" *ngIf="form.get('manager')?.invalid && form.get('manager')?.touched">
+      Required
+    </div>
+
+    <label for="assignedTo" class="full-label">assignedTo:</label>
+    <input id="assignedTo" class="full-input" formControlName="assignedTo" type="text" />
+
+    <div class="error" *ngIf="form.get('assignedTo')?.invalid && form.get('assignedTo')?.touched">
+      Required
+    </div>
+
+    <label for="department" class="full-label">department:</label>
+    <input id="department" class="full-input" formControlName="department" type="text" />
+
+    <div class="error" *ngIf="form.get('department')?.invalid && form.get('department')?.touched">
+      Required
+    </div>
+
+    <label for="registration" class="full-label">registration:</label>
+    <input id="registration" class="full-input" formControlName="registration" type="text" />
+
+    <div class="error" *ngIf="form.get('registration')?.invalid && form.get('registration')?.touched">
+      Required
+    </div>
+
+    <label for="inspection" class="full-label">inspection:</label>
+    <input id="inspection" class="full-input" formControlName="inspection" type="text" />
+
+    <div class="error" *ngIf="form.get('inspection')?.invalid && form.get('inspection')?.touched">
+      Required
+    </div>
+
+    
+    <label for="vendorVehicleID" class="full-label">vendorVehicleID:</label>
+    <input id="vendorVehicleID" class="full-input" formControlName="vendorVehicleID" type="text" />
+
+    <div class="error" *ngIf="form.get('vendorVehicleID')?.invalid && form.get('vendorVehicleID')?.touched">
+      Required
+    </div>
+
+    <label for="passType" class="full-label">passType:</label>
+    <input id="passType" class="full-input" formControlName="passType" type="text" />
+
+    <div class="error" *ngIf="form.get('passType')?.invalid && form.get('passType')?.touched">
+      Required
+    </div>
+
+    <label for="passNumber" class="full-label">passNumber:</label>
+    <input id="passNumber" class="full-input" formControlName="passNumber" type="text" />
+
+    <div class="error" *ngIf="form.get('passNumber')?.invalid && form.get('passNumber')?.touched">
+      Required
+    </div>
+
+        <div class="form-actions">
+            <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
+            <td><button type="button" class="btn-cancel"[routerLink]="['/offices']">Cancel</button></td>
+        </div>
+    </form>
+</div>
