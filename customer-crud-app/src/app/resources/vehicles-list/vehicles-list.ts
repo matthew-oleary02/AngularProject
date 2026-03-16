@@ -59,7 +59,7 @@ export class VehiclesListComponent implements OnInit {
 
     this.vehiclesService.deleteVehicles(id).subscribe({
       next: () => {
-        this.allVehicles = this.allVehicles.filter(v => v.id !== id);
+        this.allVehicles = this.allVehicles.filter(v => v.rowId !== id);
         this.applyFilters();
       },
       error: err => console.error('Delete failed:', err)

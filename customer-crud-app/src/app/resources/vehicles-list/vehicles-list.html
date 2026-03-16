@@ -55,9 +55,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let vehicles of vehicles">
-        <td><a [routerLink]="['/vehicles/view', vehicles.id]">{{ vehicles.vehicleCode }}</a></td>
+        <td><a [routerLink]="['/vehicles/view', vehicles.rowId]">{{ vehicles.vehicleCode }}</a></td>
         <td>{{ vehicles.vehicleCode }}</td>
-        <td>{{ vehicles.status }}</td>
+        <td>{{ vehicles.status ? 'Active' : 'Inactive' }}</td>
         <td>{{ vehicles.gpsType }}</td>
         <td>{{ vehicles.statusNote }}</td>
         <td>{{ vehicles.vehicleType }}</td>
@@ -77,10 +77,12 @@
         <td>{{ vehicles.passType }}</td>
         <td>{{ vehicles.passNumber }}</td>
         <td>
-          <button class="btn-edit" [routerLink]="['/vehicles/edit', office.id]">Edit</button>
-          <button (click)="onDelete(vehicles.id)" class="btn-delete" >Delete</button>
+          <button class="btn-edit" [routerLink]="['/vehicles/edit', vehicles.rowId]">Edit</button>
+          <button (click)="onDelete(vehicles.rowId)" class="btn-delete" >Delete</button>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
+
+<button class="add-new-btn" type="button" [routerLink]="['/vehicles/new']">Add New Vehicle</button>

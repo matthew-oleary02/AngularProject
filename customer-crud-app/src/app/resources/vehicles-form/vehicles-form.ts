@@ -9,7 +9,7 @@ import { Vehicles } from '../vehicles.model';
     selector: 'app-vehicles-form',
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, RouterModule],
-    templateUrl: './vehicle-form.html',
+    templateUrl: './vehicles-form.html',
   styleUrls: ['../../styles/form.css'],
 })
 export class VehiclesFormComponent implements OnInit {

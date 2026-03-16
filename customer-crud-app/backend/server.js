@@ -2760,7 +2760,7 @@ app.get('/vehicles', async (req, res) => {
     await sql.connect(config);
     const result = await sql.query('SELECT * FROM Vehicles');
     const vehicles = result.recordset.map(row => ({
-      id: row.OfficeID,
+      id: row.RowID,
       vehicleCode: row.VehicleCode,
       status: row.Status,
       gpsType: row.GPSType,
@@ -2789,34 +2789,49 @@ app.get('/vehicles', async (req, res) => {
   }
 });
 
-/*
+
+// GET /vehicles/:id (get one vehicle by RowID)
 app.get('/vehicles/:id', async (req, res) => {
   try {
     await sql.connect(config);
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
-    request.input('RowId', sql.Int, id);
-    const result = await request.query('SELECT * FROM Offices WHERE RowId = @RowId');
+    request.input('RowID', sql.Int, id);
+    const result = await request.query(`SELECT * FROM Vehicles WHERE RowID = @RowID`);
     if (result.recordset.length === 0) {
-      return res.status(404).json({ message: 'Office not found' });
+      return res.status(404).json({ message: 'Vehicle not found' });
     }
     const row = result.recordset[0];
-    const office = {
-      id: row.OfficeID,
-      name: row.OfficeName,
-      address1: row.Address1,
-      address2: row.Address2,
-      city: row.City,
+    const vehicle = {
+      id: row.RowID,
+      vehicleCode: row.VehicleCode,
+      status: row.Status,
+      gpsType: row.GPSType,
+      statusNote: row.StatusNote,
+      vehicleType: row.VehicleType,
+      year: row.Year,
+      make: row.Make,
+      model: row.Model,
+      color: row.Color,
+      vin: row.VIN,
+      plate: row.Plate,
       state: row.State,
-      zip: row.Zip,
-      county: row.County,
-      country: row.Country,
-      phone: row.Phone,
-      active: row.Active
+      manager: row.Manager,
+      assignedTo: row.AssignedTo,
+      department: row.Department,
+      registration: row.Registration,
+      inspection: row.Inspection,
+      vendorVehicleID: row.VendorVehicleID,
+      passType: row.PassType,
+      passNumber: row.PassNumber,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
     };
-    res.json(office);
+    res.json(vehicle);
   } catch (err) {
-    console.error('Error fetching office:', err);
+    console.error('Error fetching vehicle:', err);
     res.status(500).send('Server error');
   }
 });
@@ -2824,26 +2839,45 @@ app.get('/vehicles/:id', async (req, res) => {
 app.post('/vehicles', async (req, res) => {
   try {
     await sql.connect(config);
-    const office = req.body;
+    const v = req.body;
     const query = `
-      INSERT INTO Offices (OfficeName, Address1, Address2, City, State, Zip, County, Country, Phone, Active)
-      VALUES (@OfficeName, @Address1, @Address2, @City, @State, @Zip, @County, @Country, @Phone, @Active)
+      INSERT INTO Offices (
+        VehicleCode, Status, GPSType, StatusNote, VehicleType, Year, Make, Model,
+        Color, VIN, Plate, State, Manager, AssignedTo, Department,
+        Registration, Inspection, VendorVehicleID, PassType, PassNumber, CreatedBy, CreatedOn
+        )
+      VALUES (
+        @VehicleCode, @Status, @GPSType, @StatusNote, @VehicleType, @Year, @Make, @Model,
+        @Color, @VIN, @Plate, @State, @Manager, @AssignedTo, @Department,
+        @Registration, @Inspection, @VendorVehicleID, @PassType, @PassNumber, @CreatedBy, GETDATE()
+        )
     `;
     const request = new sql.Request();
-    request.input('OfficeName', sql.VarChar, office.name);
-    request.input('Address1', sql.VarChar, office.address1);
-    request.input('Address2', sql.VarChar, office.address2);
-    request.input('City', sql.VarChar, office.city);
-    request.input('State', sql.VarChar, office.state);
-    request.input('Zip', sql.VarChar, office.zip);
-    request.input('County', sql.VarChar, office.county);
-    request.input('Country', sql.VarChar, office.country);
-    request.input('Phone', sql.VarChar, office.phone);
-    request.input('Active', sql.Bit, office.active);
+    request.input('VehicleCode', sql.VarChar, v.vehicleCode);
+    request.input('Status', sql.VarChar, v.status);
+    request.input('GPSType', sql.VarChar, v.gpsType);
+    request.input('StatusNote', sql.VarChar, v.statusNote);
+    request.input('VehicleType', sql.VarChar, v.vehicleType);
+    request.input('Year', sql.Int, v.year);
+    request.input('Make', sql.VarChar, v.make);
+    request.input('Model', sql.VarChar, v.model);
+    request.input('Color', sql.VarChar, v.color);
+    request.input('VIN', sql.VarChar, v.vin);
+    request.input('Plate', sql.VarChar, v.plate);
+    request.input('State', sql.VarChar, v.state);
+    request.input('Manager', sql.VarChar, v.manager);
+    request.input('AssignedTo', sql.VarChar, v.assignedTo);
+    request.input('Department', sql.VarChar, v.department);
+    request.input('Registration', sql.VarChar, v.registration);
+    request.input('Inspection', sql.VarChar, v.inspection);
+    request.input('VendorVehicleID', sql.VarChar, v.vendorVehicleID);
+    request.input('PassType', sql.VarChar, v.passType);
+    request.input('PassNumber', sql.VarChar, v.passNumber);
+    request.input('CreatedBy', sql.VarChar, 'admin');
     await request.query(query);
-    res.status(201).json({ message: 'Office added successfully' });
+    res.status(201).json({ message: 'Vehicle added successfully' });
   } catch (err) {
-    console.error('Error adding office:', err);
+    console.error('Error adding vehicle:', err);
     res.status(500).send('Server error');
   }
 });
@@ -2854,35 +2888,58 @@ app.put('/vehicles/:id', async (req, res) => {
     const office = req.body;
     const id = req.params.id;
     const query = `
-      UPDATE Offices SET
-        OfficeName = @OfficeName,
-        Address1 = @Address1,
-        Address2 = @Address2,
-        City = @City,
+      UPDATE Vehicles SET
+        VehicleCode = @VehicleCode,
+        Status = @Status,
+        GPSType = @GPSType,
+        StatusNote = @StatusNote,
+        VehicleType = @VehicleType,
+        Year = @Year,
+        Make = @Make,
+        Model = @Model,
+        Color = @Color,
+        VIN = @VIN,
+        Plate = @Plate,
         State = @State,
-        Zip = @Zip,
-        County = @County,
-        Country = @Country,
-        Phone = @Phone,
-        Active = @Active
-      WHERE RowId = @RowId
+        Manager = @Manager,
+        AssignedTo = @AssignedTo,
+        Department = @Department,
+        Registration = @Registration,
+        Inspection = @Inspection,
+        VendorVehicleID = @VendorVehicleID,
+        PassType = @PassType,
+        PassNumber = @PassNumber
+        ModifiedBy = @ModifiedBy
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID;
     `;
     const request = new sql.Request();
-    request.input('RowId', sql.Int, id);
-    request.input('OfficeName', sql.VarChar, office.name);
-    request.input('Address1', sql.VarChar, office.address1);
-    request.input('Address2', sql.VarChar, office.address2);
-    request.input('City', sql.VarChar, office.city);
-    request.input('State', sql.VarChar, office.state);
-    request.input('Zip', sql.VarChar, office.zip);
-    request.input('County', sql.VarChar, office.county);
-    request.input('Country', sql.VarChar, office.country);
-    request.input('Phone', sql.VarChar, office.phone);
-    request.input('Active', sql.Bit, office.active);
+    request.input('RowID', sql.Int, id);
+    request.input('VehicleCode', sql.VarChar, v.vehicleCode);
+    request.input('Status', sql.VarChar, v.status);
+    request.input('GPSType', sql.VarChar, v.gpsType);
+    request.input('StatusNote', sql.VarChar, v.statusNote);
+    request.input('VehicleType', sql.VarChar, v.vehicleType);
+    request.input('Year', sql.Int, v.year);
+    request.input('Make', sql.VarChar, v.make);
+    request.input('Model', sql.VarChar, v.model);
+    request.input('Color', sql.VarChar, v.color);
+    request.input('VIN', sql.VarChar, v.vin);
+    request.input('Plate', sql.VarChar, v.plate);
+    request.input('State', sql.VarChar, v.state);
+    request.input('Manager', sql.VarChar, v.manager);
+    request.input('AssignedTo', sql.VarChar, v.assignedTo);
+    request.input('Department', sql.VarChar, v.department);
+    request.input('Registration', sql.VarChar, v.registration);
+    request.input('Inspection', sql.VarChar, v.inspection);
+    request.input('VendorVehicleID', sql.VarChar, v.vendorVehicleID);
+    request.input('PassType', sql.VarChar, v.passType);
+    request.input('PassNumber', sql.VarChar, v.passNumber);
+    request.input('ModifiedBy', sql.VarChar, 'admin');
     await request.query(query);
-    res.status(200).json({ message: 'Office updated successfully' });
+    res.status(200).json({ message: 'Vehicle updated successfully' });
   } catch (err) {
-    console.error('Error updating office:', err);
+    console.error('Error updating vehicle:', err);
     res.status(500).send('Server error');
   }
 });
@@ -2896,11 +2953,11 @@ app.delete('/vehicles/:id', async (req, res) => {
     await request.query('DELETE FROM Vehicles WHERE RowId = @RowId');
     res.status(204).send();
   } catch (err) {
-    console.error('Error deleting office:', err);
+    console.error('Error deleting vehicle:', err);
     res.status(500).send('Server error');
   }
 });
-*/
+
 
 /* ===========================
     OFFICE MANAGEMENT ENDPOINTS

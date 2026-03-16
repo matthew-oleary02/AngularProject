@@ -29,7 +29,24 @@
 
     <a *ngIf="isLoggedIn() && isManager() || isAdmin()" routerLink="/vendors">Vendors</a>
 
-    <a *ngIf="isLoggedIn()" routerLink="/offices">Resources</a>
+    <!-- Resources dropdown -->
+    <div class="nav-dropdown" *ngIf="isLoggedIn() && isAdmin()">
+      <a
+        class="dropdown-trigger"
+        (click)="$event.stopPropagation(); toggleResourcesMenu()"
+        style="cursor:pointer;"
+      >
+        Resources
+        <span class="chevron" [class.open]="showResourcesMenu">▾</span>
+      </a>
+
+      <div class="dropdown-menu" *ngIf="showResourcesMenu">
+        <a routerLink="/resources" (click)="closeResourcesMenu()">Resources</a>
+        <a routerLink="/offices" (click)="closeResourcesMenu()">Offices</a>
+        <a routerLink="/report-groups" (click)="closeResourcesMenu()">Report Groups</a>
+        <a routerLink="/vehicles" (click)="closeResourcesMenu()">Vehicles</a>
+      </div>
+    </div>
 
     <!-- Admin dropdown -->
     <div class="nav-dropdown" *ngIf="isLoggedIn() && isAdmin()">

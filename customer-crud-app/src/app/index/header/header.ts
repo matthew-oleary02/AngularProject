@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent implements OnDestroy {
   showAdminMenu = false;
   showCustomerMenu = false;
+  showResourcesMenu = false;
   private navSub?: Subscription;
 
   constructor(private router: Router) {
@@ -85,6 +86,15 @@ export class HeaderComponent implements OnDestroy {
     this.showCustomerMenu = false;
   }
 
+     // Dropdown controls for Customer Menu
+  toggleResourcesMenu(): void {
+    this.showResourcesMenu = !this.showResourcesMenu;
+  }
+
+  closeResourcesMenu(): void {
+    this.showResourcesMenu = false;
+  }
+
   // Close when clicking anywhere outside the dropdown
   @HostListener('document:click', ['$event'])
   onDocumentClick(evt: MouseEvent): void {
@@ -93,6 +103,7 @@ export class HeaderComponent implements OnDestroy {
     if (!target.closest('.nav-dropdown')) {
       this.showAdminMenu = false;
       this.showCustomerMenu = false;
+      this.showResourcesMenu = false;
     }
   }
 }
