@@ -2760,7 +2760,7 @@ app.get('/vehicles', async (req, res) => {
     await sql.connect(config);
     const result = await sql.query('SELECT * FROM Vehicles');
     const vehicles = result.recordset.map(row => ({
-      id: row.RowID,
+      rowId: row.RowID,
       vehicleCode: row.VehicleCode,
       status: row.Status,
       gpsType: row.GPSType,
@@ -2803,7 +2803,7 @@ app.get('/vehicles/:id', async (req, res) => {
     }
     const row = result.recordset[0];
     const vehicle = {
-      id: row.RowID,
+      rowId: row.RowID,
       vehicleCode: row.VehicleCode,
       status: row.Status,
       gpsType: row.GPSType,
@@ -2841,7 +2841,7 @@ app.post('/vehicles', async (req, res) => {
     await sql.connect(config);
     const v = req.body;
     const query = `
-      INSERT INTO Offices (
+      INSERT INTO Vehicles (
         VehicleCode, Status, GPSType, StatusNote, VehicleType, Year, Make, Model,
         Color, VIN, Plate, State, Manager, AssignedTo, Department,
         Registration, Inspection, VendorVehicleID, PassType, PassNumber, CreatedBy, CreatedOn
@@ -2854,7 +2854,7 @@ app.post('/vehicles', async (req, res) => {
     `;
     const request = new sql.Request();
     request.input('VehicleCode', sql.VarChar, v.vehicleCode);
-    request.input('Status', sql.VarChar, v.status);
+    request.input('Status', sql.Bit, v.status ? 1 : 0);
     request.input('GPSType', sql.VarChar, v.gpsType);
     request.input('StatusNote', sql.VarChar, v.statusNote);
     request.input('VehicleType', sql.VarChar, v.vehicleType);
@@ -2885,8 +2885,8 @@ app.post('/vehicles', async (req, res) => {
 app.put('/vehicles/:id', async (req, res) => {
   try {
     await sql.connect(config);
-    const office = req.body;
-    const id = req.params.id;
+    const v = req.body;
+    const id = parseInt(req.params.id, 10);
     const query = `
       UPDATE Vehicles SET
         VehicleCode = @VehicleCode,
@@ -2908,15 +2908,15 @@ app.put('/vehicles/:id', async (req, res) => {
         Inspection = @Inspection,
         VendorVehicleID = @VendorVehicleID,
         PassType = @PassType,
-        PassNumber = @PassNumber
-        ModifiedBy = @ModifiedBy
+        PassNumber = @PassNumber,
+        ModifiedBy = @ModifiedBy,
         ModifiedOn = GETDATE()
       WHERE RowID = @RowID;
     `;
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
     request.input('VehicleCode', sql.VarChar, v.vehicleCode);
-    request.input('Status', sql.VarChar, v.status);
+    request.input('Status', sql.Bit, v.status ? 1 : 0);
     request.input('GPSType', sql.VarChar, v.gpsType);
     request.input('StatusNote', sql.VarChar, v.statusNote);
     request.input('VehicleType', sql.VarChar, v.vehicleType);
@@ -2930,11 +2930,11 @@ app.put('/vehicles/:id', async (req, res) => {
     request.input('Manager', sql.VarChar, v.manager);
     request.input('AssignedTo', sql.VarChar, v.assignedTo);
     request.input('Department', sql.VarChar, v.department);
-    request.input('Registration', sql.VarChar, v.registration);
-    request.input('Inspection', sql.VarChar, v.inspection);
+    request.input('Registration', sql.DateTime, v.registration);
+    request.input('Inspection', sql.DateTime, v.inspection);
     request.input('VendorVehicleID', sql.VarChar, v.vendorVehicleID);
     request.input('PassType', sql.VarChar, v.passType);
-    request.input('PassNumber', sql.VarChar, v.passNumber);
+    request.input('PassNumber', sql.Int, v.passNumber);
     request.input('ModifiedBy', sql.VarChar, 'admin');
     await request.query(query);
     res.status(200).json({ message: 'Vehicle updated successfully' });

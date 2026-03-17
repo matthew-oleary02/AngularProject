@@ -56,7 +56,6 @@
     <tbody>
       <tr *ngFor="let vehicles of vehicles">
         <td><a [routerLink]="['/vehicles/view', vehicles.rowId]">{{ vehicles.vehicleCode }}</a></td>
-        <td>{{ vehicles.vehicleCode }}</td>
         <td>{{ vehicles.status ? 'Active' : 'Inactive' }}</td>
         <td>{{ vehicles.gpsType }}</td>
         <td>{{ vehicles.statusNote }}</td>
