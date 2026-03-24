@@ -1,0 +1,43 @@
+<h1>Resources Details</h1>
+<div *ngIf="resources; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ resources.fname && resources.lname || 'Name' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ resources.rowId }}</div></div>
+
+    <div class="group-title">Contact Info</div>
+    <div class="item"><div class="label">Title</div><div class="value">{{ resources.contactInfo.title }}</div></div>
+    <div class="item"><div class="label">Department</div><div class="value">{{ resources.contactInfo.department }}</div></div>
+    <div class="item"><div class="label">Phone</div><div class="value">{{ resources.contactInfo.phone }}</div></div>
+    <div class="item"><div class="label">Mobile</div><div class="value">{{ resources.contactInfo.cellphone }}</div></div>
+    <div class="item"><div class="label">Email</div><div class="value">{{ resources.contactInfo.email }}</div></div>
+    <div class="item"><div class="label">Address1</div><div class="value">{{ resources.contactInfo.address1 }}</div></div>
+    <div class="item"><div class="label">Address2</div><div class="value">{{ resources.contactInfo.address2 }}</div></div>
+    <div class="item"><div class="label">City</div><div class="value">{{ resources.contactInfo.city }}</div></div>
+    <div class="item"><div class="label">State</div><div class="value">{{ resources.contactInfo.state }}</div></div>
+    <div class="item"><div class="label">ZipCode</div><div class="value">{{ resources.contactInfo.zipCode }}</div></div>
+    <div class="item"><div class="label">HireDate</div><div class="value">{{ resources.contactInfo.hireDate }}</div></div>
+    <div class="item"><div class="label">termDate</div><div class="value">{{ resources.contactInfo.termDate }}</div></div>
+    <div class="item"><div class="label">LeadTech</div><div class="value">{{ resources.contactInfo.leadTech ? 'Yes' : 'No' }}</div></div>
+    <div class="item"><div class="label">Active</div><div class="value">{{ resources.contactInfo.active ? 'Yes' : 'No' }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Company</div><div class="value">{{ resources.company }}</div></div>
+    <div class="item"><div class="label">Employment Type</div><div class="value">{{ resources.employmentType }}</div></div>
+    <div class="item"><div class="label">PIN</div><div class="value">{{ resources.pin }}</div></div>
+    <div class="item"><div class="label">DOB</div><div class="value">{{ resources.dob }}</div></div>
+    <div class="item"><div class="label">Group Name</div><div class="value">{{ resources.groupName }}</div></div>
+    <div class="item"><div class="label">Created By</div><div class="value">{{ resources.createdBy }}</div></div>
+    <div class="item"><div class="label">Created On</div><div class="value">{{ resources.createdOn }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ resources.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ resources.modifiedOn }}</div></div>
+  </div>
+  <button type="button" class="btn-return" [routerLink]="['/resources']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Resource not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/resources']">Back</button>
+  </div>
+</ng-template>

@@ -37,6 +37,9 @@ import { OfficesViewComponent } from './resources/offices-view/offices-view';
 import { VehiclesFormComponent } from './resources/vehicles-form/vehicles-form';
 import { VehiclesListComponent } from './resources/vehicles-list/vehicles-list';
 import { VehiclesViewComponent } from './resources/vehicles-view/vehicles-view';
+import { ResourcesFormComponent } from './resources/resources-form/resources-form';
+import { ResourcesListComponent } from './resources/resources-list/resources-list';
+import { ResourcesViewComponent } from './resources/resources-view/resources-view';
 import { LoginComponent } from './index/login/login';
 import { HomeComponent } from './index/home/home';
 import { ProfileComponent } from './profile/profile/profile';
@@ -122,4 +125,8 @@ export const routes: Routes = [
   { path : 'vehicles/new', component: VehiclesFormComponent, canActivate: [AuthGuard] },
   { path : 'vehicles/edit/:id', component: VehiclesFormComponent, canActivate: [AuthGuard] },
   { path : 'vehicles/view/:id', component: VehiclesViewComponent, canActivate: [AuthGuard] },
+  { path : 'resources', component: ResourcesListComponent, canActivate: [AuthGuard] },
+  { path : 'resources/new', component: ResourcesFormComponent, canActivate: [AuthGuard] },
+  { path : 'resources/edit/:id', component: ResourcesFormComponent, canActivate: [AuthGuard] },
+  { path : 'resources/view/:id', component: ResourcesViewComponent, canActivate: [AuthGuard] }
 ];

@@ -1,0 +1,66 @@
+<div class="list-container">
+  <h1>Resource Management</h1>
+  <!-- Search & Filter Toolbar -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+      aria-label="Search resources"
+    />
+
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <input
+        type="checkbox"
+        id="activeOnly"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+        aria-checked="{{ activeFilter === true }}"
+      />
+      <label for="activeOnly" title="Show only active resources">Active</label>
+    </div>
+  </div>
+
+  <!-- Resources Table -->
+  <table class="list-table" aria-label="Resources table">
+    <thead>
+      <tr>
+        <th scope="col">Last Name</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Mobile</th>
+        <th scope="col">Email</th>
+        <th scope="col">Title</th>
+        <th scope="col">Dept</th>
+        <th scope="col">State</th>
+        <th scope="col">Active</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let resource of resources">
+        <td><a [routerLink]="['/resources/view', resource.rowId]">{{ resource.rowId }}</a></td>
+        <td>{{ resource.lname }}</td>
+        <td>{{ resource.fname }}</td>
+        <td>{{ resource.contactInfo.phone }}</td>
+        <td>{{ resource.contactInfo.cellphone }}</td>
+        <td>{{ resource.contactInfo.email }}</td>
+        <td>{{ resource.contactInfo.title }}</td>
+        <td>{{ resource.contactInfo.department }}</td>
+        <td>{{ resource.contactInfo.state }}</td>
+        <td>{{ resource.contactInfo.active ? 'Yes' : 'No' }}</td>
+        <td>
+          <button class="btn-edit" [routerLink]="['/resources/edit', resource.rowId]">Edit</button>
+          <button (click)="onDelete(resource.rowId)" class="btn-delete" >Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<button class="add-new-btn" type="button" [routerLink]="['/resources/new']">Add New Resource</button>

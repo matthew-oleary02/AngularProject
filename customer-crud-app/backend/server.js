@@ -2958,6 +2958,243 @@ app.delete('/vehicles/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    RESOURCES MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /resources (all resources)
+app.get('/resources', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM Resources');
+    const resource = result.recordset.map(row => ({
+      rowId: row.RowID,
+      fname: row.firstName,
+      lname: row.lastName,
+      title: row.Title,
+      department: row.Department,
+      phone: row.Phone,
+      cellphone: row.Mobile,
+      email: row.Email,
+      address1: row.Address1,
+      address2: row.Address2,
+      city: row.City,
+      state: row.State,
+      zipCode: row.ZipCode,
+      hireDate: row.HireDate,
+      termDate: row.TermDate,
+      leadTech: row.LeadTech,
+      active: row.Active,
+      company: row.Company,
+      employmentType: row.EmploymentType,
+      pin: row.PIN,
+      dob: row.DateOfBirth,
+      groupName: row.GroupName,
+    }));
+    res.json(resource);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+// GET /resources/:id (get one resource by RowID)
+app.get('/resources/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = Number(req.params.id);
+
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+
+    const result = await request.query(`
+      SELECT * FROM Resources WHERE RowID = @RowID
+    `);
+
+    if (!result.recordset.length) {
+      return res.status(404).json({ message: 'Resource not found' });
+    }
+
+    const row = result.recordset[0];
+
+    const resource = {
+      rowId: row.RowID,
+      fname: row.FirstName,
+      lname: row.LastName,
+      title: row.Title,
+      department: row.Department,
+      phone: row.Phone,
+      cellphone: row.Mobile,
+      email: row.Email,
+      address1: row.Address1,
+      address2: row.Address2,
+      city: row.City,
+      state: row.State,
+      zipCode: row.ZipCode,
+      hireDate: row.HireDate,
+      termDate: row.TermDate,
+      leadTech: row.LeadTech,
+      active: row.Active,
+      company: row.Company,
+      employmentType: row.EmploymentType,
+      pin: row.PIN,
+      dob: row.DateOfBirth,
+      groupName: row.GroupName,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+
+    res.json(resource);
+  } catch (err) {
+    console.error('Error fetching resource:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+app.post('/resources', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const r = req.body;
+
+    const query = `
+      INSERT INTO Resources (
+        FirstName, LastName, Title, Department, Phone, Mobile, Email,
+        Address1, Address2, City, State, ZipCode,
+        HireDate, TermDate, LeadTech, Active, Company,
+        EmploymentType, PIN, DateOfBirth, GroupName,
+        CreatedBy, CreatedOn
+      )
+      VALUES (
+        @FirstName, @LastName, @Title, @Department, @Phone, @Mobile, @Email,
+        @Address1, @Address2, @City, @State, @ZipCode,
+        @HireDate, @TermDate, @LeadTech, @Active, @Company,
+        @EmploymentType, @PIN, @DateOfBirth, @GroupName,
+        @CreatedBy, GETDATE()
+      )
+    `;
+
+    const request = new sql.Request();
+    request.input('FirstName', sql.VarChar, r.fname);
+    request.input('LastName', sql.VarChar, r.lname);
+    request.input('Title', sql.VarChar, r.title);
+    request.input('Department', sql.VarChar, r.department);
+    request.input('Phone', sql.VarChar, r.phone);
+    request.input('Mobile', sql.VarChar, r.cellphone);
+    request.input('Email', sql.VarChar, r.email);
+    request.input('Address1', sql.VarChar, r.address1);
+    request.input('Address2', sql.VarChar, r.address2);
+    request.input('City', sql.VarChar, r.city);
+    request.input('State', sql.VarChar, r.state);
+    request.input('ZipCode', sql.Int, r.zipCode);
+    request.input('HireDate', sql.DateTime, r.hireDate);
+    request.input('TermDate', sql.DateTime, r.termDate);
+    request.input('LeadTech', sql.Bit, r.leadTech ? 1 : 0);
+    request.input('Active', sql.Bit, r.active ? 1 : 0);
+    request.input('Company', sql.VarChar, r.company);
+    request.input('EmploymentType', sql.VarChar, r.employmentType);
+    request.input('PIN', sql.Int, r.pin);
+    request.input('DateOfBirth', sql.DateTime, r.dob);
+    request.input('GroupName', sql.VarChar, r.groupName);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+
+    await request.query(query);
+    res.status(201).json({ message: 'Resource added successfully' });
+  } catch (err) {
+    console.error('Error adding resource:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+app.put('/resources/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const r = req.body;
+    const id = Number(req.params.id);
+
+    const query = `
+      UPDATE Resources SET
+        FirstName = @FirstName,
+        LastName = @LastName,
+        Title = @Title,
+        Department = @Department,
+        Phone = @Phone,
+        Mobile = @Mobile,
+        Email = @Email,
+        Address1 = @Address1,
+        Address2 = @Address2,
+        City = @City,
+        State = @State,
+        ZipCode = @ZipCode,
+        HireDate = @HireDate,
+        TermDate = @TermDate,
+        LeadTech = @LeadTech,
+        Active = @Active,
+        Company = @Company,
+        EmploymentType = @EmploymentType,
+        PIN = @PIN,
+        DateOfBirth = @DateOfBirth,
+        GroupName = @GroupName,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('FirstName', sql.VarChar, r.fname);
+    request.input('LastName', sql.VarChar, r.lname);
+    request.input('Title', sql.VarChar, r.title);
+    request.input('Department', sql.VarChar, r.department);
+    request.input('Phone', sql.VarChar, r.phone);
+    request.input('Mobile', sql.VarChar, r.cellphone);
+    request.input('Email', sql.VarChar, r.email);
+    request.input('Address1', sql.VarChar, r.address1);
+    request.input('Address2', sql.VarChar, r.address2);
+    request.input('City', sql.VarChar, r.city);
+    request.input('State', sql.VarChar, r.state);
+    request.input('ZipCode', sql.Int, r.zipCode);
+    request.input('HireDate', sql.DateTime, r.hireDate);
+    request.input('TermDate', sql.DateTime, r.termDate);
+    request.input('LeadTech', sql.Bit, r.leadTech ? 1 : 0);
+    request.input('Active', sql.Bit, r.active ? 1 : 0);
+    request.input('Company', sql.VarChar, r.company);
+    request.input('EmploymentType', sql.VarChar, r.employmentType);
+    request.input('PIN', sql.Int, r.pin);
+    request.input('DateOfBirth', sql.DateTime, r.dob);
+    request.input('GroupName', sql.VarChar, r.groupName);
+    request.input('ModifiedBy', sql.VarChar, r.modifiedBy || 'admin');
+
+    await request.query(query);
+    res.status(200).json({ message: 'Resource updated successfully' });
+  } catch (err) {
+    console.error('Error updating resource:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.delete('/resources/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+
+    const id = Number(req.params.id);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+
+    await request.query(`
+      DELETE FROM Resources WHERE RowID = @RowID
+    `);
+
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting resource:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 /* ===========================
     OFFICE MANAGEMENT ENDPOINTS
