@@ -1,18 +1,18 @@
-<h1>{{ isEdit ? 'Edit Customer' : 'Add New Customer' }}</h1>
+<h1>{{ isEdit ? 'Edit Resource' : 'Add New Resource' }}</h1>
 
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="submit()">
 
     <label for="fname" class="full-label">first name:</label>
     <input id="fname" class="full-input" formControlName="fname" type="text" />
-    <!-- Validation message for customer name -->
+    <!-- Validation message for resource name -->
     <div class="error" *ngIf="form.get('fname')?.invalid && form.get('fname')?.touched">
       Required
     </div>
 
     <label for="lname" class="full-label">last name:</label>
     <input id="lname" class="full-input" formControlName="lname" type="text" />
-    <!-- Validation message for customer name -->
+    <!-- Validation message for resource name -->
     <div class="error" *ngIf="form.get('lname')?.invalid && form.get('lname')?.touched">
       Required
     </div>
@@ -51,7 +51,7 @@
       <input id="zipCode" formControlName="zipCode" type="text" />
 
       <label for="hireDate">hireDate:</label>
-      <input id="hireDate" formControlName="county" type="text" />
+      <input id="hireDate" formControlName="hireDate" type="date" />
 
       <label for="leadTech">Lead Tech:</label>
       <input id="leadTech" type="checkbox" formControlName="leadTech" />
@@ -73,7 +73,7 @@
       <input id="pin" formControlName="pin" type="text" />
 
       <label for="dob">dob:</label>
-      <input id="dob" formControlName="dob" type="text" />
+      <input id="dob" formControlName="dob" type="date" />
 
       <label for="groupName">groupName:</label>
       <input id="groupName" formControlName="groupName" type="text" />

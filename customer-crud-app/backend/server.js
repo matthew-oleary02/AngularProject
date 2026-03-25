@@ -2969,22 +2969,24 @@ app.get('/resources', async (req, res) => {
     const result = await sql.query('SELECT * FROM Resources');
     const resource = result.recordset.map(row => ({
       rowId: row.RowID,
-      fname: row.firstName,
-      lname: row.lastName,
-      title: row.Title,
-      department: row.Department,
-      phone: row.Phone,
-      cellphone: row.Mobile,
-      email: row.Email,
-      address1: row.Address1,
-      address2: row.Address2,
-      city: row.City,
-      state: row.State,
-      zipCode: row.ZipCode,
-      hireDate: row.HireDate,
-      termDate: row.TermDate,
-      leadTech: row.LeadTech,
-      active: row.Active,
+      fname: row.FirstName,
+      lname: row.LastName,
+      contactInfo: {
+        title: row.Title,
+        department: row.Department,
+        phone: row.Phone,
+        cellphone: row.Mobile,
+        email: row.Email,
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zipCode: row.ZipCode,
+        hireDate: row.HireDate,
+        termDate: row.TermDate,
+        leadTech: row.LeadTech,
+        active: row.Active,
+      },
       company: row.Company,
       employmentType: row.EmploymentType,
       pin: row.PIN,
@@ -3022,20 +3024,22 @@ app.get('/resources/:id', async (req, res) => {
       rowId: row.RowID,
       fname: row.FirstName,
       lname: row.LastName,
-      title: row.Title,
-      department: row.Department,
-      phone: row.Phone,
-      cellphone: row.Mobile,
-      email: row.Email,
-      address1: row.Address1,
-      address2: row.Address2,
-      city: row.City,
-      state: row.State,
-      zipCode: row.ZipCode,
-      hireDate: row.HireDate,
-      termDate: row.TermDate,
-      leadTech: row.LeadTech,
-      active: row.Active,
+      contactInfo: {
+        title: row.Title,
+        department: row.Department,
+        phone: row.Phone,
+        cellphone: row.Mobile,
+        email: row.Email,
+        address1: row.Address1,
+        address2: row.Address2,
+        city: row.City,
+        state: row.State,
+        zipCode: row.ZipCode,
+        hireDate: row.HireDate,
+        termDate: row.TermDate,
+        leadTech: row.LeadTech,
+        active: row.Active,
+      },
       company: row.Company,
       employmentType: row.EmploymentType,
       pin: row.PIN,
@@ -3080,20 +3084,20 @@ app.post('/resources', async (req, res) => {
     const request = new sql.Request();
     request.input('FirstName', sql.VarChar, r.fname);
     request.input('LastName', sql.VarChar, r.lname);
-    request.input('Title', sql.VarChar, r.title);
-    request.input('Department', sql.VarChar, r.department);
-    request.input('Phone', sql.VarChar, r.phone);
-    request.input('Mobile', sql.VarChar, r.cellphone);
-    request.input('Email', sql.VarChar, r.email);
-    request.input('Address1', sql.VarChar, r.address1);
-    request.input('Address2', sql.VarChar, r.address2);
-    request.input('City', sql.VarChar, r.city);
-    request.input('State', sql.VarChar, r.state);
-    request.input('ZipCode', sql.Int, r.zipCode);
-    request.input('HireDate', sql.DateTime, r.hireDate);
-    request.input('TermDate', sql.DateTime, r.termDate);
-    request.input('LeadTech', sql.Bit, r.leadTech ? 1 : 0);
-    request.input('Active', sql.Bit, r.active ? 1 : 0);
+    request.input('Title', sql.VarChar, r.contactInfo.title);
+    request.input('Department', sql.VarChar, r.contactInfo.department);
+    request.input('Phone', sql.VarChar, r.contactInfo.phone);
+    request.input('Mobile', sql.VarChar, r.contactInfo.cellphone);
+    request.input('Email', sql.VarChar, r.contactInfo.email);
+    request.input('Address1', sql.VarChar, r.contactInfo.address1);
+    request.input('Address2', sql.VarChar, r.contactInfo.address2);
+    request.input('City', sql.VarChar, r.contactInfo.city);
+    request.input('State', sql.VarChar, r.contactInfo.state);
+    request.input('ZipCode', sql.Int, r.contactInfo.zipCode);
+    request.input('HireDate', sql.DateTime, r.contactInfo.hireDate);
+    request.input('TermDate', sql.DateTime, r.contactInfo.termDate);
+    request.input('LeadTech', sql.Bit, r.contactInfo.leadTech ? 1 : 0);
+    request.input('Active', sql.Bit, r.contactInfo.active ? 1 : 0);
     request.input('Company', sql.VarChar, r.company);
     request.input('EmploymentType', sql.VarChar, r.employmentType);
     request.input('PIN', sql.Int, r.pin);
@@ -3148,20 +3152,20 @@ app.put('/resources/:id', async (req, res) => {
     request.input('RowID', sql.Int, id);
     request.input('FirstName', sql.VarChar, r.fname);
     request.input('LastName', sql.VarChar, r.lname);
-    request.input('Title', sql.VarChar, r.title);
-    request.input('Department', sql.VarChar, r.department);
-    request.input('Phone', sql.VarChar, r.phone);
-    request.input('Mobile', sql.VarChar, r.cellphone);
-    request.input('Email', sql.VarChar, r.email);
-    request.input('Address1', sql.VarChar, r.address1);
-    request.input('Address2', sql.VarChar, r.address2);
-    request.input('City', sql.VarChar, r.city);
-    request.input('State', sql.VarChar, r.state);
-    request.input('ZipCode', sql.Int, r.zipCode);
-    request.input('HireDate', sql.DateTime, r.hireDate);
-    request.input('TermDate', sql.DateTime, r.termDate);
-    request.input('LeadTech', sql.Bit, r.leadTech ? 1 : 0);
-    request.input('Active', sql.Bit, r.active ? 1 : 0);
+    request.input('Title', sql.VarChar, r.contactInfo.title);
+    request.input('Department', sql.VarChar, r.contactInfo.department);
+    request.input('Phone', sql.VarChar, r.contactInfo.phone);
+    request.input('Mobile', sql.VarChar, r.contactInfo.cellphone);
+    request.input('Email', sql.VarChar, r.contactInfo.email);
+    request.input('Address1', sql.VarChar, r.contactInfo.address1);
+    request.input('Address2', sql.VarChar, r.contactInfo.address2);
+    request.input('City', sql.VarChar, r.contactInfo.city);
+    request.input('State', sql.VarChar, r.contactInfo.state);
+    request.input('ZipCode', sql.Int, r.contactInfo.zipCode);
+    request.input('HireDate', sql.DateTime, r.contactInfo.hireDate);
+    request.input('TermDate', sql.DateTime, r.contactInfo.termDate);
+    request.input('LeadTech', sql.Bit, r.contactInfo.leadTech ? 1 : 0);
+    request.input('Active', sql.Bit, r.contactInfo.active ? 1 : 0);
     request.input('Company', sql.VarChar, r.company);
     request.input('EmploymentType', sql.VarChar, r.employmentType);
     request.input('PIN', sql.Int, r.pin);

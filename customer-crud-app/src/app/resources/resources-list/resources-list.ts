@@ -70,8 +70,8 @@ export class ResourcesListComponent implements OnInit {
     const q = this.filterText.toLowerCase().trim();
 
     this.resources = this.allResources.filter(r => {
-      const matchesActive =
-        this.activeFilter === null ? true : (r.contactInfo.active === this.activeFilter);
+      if (!r || !r.contactInfo) return false;
+      const matchesActive = this.activeFilter === null ? true : (r.contactInfo.active === this.activeFilter);
 
       const fields = [
         r.lname,
@@ -82,10 +82,10 @@ export class ResourcesListComponent implements OnInit {
         r.contactInfo.title,
         r.contactInfo.department,
         r.contactInfo.state,
-        r.contactInfo.active?.toString(),
+        r.contactInfo.active !== undefined ? r.contactInfo.active.toString() : '',
       ];
-      const matchesText = q === '' || fields.some(f => f?.toString().toLowerCase().includes(q));
-      return matchesActive && matchesText;
+      const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
+      return matchesActive && matchesQuery;
     });
   }
 }

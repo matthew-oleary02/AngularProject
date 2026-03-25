@@ -1,7 +1,7 @@
 <h1>Resources Details</h1>
 <div *ngIf="resources; else notFound" class="card">
   <div class="detail-grid">
-    <h2 class="title">{{ resources.fname && resources.lname || 'Name' }}</h2>
+    <h2 class="title">{{ resources.fname || 'First Name' }} {{ resources.lname || 'Last Name'}}</h2>
 
     <div class="item"><div class="label">ID</div><div class="value">{{ resources.rowId }}</div></div>
 
