@@ -4,6 +4,8 @@ import { ResourcesService } from '../resources.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Resources } from '../resources.model';
+import { ReportGroups } from '../report-groups.model';
+import { ReportGroupsService } from '../report-groups.service';
 
 @Component({
   selector: 'app-resources-form',
@@ -16,12 +18,14 @@ export class ResourcesFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
   resourceId!: number;
+  department: ReportGroups[] = [];
 
   constructor(
     private fb: FormBuilder,
     private resourcesService: ResourcesService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private reportGroupsService: ReportGroupsService
   ) {}
 
   /* Initialize the form and load resource data if editing */
@@ -49,6 +53,11 @@ export class ResourcesFormComponent implements OnInit {
       pin: [''],
       dob: [''],
       groupName: ['']
+    });
+
+    this.reportGroupsService.getDepartments().subscribe({
+      next: d => this.department = d || [],
+      error: err => console.error('Error fetching report groups:', err)
     });
 
     /* Check if we are in edit mode based on route parameters */

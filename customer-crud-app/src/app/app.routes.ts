@@ -40,6 +40,9 @@ import { VehiclesViewComponent } from './resources/vehicles-view/vehicles-view';
 import { ResourcesFormComponent } from './resources/resources-form/resources-form';
 import { ResourcesListComponent } from './resources/resources-list/resources-list';
 import { ResourcesViewComponent } from './resources/resources-view/resources-view';
+import { ReportGroupsFormComponent } from './resources/report-groups-form/report-groups-form';
+import { ReportGroupsListComponent } from './resources/report-groups-list/report-groups-list';
+import { ReportGroupsViewComponent } from './resources/report-groups-view/report-groups-view';
 import { LoginComponent } from './index/login/login';
 import { HomeComponent } from './index/home/home';
 import { ProfileComponent } from './profile/profile/profile';
@@ -128,5 +131,9 @@ export const routes: Routes = [
   { path : 'resources', component: ResourcesListComponent, canActivate: [AuthGuard] },
   { path : 'resources/new', component: ResourcesFormComponent, canActivate: [AuthGuard] },
   { path : 'resources/edit/:id', component: ResourcesFormComponent, canActivate: [AuthGuard] },
-  { path : 'resources/view/:id', component: ResourcesViewComponent, canActivate: [AuthGuard] }
+  { path : 'resources/view/:id', component: ResourcesViewComponent, canActivate: [AuthGuard] },
+  { path : 'report-groups', component: ReportGroupsListComponent, canActivate: [AuthGuard] },
+  { path : 'report-groups/new', component: ReportGroupsFormComponent, canActivate: [AuthGuard] },
+  { path : 'report-groups/edit/:id', component: ReportGroupsFormComponent, canActivate: [AuthGuard] },
+  { path : 'report-groups/view/:id', component: ReportGroupsViewComponent, canActivate: [AuthGuard] }
 ];

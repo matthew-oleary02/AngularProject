@@ -3200,6 +3200,167 @@ app.delete('/resources/:id', async (req, res) => {
   }
 });
 
+
+/* ===========================
+    REPORT GROUP ENDPOINTS
+=========================== */
+
+// GET /report-group (all report groups)
+app.get('/report-groups', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM ReportGroups');
+
+    const groups = result.recordset.map(row => ({
+      rowId: row.RowID,
+      groupName: row.GroupName,
+      employee: row.Employee,
+      levelId: row.LevelID,
+      alertEmail: row.AlertEmail,
+      active: row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+
+    res.json(groups);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.get('/report-groups/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+
+    const id = Number(req.params.id);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+
+    const result = await request.query(`
+      SELECT * FROM ReportGroups WHERE RowID = @RowID
+    `);
+
+    if (!result.recordset.length) {
+      return res.status(404).json({ message: 'Report group not found' });
+    }
+
+    const row = result.recordset[0];
+
+    const group = {
+      rowId: row.RowID,
+      groupName: row.GroupName,
+      employee: row.Employee,
+      levelId: row.LevelID,
+      alertEmail: row.AlertEmail,
+      active: row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+
+    res.json(group);
+  } catch (err) {
+    console.error('Error fetching report group:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /report-group (add new report group)
+app.post('/report-groups', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const r = req.body;
+
+    const query = `
+      INSERT INTO ReportGroups (
+        GroupName, Employee, LevelID, AlertEmail, Active,
+        CreatedBy, CreatedOn
+      ) VALUES (
+        @GroupName, @Employee, @LevelID, @AlertEmail, @Active,
+        @CreatedBy, GETDATE()
+      )
+    `;
+
+    const request = new sql.Request();
+    request.input('GroupName', sql.VarChar, r.groupName);
+    request.input('Employee', sql.VarChar, r.employee);
+    request.input('LevelID', sql.Int, r.levelId);
+    request.input('AlertEmail', sql.VarChar, r.alertEmail);
+    request.input('Active', sql.Bit, r.active ? 1 : 0);
+    request.input('CreatedBy', sql.VarChar, r.createdBy || 'admin');
+
+    await request.query(query);
+
+    res.status(201).json({ message: 'Report group added successfully' });
+  } catch (err) {
+    console.error('Error adding report group:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /report-group/:id (update existing report group)
+app.put('/report-groups/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+
+    const r = req.body;
+    const id = Number(req.params.id);
+
+    const query = `
+      UPDATE ReportGroups SET
+        GroupName = @GroupName,
+        Employee = @Employee,
+        LevelID = @LevelID,
+        AlertEmail = @AlertEmail,
+        Active = @Active,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('GroupName', sql.VarChar, r.groupName);
+    request.input('Employee', sql.VarChar, r.employee);
+    request.input('LevelID', sql.Int, r.levelId);
+    request.input('AlertEmail', sql.VarChar, r.alertEmail);
+    request.input('Active', sql.Bit, r.active ? 1 : 0);
+    request.input('ModifiedBy', sql.VarChar, r.modifiedBy || 'admin');
+
+    await request.query(query);
+
+    res.status(200).json({ message: 'Report group updated successfully' });
+  } catch (err) {
+    console.error('Error updating report group:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /report-group/:id (delete report group)
+app.delete('/report-groups/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+
+    const id = Number(req.params.id);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+
+    await request.query(`
+      DELETE FROM ReportGroups WHERE RowID = @RowID
+    `);
+
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting report group:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
 /* ===========================
     OFFICE MANAGEMENT ENDPOINTS
 =========================== */

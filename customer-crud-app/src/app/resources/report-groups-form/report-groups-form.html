@@ -1,0 +1,44 @@
+<!-- report-groups-form.html -->
+
+<h1>{{ isEdit ? 'Edit Department' : 'Add New Department' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="groupName" class="full-label">Group Name:</label>
+    <input id="groupName" class="full-input" formControlName="groupName" type="text" />
+
+    <div class="error" *ngIf="form.get('groupName')?.invalid && form.get('groupName')?.touched">
+      Required
+    </div>
+
+    <label for="employee" class="full-label">employee:</label>
+    <input id="employee" class="full-input" formControlName="employee" type="text" />
+
+    <div class="error" *ngIf="form.get('employee')?.invalid && form.get('employee')?.touched">
+      Required
+    </div>
+
+    <label for="levelId" class="full-label">levelId:</label>
+    <input id="levelId" class="full-input" formControlName="levelId" type="text" />
+
+    <div class="error" *ngIf="form.get('levelId')?.invalid && form.get('levelId')?.touched">
+      Required
+    </div>
+    
+    <label for="alertEmail" class="full-label">alertEmail:</label>
+    <input id="alertEmail" class="full-input" formControlName="alertEmail" type="text" />
+
+    <div class="error" *ngIf="form.get('alertEmail')?.invalid && form.get('alertEmail')?.touched">
+      Required
+    </div>
+
+    <label for="active">Active:</label>
+    <input id="active" type="checkbox" formControlName="active" />
+
+        <div class="form-actions">
+            <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
+            <td><button type="button" class="btn-cancel"[routerLink]="['/report-groups']">Cancel</button></td>
+        </div>
+    </form>
+</div>

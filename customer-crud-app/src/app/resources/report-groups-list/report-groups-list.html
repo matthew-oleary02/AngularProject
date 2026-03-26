@@ -1,0 +1,56 @@
+<div class="list-container">
+  <h1>Department Management</h1>
+  <!-- Search & Filter Toolbar -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+      aria-label="Search departments"
+    />
+
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+
+    <div style="display:flex;align-items:center;gap:6px;">
+      <input
+        type="checkbox"
+        id="activeOnly"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+        aria-checked="{{ activeFilter === true }}"
+      />
+      <label for="activeOnly" title="Show only active departments">Active</label>
+    </div>
+  </div>
+
+  <!-- Departments Table -->
+  <table class="list-table" aria-label="Departments table">
+    <thead>
+      <tr>
+        <th scope="col">GroupName</th>
+        <!--<th scope="col">Assigned</th>-->
+        <th scope="col">Manager</th>
+        <th scope="col">AlertEmail</th>
+        <th scope="col">Active</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of department">
+        <td><a [routerLink]="['/report-groups/view', d.rowId]">{{ d.groupName }}</a></td>
+        <td>{{ d.employee }}</td>
+        <td>{{ d.alertEmail }}</td>
+        <td>{{ d.active ? 'Yes' : 'No' }}</td>
+        <td>
+          <button class="btn-edit" [routerLink]="['/report-groups/edit', d.rowId]">Edit</button>
+          <button (click)="onDelete(d.rowId)" class="btn-delete" >Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<button class="add-new-btn" type="button" [routerLink]="['/report-groups/new']">Add New Department</button>
