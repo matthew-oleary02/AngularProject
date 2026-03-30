@@ -1,0 +1,31 @@
+<!-- tablet-users-form.component.html -->
+
+<h1>{{ isEdit ? 'Edit Tablet User' : 'Add New Tablet User' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="fname" class="full-label">First Name:</label>
+    <input id="fname" class="full-input" formControlName="fname" type="text" />
+
+    <div class="error" *ngIf="form.get('fname')?.invalid && form.get('fname')?.touched">
+      Required
+    </div>
+
+    <label for="lname" class="full-label">Last Name:</label>
+    <input id="lname" class="full-input" formControlName="lname" type="text" />
+
+    <div class="error" *ngIf="form.get('lname')?.invalid && form.get('lname')?.touched">
+      Required
+    </div>
+
+    <label for="pin" class="full-label">PIN:</label>
+    <input id="pin" class="full-input" formControlName="pin" type="text" />
+
+    <div class="error" *ngIf="form.get('pin')?.invalid && form.get('pin')?.touched">
+      Required
+    </div>
+
+    <button type="submit">{{ isEdit ? 'Update' : 'Create' }}</button>
+  </form>
+</div>
