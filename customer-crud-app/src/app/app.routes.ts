@@ -43,6 +43,9 @@ import { ResourcesViewComponent } from './resources/resources-view/resources-vie
 import { ReportGroupsFormComponent } from './resources/report-groups-form/report-groups-form';
 import { ReportGroupsListComponent } from './resources/report-groups-list/report-groups-list';
 import { ReportGroupsViewComponent } from './resources/report-groups-view/report-groups-view';
+import { TabletUsersFormComponent } from './resources/tablet-users-form/tablet-users-form';
+import { TabletUsersListComponent } from './resources/tablet-users-list/tablet-users-list';
+import { TabletUsersViewComponent } from './resources/tablet-users-view/tablet-users-view';
 import { LoginComponent } from './index/login/login';
 import { HomeComponent } from './index/home/home';
 import { ProfileComponent } from './profile/profile/profile';
@@ -135,5 +138,9 @@ export const routes: Routes = [
   { path : 'report-groups', component: ReportGroupsListComponent, canActivate: [AuthGuard] },
   { path : 'report-groups/new', component: ReportGroupsFormComponent, canActivate: [AuthGuard] },
   { path : 'report-groups/edit/:id', component: ReportGroupsFormComponent, canActivate: [AuthGuard] },
-  { path : 'report-groups/view/:id', component: ReportGroupsViewComponent, canActivate: [AuthGuard] }
+  { path : 'report-groups/view/:id', component: ReportGroupsViewComponent, canActivate: [AuthGuard] },
+  { path : 'tablet-users', component: TabletUsersListComponent, canActivate: [AuthGuard] },
+  { path : 'tablet-users/new', component: TabletUsersFormComponent, canActivate: [AuthGuard] },
+  { path : 'tablet-users/edit/:id', component: TabletUsersFormComponent, canActivate: [AuthGuard] },
+  { path : 'tablet-users/view/:id', component: TabletUsersViewComponent, canActivate: [AuthGuard] },
 ];

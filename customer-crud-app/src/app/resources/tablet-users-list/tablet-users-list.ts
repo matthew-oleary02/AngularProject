@@ -1,14 +1,17 @@
 // tablet-users-list.ts
 
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { TabletUser } from '../tablet-users.model';
 import { TabletUsersService } from '../tablet-users.service';
 
 @Component({
     selector: 'app-tablet-users-list',
+    standalone: true,
+    imports: [CommonModule, RouterModule],
     templateUrl: './tablet-users-list.html',
-    styleUrls: ['./tablet-users-list.css']
+    styleUrls: ['../../styles/list.css'],
 })
 
 export class TabletUsersListComponent implements OnInit {
@@ -17,7 +20,7 @@ export class TabletUsersListComponent implements OnInit {
 
     filterText = '';
 
-    constructor(private tabletUsersService: TabletUsersService, private router: Router) { }
+    constructor(private tabletUsersService: TabletUsersService) { }
 
     ngOnInit(): void {
         this.tabletUsersService.getTabletUsers().subscribe({
@@ -61,7 +64,7 @@ export class TabletUsersListComponent implements OnInit {
                 u.lname,
                 u.pin
             ];
-            return fields.some(f => f.toLowerCase().includes(query));
+            return fields.some(f => f?.toLowerCase().includes(query));
         });
     }
 }

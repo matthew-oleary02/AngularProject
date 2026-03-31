@@ -5,17 +5,14 @@
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="submit()">
 
-    <label for="fname" class="full-label">First Name:</label>
-    <input id="fname" class="full-input" formControlName="fname" type="text" />
-
-    <div class="error" *ngIf="form.get('fname')?.invalid && form.get('fname')?.touched">
-      Required
-    </div>
-
-    <label for="lname" class="full-label">Last Name:</label>
-    <input id="lname" class="full-input" formControlName="lname" type="text" />
-
-    <div class="error" *ngIf="form.get('lname')?.invalid && form.get('lname')?.touched">
+    <label for="resourceId" class="full-label">Resource (Name):</label>
+    <select id="resourceId" class="full-input" formControlName="resourceId">
+      <option value="">Select a resource</option>
+      <option *ngFor="let r of resources" [value]="r.rowId">
+        {{ r.fname }} {{ r.lname }}
+      </option>
+    </select>
+    <div class="error" *ngIf="form.get('resourceId')?.invalid && form.get('resourceId')?.touched">
       Required
     </div>
 
@@ -26,6 +23,9 @@
       Required
     </div>
 
-    <button type="submit">{{ isEdit ? 'Update' : 'Create' }}</button>
+    <div class="form-actions">
+      <td><button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button></td>
+      <td><button type="button" class="btn-cancel"[routerLink]="['/tablet-users']">Cancel</button></td>
+    </div>
   </form>
 </div>

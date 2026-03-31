@@ -3360,6 +3360,126 @@ app.delete('/report-groups/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    TABLET USERS MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /tablet-users (all tablet users)
+app.get('/tablet-users', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM TabletUsers');
+    const users = result.recordset.map(row => ({
+      rowId: row.RowID,
+      fname: row.FirstName,
+      lname: row.LastName,
+      pin: row.PIN,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(users);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+//GET /tablet-users/:id (get one tablet user by RowID)
+app.get('/tablet-users/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM TabletUsers WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Tablet user not found' });
+    }
+    const row = result.recordset[0];
+    const user = {
+      rowId: row.RowID,
+      fname: row.FirstName,
+      lname: row.LastName,
+      pin: row.PIN,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching tablet user:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /tablet-users (add new tablet user)
+app.post('/tablet-users', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const user = req.body;
+    const query = `
+      INSERT INTO TabletUsers (FirstName, LastName, PIN, CreatedBy, CreatedOn)
+      VALUES (@FirstName, @LastName, @PIN, @CreatedBy, GETDATE())
+    `;
+    const request = new sql.Request();
+    request.input('FirstName', sql.VarChar, user.fname);
+    request.input('LastName', sql.VarChar, user.lname);
+    request.input('PIN', sql.Int, user.pin);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.status(201).json({ message: 'Tablet user added successfully' });
+  } catch (err) {
+    console.error('Error adding tablet user:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /tablet-users/:id (update existing tablet user)
+app.put('/tablet-users/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const user = req.body;
+    const id = parseInt(req.params.id, 10);
+    const query = `
+      UPDATE TabletUsers SET
+        FirstName = @FirstName,
+        LastName = @LastName,
+        PIN = @PIN,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('FirstName', sql.VarChar, user.fname);
+    request.input('LastName', sql.VarChar, user.lname);
+    request.input('PIN', sql.Int, user.pin);
+    request.input('ModifiedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.status(200).json({ message: 'Tablet user updated successfully' });
+  } catch (err) {
+    console.error('Error updating tablet user:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /tablet-users/:id (delete tablet user)
+app.delete('/tablet-users/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM TabletUsers WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting tablet user:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 /* ===========================
     OFFICE MANAGEMENT ENDPOINTS

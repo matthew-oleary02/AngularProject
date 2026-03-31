@@ -68,7 +68,7 @@
     <label for="active">Active:</label>
     <input id="active" type="checkbox" formControlName="active" />
         <div class="form-actions">
-            <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
+            <td><button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button></td>
             <td><button type="button" class="btn-cancel"[routerLink]="['/offices']">Cancel</button></td>
         </div>
     </form>

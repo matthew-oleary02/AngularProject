@@ -5,7 +5,7 @@ import { TabletUser } from './tablet-users.model';
 
 @Injectable({ providedIn: 'root' })
 export class TabletUsersService {
-    private apiUrl = 'http://localhost:3000/tabletUsers';
+    private apiUrl = 'http://localhost:3000/tablet-users';
 
     constructor(private http: HttpClient) { }
 

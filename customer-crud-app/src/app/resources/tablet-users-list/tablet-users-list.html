@@ -1,4 +1,48 @@
 <!-- tablet-users-list.component.html -->
 
 <div class="list-container">
-    <h1></h1>
+    <h1>Tablet Users List</h1>
+    <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+      aria-label="Search resources"
+    />
+
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+  </div>
+
+    <table class="list-table" aria-label="Tablet Users table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">PIN</th>
+                <th scope="col">CreatedBy</th>
+                <th scope="col">CreatedOn</th>
+                <th scope="col">ModifiedBy</th>
+                <th scope="col">ModifiedOn</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of tabletUsers">
+                <td><a [routerLink]="['/tablet-users/view', user.rowId]">{{ user.fname }} {{ user.lname }}</a></td>
+                <td>{{ user.pin }}</td>
+                <td>{{ user.createdBy }}</td>
+                <td>{{ user.createdOn | date:'short' }}</td>
+                <td>{{ user.modifiedBy }}</td>
+                <td>{{ user.modifiedOn | date:'short' }}</td>
+                <td>
+                    <button class="btn-edit" [routerLink]="['/tablet-users/edit', user.rowId]">Edit</button>
+                    <button (click)="onDelete(user.rowId)" class="btn-delete" >Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<button class="add-new-btn" type="button" [routerLink]="['/tablet-users/new']">Add New User</button>

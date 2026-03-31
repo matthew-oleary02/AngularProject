@@ -1,44 +1,59 @@
 // tablet-users-form.ts
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { TabletUsersService } from '../tablet-users.service';
 import { TabletUser } from '../tablet-users.model';
+import { ResourcesService } from '../resources.service';
+import { Resources } from '../resources.model';
 
 @Component({
     selector: 'app-tablet-users-form',
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, RouterModule],
     templateUrl: './tablet-users-form.html',
-    styleUrls: ['./tablet-users-form.css']
+    styleUrls: ['../../styles/form.css'],
 })
 export class TabletUsersFormComponent implements OnInit {
     form!: FormGroup;
-    isEditMode = false;
+    isEdit = false;
     tabletUserId!: number;
+    resources: Resources[] = [];
     
     constructor(
         private fb: FormBuilder,
         private tabletUsersService: TabletUsersService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private resourcesService: ResourcesService // Inject ResourcesService
     ) { }
 
     ngOnInit(): void {
         this.form = this.fb.group({
-            fname: ['', Validators.required],
-            lname: ['', Validators.required],
+            resourceId: ['', Validators.required],
             pin: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]]
         });
+
+        // Fetch all resources for dropdown
+        this.resourcesService.getResources().subscribe(r => this.resources = r || []);
 
         const idParam = this.route.snapshot.paramMap.get('id');
         if (idParam) {
             this.tabletUserId = Number(idParam);
             if (Number.isFinite(this.tabletUserId) && this.tabletUserId > 0) {
-                this.isEditMode = true;
+                this.isEdit = true;
             }
         }
-        if (this.isEditMode) {
+        if (this.isEdit) {
             this.tabletUsersService.getTabletUser(this.tabletUserId).subscribe(u => {
-                if (u) this.form.patchValue(u);
+                if (u) {
+                    // If editing, set resourceId from the user data if available
+                    this.form.patchValue({
+                        resourceId: u.resourceId,
+                        pin: u.pin
+                    });
+                }
             });
         }
     }
@@ -47,9 +62,16 @@ export class TabletUsersFormComponent implements OnInit {
         if (this.form.invalid) {
             return;
         }
-        const tabletUserData: TabletUser = this.form.value;
-        if (this.isEditMode) {
-            tabletUserData.rowId = this.tabletUserId;
+        const tabletUserData: TabletUser = {
+            rowId: this.isEdit ? this.tabletUserId : 0,
+            resourceId: this.form.value.resourceId,
+            pin: this.form.value.pin,
+            createdOn: new Date(), // You may want to set these properly
+            createdBy: '',
+            modifiedOn: new Date(),
+            modifiedBy: ''
+        };
+        if (this.isEdit) {
             this.tabletUsersService.updateTabletUser(tabletUserData).subscribe({
                 next: () => this.router.navigate(['/tablet-users']),
                 error: err => console.error('Error updating tablet user:', err)

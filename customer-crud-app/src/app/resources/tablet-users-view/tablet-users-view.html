@@ -1,0 +1,23 @@
+<h1>Tablet User Details</h1>
+<div *ngIf="tabletUser; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ tabletUser.fname }} {{ tabletUser.lname }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ tabletUser.rowId }}</div></div>
+
+    <div class="group-title">Tablet User Info</div>
+    <div class="item"><div class="label">PIN</div><div class="value">{{ tabletUser.pin }}</div></div>
+    <div class="item"><div class="label">Created By</div><div class="value">{{ tabletUser.createdBy }}</div></div>
+    <div class="item"><div class="label">Created On</div><div class="value">{{ tabletUser.createdOn | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ tabletUser.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ tabletUser.modifiedOn | date:'short' }}</div></div>
+  </div>
+  <button type="button" class="btn-return" [routerLink]="['/tablet-users']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Tablet user not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/tablet-users']">Back</button>
+  </div>
+</ng-template>
