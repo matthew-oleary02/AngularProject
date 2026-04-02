@@ -1,0 +1,47 @@
+<div class="list-container">
+  <h1>Resource Productivity</h1>
+  <!-- Search & Filter Toolbar -->
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+      aria-label="Search resource productivity"
+    />
+
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+  </div>
+
+  <!-- Resource Productivity Table -->
+  <table class="list-table" aria-label="Resource productivity table">
+    <thead>
+      <tr>
+        <th scope="col">Employee</th>
+        <th scope="col">Productivity Rate</th>
+        <th scope="col">Variance</th>
+        <th scope="col">Created On</th>
+        <th scope="col">Created By</th>
+        <th scope="col">Modified On</th>
+        <th scope="col">Modified By</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of resourceProductivity">
+        <td><a [routerLink]="['/resource-productivity/view', r.rowId]">{{ r.employee }}</a></td>
+        <td>{{ r.productivityRate }}</td>
+        <td>{{ r.variance }}</td>
+        <td>{{ r.createdOn | date:'short' }}</td>
+        <td>{{ r.createdBy }}</td>
+        <td>{{ r.modifiedOn | date:'short' }}</td>
+        <td>{{ r.modifiedBy }}</td>
+        <td>
+          <button class="btn-edit" [routerLink]="['/resource-productivity/edit', r.rowId]">Edit</button>
+          <button (click)="onDelete(r.rowId)" class="btn-delete" >Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>

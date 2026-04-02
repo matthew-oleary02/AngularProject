@@ -1,0 +1,33 @@
+<!-- rescource-productivity-form.html -->
+
+<h1>{{ isEdit ? 'Edit Resource Productivity' : 'Add New Resource Productivity' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="employee" class="full-label">Employee:</label>
+    <input id="employee" class="full-input" formControlName="employee" type="text" />
+
+    <div class="error" *ngIf="form.get('employee')?.invalid && form.get('employee')?.touched">
+      Required
+    </div>
+
+    <label for="productivityRate" class="full-label">Productivity Rate:</label>
+    <input id="productivityRate" class="full-input" formControlName="productivityRate" type="number" />
+
+    <div class="error" *ngIf="form.get('productivityRate')?.invalid && form.get('productivityRate')?.touched">
+      Required
+    </div>
+
+    <label for="variance" class="full-label">Variance:</label>
+    <input id="variance" class="full-input" formControlName="variance" type="number" />
+
+    <div class="error" *ngIf="form.get('variance')?.invalid && form.get('variance')?.touched">
+      Required
+    </div>
+
+        <div class="form-actions">
+            <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
+            <td><button type="button" class="btn-cancel"[routerLink]="['/resource-productivity']">Cancel</button></td>
+        </div>
+    </form>

@@ -3482,6 +3482,127 @@ app.delete('/tablet-users/:id', async (req, res) => {
 });
 
 /* ===========================
+    RESOURCE PRODUCTIVITY ENDPOINTS
+=========================== */
+
+// GET /resource-productivity (all resource productivity records)
+app.get('/resource-productivity', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM ResourceProductivity');
+    const records = result.recordset.map(row => ({
+      rowId: row.RowID,
+      employee: row.Employee,
+      productivityRate: row.ProductivityRate,
+      variance: row.Variance,
+      createdOn: row.CreatedOn,
+      createdBy: row.CreatedBy,
+      modifiedOn: row.ModifiedOn,
+      modifiedBy: row.ModifiedBy
+    }));
+    res.json(records);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /resource-productivity/:id (get one resource productivity record by RowID)
+app.get('/resource-productivity/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM ResourceProductivity WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Resource productivity record not found' });
+    }
+    const row = result.recordset[0];
+    const record = {
+      rowId: row.RowID,
+      employee: row.Employee,
+      productivityRate: row.ProductivityRate,
+      variance: row.Variance,
+      createdOn: row.CreatedOn,
+      createdBy: row.CreatedBy,
+      modifiedOn: row.ModifiedOn,
+      modifiedBy: row.ModifiedBy
+    };
+    res.json(record);
+  } catch (err) {
+    console.error('Error fetching resource productivity record:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /resource-productivity (add new resource productivity record)
+app.post('/resource-productivity', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const record = req.body;
+    const query = `
+      INSERT INTO ResourceProductivity (Employee, ProductivityRate, Variance, CreatedBy, CreatedOn)
+      VALUES (@Employee, @ProductivityRate, @Variance, @CreatedBy, GETDATE())
+    `;
+    const request = new sql.Request();
+    request.input('Employee', sql.VarChar, record.employee);
+    request.input('ProductivityRate', sql.Decimal(5, 2), record.productivityRate);
+    request.input('Variance', sql.Decimal(5, 2), record.variance);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.status(201).json({ message: 'Resource productivity record added successfully' });
+  } catch (err) {
+    console.error('Error adding resource productivity record:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /resource-productivity/:id (update existing resource productivity record)
+app.put('/resource-productivity/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const record = req.body;
+    const id = parseInt(req.params.id, 10);
+    const query = `
+      UPDATE ResourceProductivity SET
+        Employee = @Employee,
+        ProductivityRate = @ProductivityRate,
+        Variance = @Variance,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Employee', sql.VarChar, record.employee);
+    request.input('ProductivityRate', sql.Decimal(5, 2), record.productivityRate);
+    request.input('Variance', sql.Decimal(5, 2), record.variance);
+    request.input('ModifiedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.status(200).json({ message: 'Resource productivity record updated successfully' });
+  } catch (err) {
+    console.error('Error updating resource productivity record:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /resource-productivity/:id (delete resource productivity record)
+app.delete('/resource-productivity/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM ResourceProductivity WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting resource productivity record:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
     OFFICE MANAGEMENT ENDPOINTS
 =========================== */
 

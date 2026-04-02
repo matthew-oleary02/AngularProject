@@ -1,0 +1,26 @@
+<h1>Resource Productivity Details</h1>
+<div *ngIf="rP; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ rP.employee || 'Employee Name' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ rP.rowId }}</div></div>
+
+    <div class="group-title">Productivity Info</div>
+    <div class="item"><div class="label">Productivity Rate</div><div class="value">{{ rP.productivityRate }}</div></div>
+    <div class="item"><div class="label">Variance</div><div class="value">{{ rP.variance }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Created By</div><div class="value">{{ rP.createdBy }}</div></div>
+    <div class="item"><div class="label">Created On</div><div class="value">{{ rP.createdOn }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ rP.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Modified On</div><div class="value">{{ rP.modifiedOn }}</div></div>
+  </div>
+  <button type="button" class="btn-return" [routerLink]="['/resource-productivity']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Resource Productivity record not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/resource-productivity']">Back</button>
+  </div>
+</ng-template>

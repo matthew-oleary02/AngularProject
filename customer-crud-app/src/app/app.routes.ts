@@ -46,6 +46,9 @@ import { ReportGroupsViewComponent } from './resources/report-groups-view/report
 import { TabletUsersFormComponent } from './resources/tablet-users-form/tablet-users-form';
 import { TabletUsersListComponent } from './resources/tablet-users-list/tablet-users-list';
 import { TabletUsersViewComponent } from './resources/tablet-users-view/tablet-users-view';
+import { ResourceProductivityViewComponent } from './resources/resource-productivity-view/resource-productivity-view';
+import { ResourceProductivityListComponent } from './resources/resource-productivity-list/resource-productivity-list';
+import { ResourceProductivityFormComponent } from './resources/resource-productivity-form/resource-productivity-form';
 import { LoginComponent } from './index/login/login';
 import { HomeComponent } from './index/home/home';
 import { ProfileComponent } from './profile/profile/profile';
@@ -143,4 +146,8 @@ export const routes: Routes = [
   { path : 'tablet-users/new', component: TabletUsersFormComponent, canActivate: [AuthGuard] },
   { path : 'tablet-users/edit/:id', component: TabletUsersFormComponent, canActivate: [AuthGuard] },
   { path : 'tablet-users/view/:id', component: TabletUsersViewComponent, canActivate: [AuthGuard] },
+  { path : 'resource-productivity', component: ResourceProductivityListComponent, canActivate: [AuthGuard] },
+  { path : 'resource-productivity/new', component: ResourceProductivityFormComponent, canActivate: [AuthGuard] },
+  { path : 'resource-productivity/edit/:id', component: ResourceProductivityFormComponent, canActivate: [AuthGuard] },
+  { path : 'resource-productivity/view/:id', component: ResourceProductivityViewComponent, canActivate: [AuthGuard] },
 ];
