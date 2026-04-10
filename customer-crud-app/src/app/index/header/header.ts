@@ -13,7 +13,9 @@ import { Subscription } from 'rxjs';
 })
 export class HeaderComponent implements OnDestroy {
   showAdminMenu = false;
+  showAccountingMenu = false;
   showCustomerMenu = false;
+  showVendorMenu = false;
   showResourcesMenu = false;
   private navSub?: Subscription;
 
@@ -22,7 +24,10 @@ export class HeaderComponent implements OnDestroy {
     this.navSub = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showAdminMenu = false;
+        this.showAccountingMenu = false;
         this.showCustomerMenu = false;
+        this.showVendorMenu = false;
+        this.showResourcesMenu = false;
       }
     });
   }
@@ -77,7 +82,16 @@ export class HeaderComponent implements OnDestroy {
     this.showAdminMenu = false;
   }
 
-   // Dropdown controls for Customer Menu
+  // Dropdown controls for Accounting Menu
+  toggleAccountingMenu(): void {
+    this.showAccountingMenu = !this.showAccountingMenu;
+  }
+
+  closeAccountingMenu(): void {
+    this.showAccountingMenu = false;
+  }
+
+  // Dropdown controls for Customer Menu
   toggleCustomerMenu(): void {
     this.showCustomerMenu = !this.showCustomerMenu;
   }
@@ -86,7 +100,15 @@ export class HeaderComponent implements OnDestroy {
     this.showCustomerMenu = false;
   }
 
-     // Dropdown controls for Customer Menu
+  toggleVendorMenu(): void {
+    this.showVendorMenu = !this.showVendorMenu;
+  }
+
+  closeVendorMenu(): void {
+    this.showVendorMenu = false;
+  }
+
+  // Dropdown controls for Customer Menu
   toggleResourcesMenu(): void {
     this.showResourcesMenu = !this.showResourcesMenu;
   }
@@ -102,28 +124,30 @@ export class HeaderComponent implements OnDestroy {
     // If the click is not inside the dropdown container, close it
     if (!target.closest('.nav-dropdown')) {
       this.showAdminMenu = false;
+      this.showAccountingMenu = false;
       this.showCustomerMenu = false;
+      this.showVendorMenu = false;
       this.showResourcesMenu = false;
     }
   }
 }
 
 
-  /*
-  toggleDropdown(event: Event): void {
-    event.preventDefault();
-    const dropdown = document.querySelector('.dropdown-content');
-    if (dropdown) {
-      dropdown.classList.toggle('show');
-    }
+/*
+toggleDropdown(event: Event): void {
+  event.preventDefault();
+  const dropdown = document.querySelector('.dropdown-content');
+  if (dropdown) {
+    dropdown.classList.toggle('show');
   }
+}
 
-  toggleSubButtons() {
-    this.showSubButtons = !this.showSubButtons; // Add this method
-  }
+toggleSubButtons() {
+  this.showSubButtons = !this.showSubButtons; // Add this method
+}
 
-  get dropdownOpen(): boolean {
-    const dropdown = document.querySelector('.dropdown-content');
-    return dropdown ? dropdown.classList.contains('show') : false;
-  }
-  */
+get dropdownOpen(): boolean {
+  const dropdown = document.querySelector('.dropdown-content');
+  return dropdown ? dropdown.classList.contains('show') : false;
+}
+*/

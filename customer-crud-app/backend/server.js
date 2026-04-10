@@ -13,15 +13,15 @@ app.use(cors());
 app.use(express.json());
 
 const config = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_DATABASE,
-    server: process.env.DB_SERVER,
-    port: parseInt(process.env.DB_PORT, 10),
-    options: {
-        encrypt: false,
-        trustServerCertificate: true
-    }
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_DATABASE,
+  server: process.env.DB_SERVER,
+  port: parseInt(process.env.DB_PORT, 10),
+  options: {
+    encrypt: false,
+    trustServerCertificate: true
+  }
 };
 
 /* ===========================
@@ -30,71 +30,71 @@ const config = {
 
 // POST /api/auth/register
 app.post('/api/auth/register', async (req, res) => {
-    const { username, password, role } = req.body;
-    if (!username || !password || !role) {
-        return res.status(400).json({ message: 'Username, password, and role are required' });
+  const { username, password, role } = req.body;
+  if (!username || !password || !role) {
+    return res.status(400).json({ message: 'Username, password, and role are required' });
+  }
+
+  try {
+    await sql.connect(config);
+
+    // Check if user already exists
+    const checkUser = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
+    if (checkUser.recordset.length > 0) {
+      return res.status(400).json({ message: 'User already exists' });
     }
 
-    try {
-        await sql.connect(config);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Check if user already exists
-        const checkUser = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
-        if (checkUser.recordset.length > 0) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Insert user
-        await sql.query`
+    // Insert user
+    await sql.query`
             INSERT INTO Users (Username, PasswordHash, Role)
             VALUES (${username}, ${hashedPassword}, ${role})
         `;
 
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (err) {
-        console.error('Error registering user:', err);
-        res.status(500).send('Server error');
-    }
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (err) {
+    console.error('Error registering user:', err);
+    res.status(500).send('Server error');
+  }
 });
 
 // POST /api/auth/login
 app.post('/api/auth/login', async (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required' });
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password are required' });
+  }
+
+  try {
+    await sql.connect(config);
+
+    const result = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
+    if (result.recordset.length === 0) {
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    try {
-        await sql.connect(config);
+    const user = result.recordset[0];
 
-        const result = await sql.query`SELECT * FROM Users WHERE Username = ${username}`;
-        if (result.recordset.length === 0) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        const user = result.recordset[0];
-
-        // Verify password
-        const isMatch = await bcrypt.compare(password, user.PasswordHash);
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        // Create JWT
-        const token = jwt.sign(
-            { id: user.Id, username: user.Username, role: user.Role },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        res.json({ token });
-    } catch (err) {
-        console.error('Error logging in:', err);
-        res.status(500).send('Server error');
+    // Verify password
+    const isMatch = await bcrypt.compare(password, user.PasswordHash);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
+
+    // Create JWT
+    const token = jwt.sign(
+      { id: user.Id, username: user.Username, role: user.Role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.json({ token });
+  } catch (err) {
+    console.error('Error logging in:', err);
+    res.status(500).send('Server error');
+  }
 });
 
 /* ===========================
@@ -103,20 +103,20 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Middleware to verify JWT
 function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'Token required' });
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Token required' });
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ message: 'Invalid token' });
-        req.user = user;
-        next();
-    });
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Invalid token' });
+    req.user = user;
+    next();
+  });
 }
 
 // GET /api/auth/me
 app.get('/api/auth/me', authenticateToken, (req, res) => {
-    res.json({ userId: req.user.userId, username: req.user.username, role: req.user.role });
+  res.json({ userId: req.user.userId, username: req.user.username, role: req.user.role });
 });
 
 /* ===========================
@@ -126,35 +126,35 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
 
 
 app.get('/profile', authenticateToken, async (req, res) => {
-    const id = parseInt(req.user.id, 10);
-    try {
-        await sql.connect(config);
-        const request = new sql.Request();
-        request.input('Id', sql.Int, id);
-        const result = await request.query(`
+  const id = parseInt(req.user.id, 10);
+  try {
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('Id', sql.Int, id);
+    const result = await request.query(`
             SELECT Id, Username, FirstName, LastName, Email
             FROM Users
             WHERE Id = @Id
         `);
 
-        if (result.recordset.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        const row = result.recordset[0];
-        const user = {
-            id: row.Id,
-            username: row.Username,
-            firstName: row.FirstName,
-            lastName: row.LastName,
-            email: row.Email
-        };
-
-        res.json(user);
-    } catch (err) {
-        console.error('Error fetching profile:', err);
-        res.status(500).send('Server error');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
     }
+
+    const row = result.recordset[0];
+    const user = {
+      id: row.Id,
+      username: row.Username,
+      firstName: row.FirstName,
+      lastName: row.LastName,
+      email: row.Email
+    };
+
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching profile:', err);
+    res.status(500).send('Server error');
+  }
 });
 
 
@@ -251,36 +251,36 @@ app.get('/admin', authenticateToken, async (req, res) => {
 
 // GET /admin/:id (single user)
 app.get('/admin/:id', authenticateToken, async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    try {
-        await sql.connect(config);
-        const request = new sql.Request();
-        request.input('Id', sql.Int, id);
-        const result = await request.query('SELECT Id, Username, FirstName, LastName, PasswordHash, Role, CreatedOn, RoleId, Email, Active, ModifiedOn FROM Users WHERE Id = @Id');
+  const id = parseInt(req.params.id, 10);
+  try {
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('Id', sql.Int, id);
+    const result = await request.query('SELECT Id, Username, FirstName, LastName, PasswordHash, Role, CreatedOn, RoleId, Email, Active, ModifiedOn FROM Users WHERE Id = @Id');
 
-        if (result.recordset.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        const row = result.recordset[0];
-        const user = {
-            id: row.Id,
-            username: row.Username,
-            firstName: row.FirstName,
-            lastName: row.LastName,
-            passwordHash: row.PasswordHash,
-            role: row.Role,
-            createdOn: row.CreatedOn,
-            roleId: row.RoleId,
-            email: row.Email,
-            active: row.Active,
-            modifiedOn: row.ModifiedOn
-        };
-        res.json(user);
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
     }
-    catch (err) {
-        console.error('Error fetching user:', err);
-        res.status(500).send('Server error');
-    }
+    const row = result.recordset[0];
+    const user = {
+      id: row.Id,
+      username: row.Username,
+      firstName: row.FirstName,
+      lastName: row.LastName,
+      passwordHash: row.PasswordHash,
+      role: row.Role,
+      createdOn: row.CreatedOn,
+      roleId: row.RoleId,
+      email: row.Email,
+      active: row.Active,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(user);
+  }
+  catch (err) {
+    console.error('Error fetching user:', err);
+    res.status(500).send('Server error');
+  }
 });
 
 
@@ -401,20 +401,20 @@ app.put('/admin/:id', authenticateToken, async (req, res) => {
 
 // DELETE /admin/:id (delete user)
 app.delete('/admin/:id', authenticateToken, async (req, res) => {
-    const id = parseInt(req.params.id, 10);
+  const id = parseInt(req.params.id, 10);
 
-    try {
-        await sql.connect(config);
+  try {
+    await sql.connect(config);
 
-        const request = new sql.Request();
-        request.input('Id', sql.Int, id);
+    const request = new sql.Request();
+    request.input('Id', sql.Int, id);
 
-        await request.query('DELETE FROM Users WHERE Id = @Id');
-        res.status(204).send();
-    } catch (err) {
-        console.error('Error deleting user:', err);
-        res.status(500).send('Server error');
-    }
+    await request.query('DELETE FROM Users WHERE Id = @Id');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).send('Server error');
+  }
 });
 
 /* ===========================
@@ -1304,7 +1304,7 @@ app.get('/customers/:id/equipment', async (req, res) => {
       condition: row.Condition,
       typeOfUnit: row.TypeOfUnit,
       dateLoaded: row.DateLoaded
-    }));  
+    }));
     res.json(equipmentList);
   } catch (err) {
     console.error('Error fetching equipment list for customer:', err);
@@ -1316,7 +1316,7 @@ app.get('/customers/:id/equipment', async (req, res) => {
 // DELETE /customers/:id (delete customer)
 app.delete('/customers/:id', async (req, res) => {
   try {
-   await sql.connect(config);
+    await sql.connect(config);
     const id = parseInt(req.params.id, 10);
 
     const request = new sql.Request();
@@ -2703,7 +2703,7 @@ app.put('/vendors/:id', async (req, res) => {
 // DELETE /vendors/:id (delete vendor)
 app.delete('/vendors/:id', async (req, res) => {
   try {
-   await sql.connect(config);
+    await sql.connect(config);
     const id = parseInt(req.params.id, 10);
 
     const request = new sql.Request();
@@ -2749,6 +2749,169 @@ app.delete('/vendors/:id', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+/* ===========================
+    VENDOR COVERAGE ENDPOINTS
+=========================== */
+
+// GET /vendor-coverage (all vendor coverage records)
+app.get('/vendor-coverage', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorCoverage');
+    const coverageRecords = result.recordset.map(row => ({
+      rowId: parseInt(row.RowID, 10),
+      vendorName: row.VendorName,
+      status: row.Status,
+      city: row.City,
+      state: row.State,
+      zipCode: row.ZipCode,
+      trade: row.Trade,
+      rate: row.Rate,
+      radius: row.Radius,
+      vendorStatus: row.VendorStatus,
+      active: row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(coverageRecords);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendor-coverage/:id (single vendor coverage record by ID)
+app.get('/vendor-coverage/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM VendorCoverage WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor coverage record not found' });
+    }
+    const row = result.recordset[0];
+    const coverageRecord = {
+      rowId: parseInt(row.RowID, 10),
+      vendorName: row.VendorName,
+      status: row.Status,
+      city: row.City,
+      state: row.State,
+      zipCode: row.ZipCode,
+      trade: row.Trade,
+      rate: row.Rate,
+      radius: row.Radius,
+      vendorStatus: row.VendorStatus,
+      active: row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(coverageRecord);
+  } catch (err) {
+    console.error('Error fetching vendor coverage record:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendor-coverage (add new vendor coverage record)
+app.post('/vendor-coverage', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const coverageRecord = req.body;
+    const query = `
+      INSERT INTO VendorCoverage (
+        VendorName, Status, City, State, ZipCode, Trade, Rate, Radius,
+        VendorStatus, Active, CreatedBy, CreatedOn
+      ) VALUES (
+        @VendorName, @Status, @City, @State, @ZipCode, @Trade, @Rate, @Radius,
+        @VendorStatus, @Active, @CreatedBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('VendorName', sql.VarChar, coverageRecord.vendorName);
+    request.input('Status', sql.VarChar, coverageRecord.status);
+    request.input('City', sql.VarChar, coverageRecord.city);
+    request.input('State', sql.VarChar, coverageRecord.state);
+    request.input('ZipCode', sql.VarChar, coverageRecord.zipCode);
+    request.input('Trade', sql.VarChar, coverageRecord.trade);
+    request.input('Rate', sql.Decimal(18, 2), coverageRecord.rate);
+    request.input('Radius', sql.Int, coverageRecord.radius);
+    request.input('VendorStatus', sql.VarChar, coverageRecord.vendorStatus);
+    request.input('Active', sql.Bit, coverageRecord.active ? 1 : 0);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Vendor coverage record added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor coverage record:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-coverage/:id (update existing vendor coverage record)
+app.put('/vendor-coverage/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const coverageRecord = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorCoverage SET
+        VendorName = @VendorName,
+        Status = @Status,
+        City = @City,
+        State = @State,
+        ZipCode = @ZipCode,
+        Trade = @Trade,
+        Rate = @Rate,
+        Radius = @Radius,
+        VendorStatus = @VendorStatus,
+        Active = @Active,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('VendorName', sql.VarChar, coverageRecord.vendorName);
+    request.input('Status', sql.VarChar, coverageRecord.status);
+    request.input('City', sql.VarChar, coverageRecord.city);
+    request.input('State', sql.VarChar, coverageRecord.state);
+    request.input('ZipCode', sql.VarChar, coverageRecord.zipCode);
+    request.input('Trade', sql.VarChar, coverageRecord.trade);
+    request.input('Rate', sql.Decimal(18, 2), coverageRecord.rate);
+    request.input('Radius', sql.Int, coverageRecord.radius);
+    request.input('VendorStatus', sql.VarChar, coverageRecord.vendorStatus);
+    request.input('Active', sql.Bit, coverageRecord.active ? 1 : 0);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor coverage record updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor coverage record:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-coverage/:id (delete vendor coverage record)
+app.delete('/vendor-coverage/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorCoverage WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor coverage record:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 /* ===========================
     VEHICLES MANAGEMENT ENDPOINTS
@@ -3897,6 +4060,154 @@ app.delete('/purchase-orders/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    INVOICE ITEMS ENDPOINTS
+=========================== */
+
+// GET /invoice-items (all invoice items)
+app.get('/invoice-items', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM InvoiceItems');
+    const invoiceItems = result.recordset.map(row => ({
+      rowId: parseInt(row.RowID, 10),
+      serviceRequestId: row.ServiceRequestId,
+      category: row.Category,
+      description: row.Description,
+      total: row.Total,
+      saleTaxTotal: row.SaleTaxTotal,
+      quantity: row.Quantity,
+      rate: row.Rate,
+      createdOn: row.CreatedOn,
+      createdBy: row.CreatedBy,
+      modifiedOn: row.ModifiedOn,
+      modifiedBy: row.ModifiedBy
+    }));
+    res.json(invoiceItems);
+  }
+  catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /invoice-items/:id (single invoice item by ID)
+app.get('/invoice-items/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM InvoiceItems WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Invoice item not found' });
+    }
+    const row = result.recordset[0];
+    const invoiceItem = {
+      rowId: parseInt(row.RowID, 10),
+      serviceRequestId: row.ServiceRequestId,
+      category: row.Category,
+      description: row.Description,
+      total: row.Total,
+      saleTaxTotal: row.SaleTaxTotal,
+      quantity: row.Quantity,
+      rate: row.Rate,
+      createdOn: row.CreatedOn,
+      createdBy: row.CreatedBy,
+      modifiedOn: row.ModifiedOn,
+      modifiedBy: row.ModifiedBy
+    };
+    res.json(invoiceItem);
+  } catch (err) {
+    console.error('Error fetching invoice item:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /invoice-items (add new invoice item)
+app.post('/invoice-items', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const invoiceItem = req.body;
+    const query = `
+      INSERT INTO InvoiceItems (
+        ServiceRequestId, Category, Description, Total, SaleTaxTotal,
+        Quantity, Rate, CreatedOn, CreatedBy
+      ) VALUES (
+        @ServiceRequestId, @Category, @Description, @Total, @SaleTaxTotal,
+        @Quantity, @Rate, GETDATE(), @CreatedBy
+      )
+    `;
+    const request = new sql.Request();
+    request.input('ServiceRequestId', sql.Int, invoiceItem.serviceRequestId);
+    request.input('Category', sql.VarChar, invoiceItem.category);
+    request.input('Description', sql.VarChar, invoiceItem.description);
+    request.input('Total', sql.Decimal(18, 2), invoiceItem.total);
+    request.input('SaleTaxTotal', sql.Decimal(18, 2), invoiceItem.saleTaxTotal);
+    request.input('Quantity', sql.Int, invoiceItem.quantity);
+    request.input('Rate', sql.Decimal(18, 2), invoiceItem.rate);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Invoice item added successfully' });
+  }
+  catch (err) {
+    console.error('Error adding invoice item:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /invoice-items/:id (update existing invoice item)
+app.put('/invoice-items/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const invoiceItem = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE InvoiceItems SET
+        ServiceRequestId = @ServiceRequestId,
+        Category = @Category,
+        Description = @Description,
+        Total = @Total,
+        SaleTaxTotal = @SaleTaxTotal,
+        Quantity = @Quantity,
+        Rate = @Rate,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('ServiceRequestId', sql.Int, invoiceItem.serviceRequestId);
+    request.input('Category', sql.VarChar, invoiceItem.category);
+    request.input('Description', sql.VarChar, invoiceItem.description);
+    request.input('Total', sql.Decimal(18, 2), invoiceItem.total);
+    request.input('SaleTaxTotal', sql.Decimal(18, 2), invoiceItem.saleTaxTotal);
+    request.input('Quantity', sql.Int, invoiceItem.quantity);
+    request.input('Rate', sql.Decimal(18, 2), invoiceItem.rate);
+    request.input('ModifiedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.status(200).json({ message: 'Invoice item updated successfully' });
+  } catch (err) {
+    console.error('Error updating invoice item:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /invoice-items/:id (delete invoice item)
+app.delete('/invoice-items/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM InvoiceItems WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting invoice item:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 /* Start the server */
 app.listen(3000, () => console.log('Server running on port 3000'));

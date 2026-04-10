@@ -1,0 +1,43 @@
+<!-- invoice-items-list.html -->
+
+<div class="container">
+    <h2>Invoice Items</h2>
+    <a routerLink="/invoice-items/add">Add Invoice Item</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Service Request ID</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Total</th>
+                <th>Sale Tax Total</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>Created On</th>
+                <th>Created By</th>
+                <th>Modified On</th>
+                <th>Modified By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let invoiceItem of invoiceItems">
+                <td>{{ invoiceItem.serviceRequestId }}</td>
+                <td>{{ invoiceItem.category }}</td>
+                <td>{{ invoiceItem.description }}</td>
+                <td>{{ invoiceItem.total }}</td>
+                <td>{{ invoiceItem.saleTaxTotal }}</td>
+                <td>{{ invoiceItem.quantity }}</td>
+                <td>{{ invoiceItem.rate }}</td>
+                <td>{{ invoiceItem.createdOn }}</td>
+                <td>{{ invoiceItem.createdBy }}</td>
+                <td>{{ invoiceItem.modifiedOn }}</td>
+                <td>{{ invoiceItem.modifiedBy }}</td>
+                <td>
+                    <a [routerLink]="['/invoice-items/edit', invoiceItem.rowId]">Edit</a>
+                    <button (click)="deleteInvoiceItem(invoiceItem.rowId)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

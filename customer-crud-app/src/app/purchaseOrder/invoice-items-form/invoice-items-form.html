@@ -1,0 +1,52 @@
+<!-- invoice-items-form.html -->
+
+<div class="container">
+    <h2>{{ isEdit ? 'Edit Invoice Item' : 'Add Invoice Item' }}</h2>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-group">
+            <label for="serviceRequestId">Service Request ID</label>
+            <input type="number" id="serviceRequestId" formControlName="serviceRequestId" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" formControlName="category" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" formControlName="description" required>
+        </div>
+        <div class="form-group">
+            <label for="total">Total</label>
+            <input type="number" id="total" formControlName="total" required>
+        </div>
+        <div class="form-group">
+            <label for="saleTaxTotal">Sale Tax Total</label>
+            <input type="number" id="saleTaxTotal" formControlName="saleTaxTotal" required>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" formControlName="quantity" required>
+        </div>
+        <div class="form-group">
+            <label for="rate">Rate</label>
+            <input type="number" id="rate" formControlName="rate" required>
+        </div>
+        <div class="form-group">
+            <label for="createdOn">Created On</label>
+            <input type="date" id="createdOn" formControlName="createdOn" required>
+        </div>
+        <div class="form-group">
+            <label for="createdBy">Created By</label>
+            <input type="text" id="createdBy" formControlName="createdBy" required>
+        </div>
+        <div class="form-group">
+            <label for="modifiedOn">Modified On</label>
+            <input type="date" id="modifiedOn" formControlName="modifiedOn" required>
+        </div>
+        <div class="form-group">
+            <label for="modifiedBy">Modified By</label>
+            <input type="text" id="modifiedBy" formControlName="modifiedBy" required>
+        </div>
+        <button type="submit">{{ isEdit ? 'Update' : 'Add' }}</button>
+    </form>
+</div>

@@ -1,0 +1,47 @@
+<!-- vendor-coverage-form.html -->
+
+<h1>{{ isEdit ? 'Edit Vendor Coverage' : 'Add New Vendor Coverage' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="vendorName" class="full-label">Vendor Name:</label>
+    <input id="vendorName" class="full-input" formControlName="vendorName" type="text" />
+
+    <div class="error" *ngIf="form.get('vendorName')?.invalid && form.get('vendorName')?.touched">
+      Required
+    </div>
+
+    <label for="status">Status</label>
+    <input id="status" class="full-input" formControlName="status" type="text" />
+
+    <label for="city">City:</label>
+    <input id="city" formControlName="city" type="text" />
+
+    <label for="state">State:</label>
+    <input id="state" formControlName="state" type="text" />
+
+    <label for="zipCode">Zip Code:</label>
+    <input id="zipCode" formControlName="zipCode" type="text" />
+
+    <label for="trade">Trade:</label>
+    <input id="trade" formControlName="trade" type="text" />
+
+    <label for="rate">Rate:</label>
+    <input id="rate" formControlName="rate" type="number" />
+
+    <label for="radius">Radius:</label>
+    <input id="radius" formControlName="radius" type="number" />
+
+    <label for="vendorStatus">Vendor Status:</label>
+    <input id="vendorStatus" formControlName="vendorStatus" type="text" />
+
+    <label for="active">Active:</label>
+    <input id="active" type="checkbox" formControlName="active" />
+
+    <div class="form-actions">
+      <td><button type="submit" [disabled]="form.invalid">{{ 'Save' }}</button></td>
+      <td><button type="button" class="btn-cancel" [routerLink]="['/vendor-coverages']">Cancel</button></td>
+    </div>
+    </form>
+</div>

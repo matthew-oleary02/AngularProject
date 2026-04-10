@@ -1,0 +1,56 @@
+<!-- invoice-items-view.html -->
+
+<h1>Invoice Item Details</h1>
+
+<div *ngIf="ii; else notFound" class="card">
+    <div class="detail-grid">
+        <h2 class="title">{{ ii.serviceRequestId || 'Service Request#' }}</h2>
+
+        <div class="item">
+            <div class="label">ID</div>
+            <div class="value">{{ ii.rowId }}</div>
+        </div>
+
+        <div class="group-title">Invoice Item Info</div>
+        <div class="item">
+            <div class="label">Total</div>
+            <div class="value">{{ ii.total | currency }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Sale Tax Total</div>
+            <div class="value">{{ ii.saleTaxTotal | currency }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Quantity</div>
+            <div class="value">{{ ii.quantity }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Rate</div>
+            <div class="value">{{ ii.rate | currency }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Created On</div>
+            <div class="value">{{ ii.createdOn | date:'short' }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Created By</div>
+            <div class="value">{{ ii.createdBy }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Modified On</div>
+            <div class="value">{{ ii.modifiedOn | date:'short' }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Modified By</div>
+            <div class="value">{{ ii.modifiedBy }}</div>
+        </div>
+    </div>
+    <button type="button" class="btn-return" [routerLink]="['/invoice-items']">Back</button>
+</div>
+
+<ng-template #notFound>
+    <div class="card">
+        <p>Invoice item not found.</p>
+        <button type="button" class="btn-return" [routerLink]="['/invoice-items']">Back</button>
+    </div>
+</ng-template>

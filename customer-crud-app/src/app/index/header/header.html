@@ -1,19 +1,27 @@
-
 <header class="app-header">
   <h1 routerLink="/home">Customer CRUD App</h1>
   <nav>
     <a *ngIf="isLoggedIn()" routerLink="/jobs">Jobs</a>
 
-    <a *ngIf="isLoggedIn() && isManager() || isAdmin()" routerLink="/purchase-orders">Accounting</a>
+    <!-- Accounting dropdown -->
+    <div class="nav-dropdown" *ngIf="isLoggedIn() && isManager() || isAdmin()">
+      <a class="dropdown-trigger" (click)="$event.stopPropagation(); toggleAccountingMenu()" style="cursor:pointer;">
+        Accounting
+        <span class="chevron" [class.open]="showAccountingMenu">▾</span>
+      </a>
+
+      <div class="dropdown-menu" *ngIf="showAccountingMenu">
+        <a routerLink="/purchase-orders" (click)="closeAccountingMenu()">Purchase Orders</a>
+        <a routerLink="/invoice-items" (click)="closeAccountingMenu()">Invoice Items</a>
+      </div>
+    </div>
+
+    <!--<a *ngIf="isLoggedIn() && isManager() || isAdmin()" routerLink="/purchase-orders">Accounting</a>-->
     <!--<a *ngIf="isLoggedIn()" routerLink="/customers">Customers</a>-->
 
     <!-- Customer dropdown -->
     <div class="nav-dropdown" *ngIf="isLoggedIn()">
-      <a
-        class="dropdown-trigger"
-        (click)="$event.stopPropagation(); toggleCustomerMenu()"
-        style="cursor:pointer;"
-      >
+      <a class="dropdown-trigger" (click)="$event.stopPropagation(); toggleCustomerMenu()" style="cursor:pointer;">
         Customers
         <span class="chevron" [class.open]="showCustomerMenu">▾</span>
       </a>
@@ -27,15 +35,23 @@
       </div>
     </div>
 
-    <a *ngIf="isLoggedIn() && isManager() || isAdmin()" routerLink="/vendors">Vendors</a>
+    <!-- Vendor dropdown -->
+    <div class="nav-dropdown" *ngIf="isLoggedIn() && isAdmin()">
+      <a class="dropdown-trigger" (click)="$event.stopPropagation(); toggleVendorMenu()" style="cursor:pointer;">
+        Vendors
+        <span class="chevron" [class.open]="showVendorMenu">▾</span>
+      </a>
+
+      <div class="dropdown-menu" *ngIf="showVendorMenu">
+        <!-- Use Angular routes or swap to /vendors.html if needed -->
+        <a routerLink="/vendors" (click)="closeVendorMenu()">Vendors</a>
+        <a routerLink="/vendor-coverage" (click)="closeVendorMenu()">Vendor Coverage</a>
+      </div>
+    </div>
 
     <!-- Resources dropdown -->
     <div class="nav-dropdown" *ngIf="isLoggedIn() && isAdmin()">
-      <a
-        class="dropdown-trigger"
-        (click)="$event.stopPropagation(); toggleResourcesMenu()"
-        style="cursor:pointer;"
-      >
+      <a class="dropdown-trigger" (click)="$event.stopPropagation(); toggleResourcesMenu()" style="cursor:pointer;">
         Resources
         <span class="chevron" [class.open]="showResourcesMenu">▾</span>
       </a>
@@ -52,11 +68,7 @@
 
     <!-- Admin dropdown -->
     <div class="nav-dropdown" *ngIf="isLoggedIn() && isAdmin()">
-      <a
-        class="dropdown-trigger"
-        (click)="$event.stopPropagation(); toggleAdminMenu()"
-        style="cursor:pointer;"
-      >
+      <a class="dropdown-trigger" (click)="$event.stopPropagation(); toggleAdminMenu()" style="cursor:pointer;">
         Admin
         <span class="chevron" [class.open]="showAdminMenu">▾</span>
       </a>
