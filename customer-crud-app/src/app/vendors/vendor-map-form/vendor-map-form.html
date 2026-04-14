@@ -1,1 +1,26 @@
 <!-- vendor-map form view -->
+
+<h1>{{isEdit ? 'Edit' : 'Add'}} Vendor Map</h1>
+
+<div class="card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <label for="vendorId">Vendor ID</label>
+        <input type="number" id="vendorId" formControlName="vendorId" required>
+
+        <label for="vendorCoverageId">Vendor Coverage ID</label>
+        <input type="number" id="vendorCoverageId" formControlName="vendorCoverageId" required>
+
+        <label for="coordinates">Coordinates</label>
+        <input type="text" id="coordinates" formControlName="coordinates" required>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">{{isEdit ? 'Update' : 'Add'}}</button>
+            <button type="button" class="btn-cancel" [routerLink]="['/vendor-map']">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<ng-template #notFound>
+    <p>Vendor map not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/vendor-map']">Back</button>
+</ng-template>

@@ -1,1 +1,29 @@
 <!-- vendor-map view display -->
+
+<div *ngIf="vendorMap; else notFound" class="card">
+    <h1>Vendor Map</h1>
+    <div class="details">
+        <div class="item">
+            <div class="label">ID</div>
+            <div class="value">{{ vendorMap.rowId }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Vendor ID</div>
+            <div class="value">{{ vendorMap.vendorId }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Vendor Coverage ID</div>
+            <div class="value">{{ vendorMap.vendorCoverageId }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Coordinates</div>
+            <div class="value">{{ vendorMap.coordinates }}</div>
+        </div>
+    </div>
+    <button type="button" class="btn-return" [routerLink]="['/vendor-map', vendorMap.rowId]">Back</button>
+</div>
+
+<ng-template #notFound>
+    <p>Vendor map not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/vendor-map']">Back</button>
+</ng-template>

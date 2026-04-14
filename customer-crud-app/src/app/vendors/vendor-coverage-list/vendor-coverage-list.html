@@ -4,30 +4,20 @@
   <h1>Vendor Coverage List</h1>
   <!-- Toolbar with filter input and clear button -->
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search name, city, state, zip, contact..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search name, city, state, zip, contact..."
+      (input)="onFilterChange($event.target.value)" [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
     <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
+      <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true" />
       <label for="active">Active</label>
     </td>
   </div>
 
-<table class="list-table">
+  <table class="list-table">
     <thead>
-        <tr>
+      <tr>
         <th>ID</th>
         <th>Name</th>
         <th>City</th>
@@ -41,10 +31,10 @@
         <th>Created On</th>
         <th>Modified By</th>
         <th>Modified On</th>
-        </tr>
+      </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let vendor of vendors">
+      <tr *ngFor="let vendor of vendors">
         <td>{{ vendor.rowId }}</td>
         <td><a [routerLink]="['/vendor-coverage/view', vendor.rowId]">{{ vendor.vendorName }}</a></td>
         <td>{{ vendor.city }}</td>
@@ -58,6 +48,7 @@
         <td>{{ vendor.createdOn | date:'short' }}</td>
         <td>{{ vendor.modifiedBy }}</td>
         <td>{{ vendor.modifiedOn | date:'short' }}</td>
-        </tr>
+      </tr>
     </tbody>
-</table>
+  </table>
+</div>

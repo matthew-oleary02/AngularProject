@@ -55,6 +55,9 @@ import { ResourceProductivityFormComponent } from './resources/resource-producti
 import { VendorCoverageListComponent } from './vendors/vendor-coverage-list/vendor-coverage-list';
 import { VendorCoverageFormComponent } from './vendors/vendor-coverage-form/vendor-coverage-form';
 import { VendorCoverageViewComponent } from './vendors/vendor-coverage-view/vendor-coverage-view';
+import { VendorMapListComponent } from './vendors/vendor-map-list/vendor-map-list';
+import { VendorMapFormComponent } from './vendors/vendor-map-form/vendor-map-form';
+import { VendorMapViewComponent } from './vendors/vendor-map-view/vendor-map-view';
 import { LoginComponent } from './index/login/login';
 import { HomeComponent } from './index/home/home';
 import { ProfileComponent } from './profile/profile/profile';
@@ -164,4 +167,8 @@ export const routes: Routes = [
   { path: 'vendor-coverage/new', component: VendorCoverageFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-coverage/edit/:id', component: VendorCoverageFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-coverage/view/:id', component: VendorCoverageViewComponent, canActivate: [AuthGuard] },
+  { path: 'vendor-map', component: VendorMapListComponent, canActivate: [AuthGuard] },
+  { path: 'vendor-map/new', component: VendorMapFormComponent, canActivate: [AuthGuard] },
+  { path: 'vendor-map/edit/:id', component: VendorMapFormComponent, canActivate: [AuthGuard] },
+  { path: 'vendor-map/view/:id', component: VendorMapViewComponent, canActivate: [AuthGuard] },
 ];

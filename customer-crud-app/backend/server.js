@@ -2912,6 +2912,118 @@ app.delete('/vendor-coverage/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    VENDOR MAPS MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /vendor-maps (all vendor maps)
+app.get('/vendor-maps', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorMaps');
+    const vendorMaps = result.recordset.map(row => ({
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      vendorCoverageId: row.VendorCoverageID,
+      coordinates: row.Coordinates
+    }));
+    res.json(vendorMaps);
+  } catch (err) {
+    console.error('Error fetching vendor maps:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendor-maps/:id (single vendor map by ID)
+app.get('/vendor-maps/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM VendorMaps WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor map not found' });
+    }
+    const row = result.recordset[0];
+    const vendorMap = {
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      vendorCoverageId: row.VendorCoverageID,
+      coordinates: row.Coordinates
+    };
+    res.json(vendorMap);
+  } catch (err) {
+    console.error('Error fetching vendor map:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendor-maps (add new vendor map)
+app.post('/vendor-maps', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorMap = req.body;
+    const query = `
+      INSERT INTO VendorMaps (
+        VendorID, VendorCoverageID, Coordinates
+      ) VALUES (
+        @VendorID, @VendorCoverageID, @Coordinates
+      )
+    `;
+    const request = new sql.Request();
+    request.input('VendorID', sql.Int, vendorMap.vendorId);
+    request.input('VendorCoverageID', sql.Int, vendorMap.vendorCoverageId);
+    request.input('Coordinates', sql.VarChar, vendorMap.coordinates);
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Vendor map added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor map:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-maps/:id (update existing vendor map)
+app.put('/vendor-maps/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorMap = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorMaps SET
+        VendorID = @VendorID,
+        VendorCoverageID = @VendorCoverageID,
+        Coordinates = @Coordinates
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('VendorID', sql.Int, vendorMap.vendorId);
+    request.input('VendorCoverageID', sql.Int, vendorMap.vendorCoverageId);
+    request.input('Coordinates', sql.VarChar, vendorMap.coordinates);
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor map updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor map:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-maps/:id (delete vendor map)
+app.delete('/vendor-maps/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorMaps WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor map:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 /* ===========================
     VEHICLES MANAGEMENT ENDPOINTS

@@ -1,13 +1,67 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { VendorMap } from '../vendor-map.model';
+import { VendorMapService } from '../vendor-map.service';
 
 @Component({
   selector: 'app-vendor-map-list',
-  templateUrl: './vendor-map-list.html'
+  standalone: true,
+  imports: [CommonModule, RouterModule],
+  templateUrl: './vendor-map-list.html',
+  styleUrls: ['../../styles/list.css']
 })
 export class VendorMapListComponent implements OnInit {
-  constructor() {}
+  vendorMaps: VendorMap[] = [];
+  private allVendorMaps: VendorMap[] = [];
+  filterText = '';
 
-  ngOnInit(): void {}
+  constructor(private vendorMapService: VendorMapService) { }
 
-  // Collection display and basic navigation for vendor-map
+  ngOnInit() {
+    this.vendorMapService.getVendorMaps().subscribe({
+      next: vm => {
+        this.vendorMaps = vm || [];
+      },
+      error: err => console.error('Error fetching vendor maps:', err)
+    });
+  }
+
+  onFilterChange(query: string) {
+    this.filterText = query || '';
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    const q = this.filterText.toLowerCase().trim();
+    this.vendorMaps = this.allVendorMaps.filter(vm => {
+      const fields = [
+        vm.vendorId,
+        vm.vendorCoverageId,
+        vm.coordinates
+      ];
+      const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
+      return matchesQuery;
+    });
+  }
+
+  clearFilter() {
+    this.filterText = '';
+    this.applyFilters();
+  }
+
+  onDelete(id: number) {
+    if (!Number.isFinite(id) || id <= 0) return;
+    if (!confirm(`Delete vendor map #${id}?`)) return;
+
+    this.vendorMapService.deleteVendorMap(id).subscribe({
+      next: () => {
+        this.vendorMaps = this.vendorMaps.filter(vm => vm.rowId !== id);
+      },
+      error: err => {
+        console.error('Error deleting vendor map:', err);
+        alert('Failed to delete vendor map. Please try again.');
+      }
+    });
+  }
 }

@@ -1,1 +1,28 @@
 <!-- vendor-map list view -->
+
+<div class="list-container">
+    <h1>Vendor Map List</h1>
+    <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+        <input type="text" placeholder="Search..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+            class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+        <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Vendor ID</th>
+                    <th>Vendor Coverage ID</th>
+                    <th>Coordinates</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let vendorMap of vendorMaps">
+                    <td>{{ vendorMap.rowId }}</td>
+                    <td>{{ vendorMap.vendorId }}</td>
+                    <td>{{ vendorMap.vendorCoverageId }}</td>
+                    <td>{{ vendorMap.coordinates }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
