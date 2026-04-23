@@ -7,7 +7,7 @@ import { VendorMap } from './vendor-map.model';
 // Handles CRUD operations for vendor-map API endpoints
 export class VendorMapService {
   // Base API URL
-  private apiUrl = 'http://localhost:3000/vendor-map';
+  private apiUrl = 'http://localhost:3000/vendor-maps';
 
   constructor(private http: HttpClient) { }
 

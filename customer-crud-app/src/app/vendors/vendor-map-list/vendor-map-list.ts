@@ -37,6 +37,7 @@ export class VendorMapListComponent implements OnInit {
     this.vendorMaps = this.allVendorMaps.filter(vm => {
       const fields = [
         vm.vendorId,
+        vm.vendorName,
         vm.vendorCoverageId,
         vm.coordinates
       ];

@@ -1,0 +1,25 @@
+<!-- customer-crud-app/src/app/vendors/vendor-rates-view/vendor-rates-view.html -->
+<h1>Vendor Rates Details</h1>
+<div *ngIf="rate; else notFound" class="card">
+    <div class="detail-grid">
+        <h2 class="title">{{ rate.rateType || 'Rate Type' }}</h2>
+    
+        <!-- TODO: use rate.id or rate.rowId depending on your backend schema -->
+        <div class="item"><div class="label">ID</div><div class="value">{{ rate.id || rate.rowId }}</div></div>
+    
+        <div class="group-title">Vendor Rate Info</div>
+        <div class="item"><div class="label">Vendor</div><div class="value">{{ rate.vendor }}</div></div>
+        <div class="item"><div class="label">Trade</div><div class="value">{{ rate.trade }}</div></div>
+        <div class="item"><div class="label">Rate Type</div><div class="value">{{ rate.rateType }}</div></div>
+        <div class="item"><div class="label">State</div><div class="value">{{ rate.state }}</div></div>
+        <div class="item"><div class="label">Rate</div><div class="value">{{ rate.rate }}</div></div>
+    </div>
+    <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
+</div>
+
+<ng-template #notFound>
+    <div class="card">
+        <p>Vendor Rate not found.</p>
+        <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
+    </div>
+</ng-template>

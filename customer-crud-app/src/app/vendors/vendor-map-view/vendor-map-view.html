@@ -8,6 +8,10 @@
             <div class="value">{{ vendorMap.rowId }}</div>
         </div>
         <div class="item">
+            <div class="label">Vendor Name</div>
+            <div class="value">{{ vendorMap.vendorName }}</div>
+        </div>
+        <div class="item">
             <div class="label">Vendor ID</div>
             <div class="value">{{ vendorMap.vendorId }}</div>
         </div>
@@ -18,6 +22,22 @@
         <div class="item">
             <div class="label">Coordinates</div>
             <div class="value">{{ vendorMap.coordinates }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Created By</div>
+            <div class="value">{{ vendorMap.createdBy }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Created On</div>
+            <div class="value">{{ vendorMap.createdOn }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Modified By</div>
+            <div class="value">{{ vendorMap.modifiedBy }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Modified On</div>
+            <div class="value">{{ vendorMap.modifiedOn }}</div>
         </div>
     </div>
     <button type="button" class="btn-return" [routerLink]="['/vendor-map', vendorMap.rowId]">Back</button>

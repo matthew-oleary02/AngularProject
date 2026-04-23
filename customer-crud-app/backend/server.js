@@ -2920,12 +2920,17 @@ app.delete('/vendor-coverage/:id', async (req, res) => {
 app.get('/vendor-maps', async (req, res) => {
   try {
     await sql.connect(config);
-    const result = await sql.query('SELECT * FROM VendorMaps');
+    const result = await sql.query('SELECT * FROM VendorMap');
     const vendorMaps = result.recordset.map(row => ({
       rowId: row.RowID,
       vendorId: row.VendorID,
+      vendorName: row.VendorName,
       vendorCoverageId: row.VendorCoverageID,
-      coordinates: row.Coordinates
+      coordinates: row.Coordinates,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
     }));
     res.json(vendorMaps);
   } catch (err) {
@@ -2941,7 +2946,7 @@ app.get('/vendor-maps/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
-    const result = await request.query('SELECT * FROM VendorMaps WHERE RowID = @RowID');
+    const result = await request.query('SELECT * FROM VendorMap WHERE RowID = @RowID');
     if (result.recordset.length === 0) {
       return res.status(404).json({ message: 'Vendor map not found' });
     }
@@ -2949,8 +2954,13 @@ app.get('/vendor-maps/:id', async (req, res) => {
     const vendorMap = {
       rowId: row.RowID,
       vendorId: row.VendorID,
+      vendorName: row.VendorName,
       vendorCoverageId: row.VendorCoverageID,
-      coordinates: row.Coordinates
+      coordinates: row.Coordinates,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
     };
     res.json(vendorMap);
   } catch (err) {
@@ -2965,16 +2975,18 @@ app.post('/vendor-maps', async (req, res) => {
     await sql.connect(config);
     const vendorMap = req.body;
     const query = `
-      INSERT INTO VendorMaps (
-        VendorID, VendorCoverageID, Coordinates
+      INSERT INTO VendorMap (
+        VendorID, VendorName, VendorCoverageID, Coordinates, CreatedBy, CreatedOn
       ) VALUES (
-        @VendorID, @VendorCoverageID, @Coordinates
+        @VendorID, @VendorName, @VendorCoverageID, @Coordinates, @CreatedBy, GETDATE()
       )
     `;
     const request = new sql.Request();
     request.input('VendorID', sql.Int, vendorMap.vendorId);
+    request.input('VendorName', sql.VarChar, vendorMap.vendorName);
     request.input('VendorCoverageID', sql.Int, vendorMap.vendorCoverageId);
     request.input('Coordinates', sql.VarChar, vendorMap.coordinates);
+    request.input('CreatedBy', sql.VarChar, 'admin');
     await request.query(query);
     res.setHeader('Content-Type', 'application/json');
     res.status(201).json({ message: 'Vendor map added successfully' });
@@ -2991,17 +3003,22 @@ app.put('/vendor-maps/:id', async (req, res) => {
     const vendorMap = req.body;
     const id = req.params.id;
     const query = `
-      UPDATE VendorMaps SET
+      UPDATE VendorMap SET
         VendorID = @VendorID,
+        VendorName = @VendorName,
         VendorCoverageID = @VendorCoverageID,
-        Coordinates = @Coordinates
+        Coordinates = @Coordinates,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
       WHERE RowID = @RowID
     `;
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
     request.input('VendorID', sql.Int, vendorMap.vendorId);
+    request.input('VendorName', sql.VarChar, vendorMap.vendorName);
     request.input('VendorCoverageID', sql.Int, vendorMap.vendorCoverageId);
     request.input('Coordinates', sql.VarChar, vendorMap.coordinates);
+    request.input('ModifiedBy', sql.VarChar, 'admin');
     await request.query(query);
     res.status(200).json({ message: 'Vendor map updated successfully' });
   } catch (err) {
@@ -3017,7 +3034,7 @@ app.delete('/vendor-maps/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
-    await request.query('DELETE FROM VendorMaps WHERE RowID = @RowID');
+    await request.query('DELETE FROM VendorMap WHERE RowID = @RowID');
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting vendor map:', err);

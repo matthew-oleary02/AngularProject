@@ -27,6 +27,7 @@ export class VendorMapFormComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       vendorId: ['', Validators.required],
+      vendorName: ['', Validators.required],
       vendorCoverageId: ['', Validators.required],
       coordinates: ['', Validators.required]
     });

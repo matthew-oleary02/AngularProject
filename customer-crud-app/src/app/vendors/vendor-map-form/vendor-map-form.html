@@ -7,6 +7,9 @@
         <label for="vendorId">Vendor ID</label>
         <input type="number" id="vendorId" formControlName="vendorId" required>
 
+        <label for="vendorName">Vendor Name</label>
+        <input type="text" id="vendorName" formControlName="vendorName" required>
+
         <label for="vendorCoverageId">Vendor Coverage ID</label>
         <input type="number" id="vendorCoverageId" formControlName="vendorCoverageId" required>
 
@@ -15,12 +18,12 @@
 
         <div class="form-actions">
             <button type="submit" class="btn-save">{{isEdit ? 'Update' : 'Add'}}</button>
-            <button type="button" class="btn-cancel" [routerLink]="['/vendor-map']">Cancel</button>
+            <button type="button" class="btn-cancel" [routerLink]="['/vendor-maps']">Cancel</button>
         </div>
     </form>
 </div>
 
 <ng-template #notFound>
     <p>Vendor map not found.</p>
-    <button type="button" class="btn-return" [routerLink]="['/vendor-map']">Back</button>
+    <button type="button" class="btn-return" [routerLink]="['/vendor-maps']">Back</button>
 </ng-template>

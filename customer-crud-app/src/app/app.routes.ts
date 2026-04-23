@@ -167,8 +167,8 @@ export const routes: Routes = [
   { path: 'vendor-coverage/new', component: VendorCoverageFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-coverage/edit/:id', component: VendorCoverageFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-coverage/view/:id', component: VendorCoverageViewComponent, canActivate: [AuthGuard] },
-  { path: 'vendor-map', component: VendorMapListComponent, canActivate: [AuthGuard] },
-  { path: 'vendor-map/new', component: VendorMapFormComponent, canActivate: [AuthGuard] },
-  { path: 'vendor-map/edit/:id', component: VendorMapFormComponent, canActivate: [AuthGuard] },
-  { path: 'vendor-map/view/:id', component: VendorMapViewComponent, canActivate: [AuthGuard] },
+  { path: 'vendor-maps', component: VendorMapListComponent, canActivate: [AuthGuard] },
+  { path: 'vendor-maps/new', component: VendorMapFormComponent, canActivate: [AuthGuard] },
+  { path: 'vendor-maps/edit/:id', component: VendorMapFormComponent, canActivate: [AuthGuard] },
+  { path: 'vendor-maps/view/:id', component: VendorMapViewComponent, canActivate: [AuthGuard] },
 ];

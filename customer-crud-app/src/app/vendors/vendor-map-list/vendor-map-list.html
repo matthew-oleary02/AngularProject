@@ -11,6 +11,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Vendor Name</th>
                     <th>Vendor ID</th>
                     <th>Vendor Coverage ID</th>
                     <th>Coordinates</th>
@@ -19,10 +20,13 @@
             <tbody>
                 <tr *ngFor="let vendorMap of vendorMaps">
                     <td>{{ vendorMap.rowId }}</td>
+                    <td><a [routerLink]="['/vendor-maps/view', vendorMap.rowId]">{{ vendorMap.vendorName }}</a></td>
                     <td>{{ vendorMap.vendorId }}</td>
                     <td>{{ vendorMap.vendorCoverageId }}</td>
                     <td>{{ vendorMap.coordinates }}</td>
                 </tr>
             </tbody>
         </table>
+        <button type="button" class="btn-add" [routerLink]="['/vendor-maps/new']">Add Vendor Map</button>
     </div>
+</div>
