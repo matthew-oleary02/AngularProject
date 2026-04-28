@@ -1,1 +1,45 @@
-<!-- vendor-asset list view -->
+<div class="list-container">
+  <h1>Vendor Asset List</h1>
+  
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search asset name, vendor ID..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <button type="button" class="btn-clear" (click)="clearFilter()">Clear</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Asset Name</th>
+        <th>Vendor ID</th>
+        <th>Active</th>
+        <th>Monthly Rate</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let asset of vendorAssets">
+        <td><a [routerLink]="['/vendors/vendor-asset-view', asset.rowId]">{{ asset.assetName }}</a></td>
+        <td>{{ asset.vendorId }}</td>
+        <td>{{ asset.active ? 'Yes' : 'No' }}</td>
+        <td>{{ asset.monthly | currency }}</td>
+        <td>{{ asset.startTime | date:'short' }}</td>
+        <td>{{ asset.endTime | date:'short' }}</td>
+        <td>
+          <button type="button" class="btn btn-edit" [routerLink]="['/vendors/vendor-asset-form', asset.rowId]">Edit</button>
+          <button type="button" class="btn btn-delete" (click)="onDelete(asset.rowId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<button class="add-new-btn" type="button" [routerLink]="['/vendors/vendor-asset-form']">Add New Vendor Asset</button>

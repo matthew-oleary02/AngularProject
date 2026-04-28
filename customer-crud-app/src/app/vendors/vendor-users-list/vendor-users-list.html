@@ -1,1 +1,48 @@
-<!-- vendor-users list view -->
+<h1>Vendor User List</h1>
+
+<div class="card">
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <div>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </div>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-users/new']">Add New Vendor User</button>
+  </div>
+
+  <table>
+    <tr>
+      <th>User</th>
+      <th>Vendor</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Trade</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let vu of vendorUsers">
+      <td><a [routerLink]="['/vendor-users/view', vu.rowId]">{{ vu.username }}</a></td>
+      <td>{{ vu.vendor }}</td>
+      <td>{{ vu.email }}</td>
+      <td>{{ vu.phone }}</td>
+      <td>{{ vu.trade }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/vendor-users/edit', vu.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(vu.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>

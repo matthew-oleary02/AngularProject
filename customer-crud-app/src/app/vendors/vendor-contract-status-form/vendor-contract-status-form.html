@@ -1,1 +1,39 @@
-<!-- vendor-contract-status form view -->
+<h1>{{ isEdit ? 'Edit' : 'Add' }} Vendor Contract Status</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      
+      <!-- Vendor Selection -->
+      <div class="field">
+        <label for="vendorId">Vendor</label>
+        <select id="vendorId" formControlName="vendorId">
+          <option value="">-- Select Vendor --</option>
+          <option *ngFor="let v of vendors" [value]="v.rowId">
+            {{ v.vendorName }} (ID: {{ v.rowId }})
+          </option>
+        </select>
+        <div *ngIf="form.get('vendorId')?.touched && form.get('vendorId')?.invalid" class="error">
+          Vendor is required.
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="field">
+        <label for="status">Status</label>
+        <input id="status" type="text" formControlName="status" placeholder="Enter contract status">
+        <div *ngIf="form.get('status')?.touched && form.get('status')?.invalid" class="error">
+          Status is required.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-return" [routerLink]="['/vendors']">Cancel</button>
+      <button type="submit" class="btn-create" [disabled]="form.invalid">
+        {{ isEdit ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>

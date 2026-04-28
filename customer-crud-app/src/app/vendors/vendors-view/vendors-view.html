@@ -38,9 +38,9 @@
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'vendorRates'"
-    (click)="activeTab = 'vendorRates'">
-    Rates
+    [class.active]="activeTab === 'vendorJobs'"
+    (click)="activeTab = 'vendorJobs'">
+    Jobs
   </button>
   <button 
     type="button" 
@@ -52,16 +52,30 @@
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'vendorClassification'"
-    (click)="activeTab = 'vendorClassification'">
-    Trades
+    [class.active]="activeTab === 'vendorAssets'"
+    (click)="activeTab = 'vendorAssets'">
+    Assets
   </button>
   <button 
     type="button" 
     class="btn-tab" 
     [class.active]="activeTab === 'vendorUsers'"
     (click)="activeTab = 'vendorUsers'">
-    Portal Users
+    Users
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorNotes'"
+    (click)="activeTab = 'vendorNotes'">
+    Notes
+  </button>
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'vendorClassification'"
+    (click)="activeTab = 'vendorClassification'">
+    Classifications
   </button>
   <button 
     type="button" 
@@ -73,17 +87,42 @@
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'workTickets'"
-    (click)="activeTab = 'workTickets'">
-    Work Tickets
+    [class.active]="activeTab === 'vendorMap'"
+    (click)="activeTab = 'vendorMap'">
+    Map
   </button>
-  <button 
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'vendorJobs'"
-    (click)="activeTab = 'vendorJobs'">
-    Jobs
-  </button>
+</div>
+
+<div *ngIf="activeTab === 'vendorJobs'" class="card">
+  <app-vendor-jobs-list [vendorId]="vendor.rowId"></app-vendor-jobs-list>
+</div>
+
+<div *ngIf="activeTab === 'vendorClassification'" class="card">
+  <app-vendor-classification-list [vendorId]="vendor.rowId"></app-vendor-classification-list>
+</div>
+
+<div *ngIf="activeTab === 'vendorContractStatus'" class="card">
+  <app-vendor-contract-status-list [vendorId]="vendor.rowId"></app-vendor-contract-status-list>
+</div>
+
+<div *ngIf="activeTab === 'vendorCoverage'" class="card">
+  <app-vendor-coverage-list [vendorId]="vendor.rowId"></app-vendor-coverage-list>
+</div>
+
+<div *ngIf="activeTab === 'vendorAssets'" class="card">
+  <app-vendor-asset-list [vendorId]="vendor.rowId"></app-vendor-asset-list>
+</div>
+
+<div *ngIf="activeTab === 'vendorUsers'" class="card">
+  <app-vendor-users-list [vendorId]="vendor.rowId"></app-vendor-users-list>
+</div>
+
+<div *ngIf="activeTab === 'vendorNotes'" class="card">
+  <app-vendor-notes-list [vendorId]="vendor.rowId"></app-vendor-notes-list>
+</div>
+
+<div *ngIf="activeTab === 'vendorMap'" class="card">
+  <app-vendor-map-list [vendorId]="vendor.rowId"></app-vendor-map-list>
 </div>
 
 <ng-template #notFound>

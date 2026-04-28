@@ -1,1 +1,39 @@
-<!-- vendor-classification list view -->
+<h1>Vendor Classifications</h1>
+
+<div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+  <input
+    type="text"
+    placeholder="Search classifications..."
+    (input)="onFilterChange($any($event.target).value)"
+    [value]="filterText"
+    class="search-box"
+    style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+  />
+  <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+  <button type="button" class="btn-create" [routerLink]="['/vendor-classification/new']">Add New Classification</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Classification</th>
+      <th>Created On</th>
+      <th>Created By</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of classifications">
+      <td>{{ c.rowId }}</td>
+      <td>{{ c.classification }}</td>
+      <td>{{ c.createdOn | date:'short' }}</td>
+      <td>{{ c.createdBy }}</td>
+      <td>
+        <button type="button" class="btn btn-view" [routerLink]="['/vendor-classification/view', c.rowId]">View</button>
+        <button type="button" class="btn btn-edit" [routerLink]="['/vendor-classification/edit', c.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(c.rowId)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

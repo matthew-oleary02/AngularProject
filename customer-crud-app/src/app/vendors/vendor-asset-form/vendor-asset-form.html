@@ -1,1 +1,41 @@
-<!-- vendor-asset form view -->
+<h1>{{ isEdit ? 'Edit Vendor Asset' : 'Add New Vendor Asset' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="vendorId" class="full-label">Vendor:</label>
+    <select id="vendorId" class="full-input" formControlName="vendorId">
+      <option value="">Select a vendor</option>
+      <option *ngFor="let vendor of vendors" [value]="vendor.rowId">
+        {{ vendor.vendorName }}
+      </option>
+    </select>
+
+    <div class="error" *ngIf="form.get('vendorId')?.invalid && form.get('vendorId')?.touched">
+      Required
+    </div>
+
+    <label for="assetName" class="full-label">Asset Name:</label>
+    <input id="assetName" class="full-input" formControlName="assetName" type="text" />
+    <div class="error" *ngIf="form.get('assetName')?.invalid && form.get('assetName')?.touched">
+      Required
+    </div>
+
+    <label for="active" class="full-label">Active:</label>
+    <input id="active" type="checkbox" formControlName="active" />
+
+    <label for="startTime" class="full-label">Start Time:</label>
+    <input id="startTime" class="full-input" formControlName="startTime" type="datetime-local" />
+
+    <label for="endTime" class="full-label">End Time:</label>
+    <input id="endTime" class="full-input" formControlName="endTime" type="datetime-local" />
+
+    <label for="monthly" class="full-label">Monthly Rate:</label>
+    <input id="monthly" class="full-input" formControlName="monthly" type="number" />
+
+    <div class="button-group">
+      <button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button>
+      <button class="btn-cancel" type="button" [routerLink]="['/vendors/vendor-asset-list']">Cancel</button>
+    </div>
+  </form>
+</div>

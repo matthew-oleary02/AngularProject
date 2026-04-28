@@ -1,1 +1,46 @@
-<!-- vendor-asset view display -->
+<div class="view-header">
+  <h1>Vendor Asset Details</h1>
+  <div class="actions">
+    <button class="btn-edit" [routerLink]="['/vendors/vendor-asset-form', asset?.rowId]">Edit</button>
+    <button class="btn-delete" (click)="deleteAsset()">Delete</button>
+    <button class="btn-back" [routerLink]="['/vendors/vendor-asset-list']">Back to List</button>
+  </div>
+</div>
+
+<div class="card" *ngIf="asset; else loading">
+  <div class="detail-row">
+    <span class="label">Asset Name:</span>
+    <span class="value">{{ asset.assetName }}</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">Vendor ID:</span>
+    <span class="value">{{ asset.vendorId }}</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">Status:</span>
+    <span class="value">{{ asset.active ? 'Active' : 'Inactive' }}</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">Start Time:</span>
+    <span class="value">{{ asset.startTime | date:'short' }}</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">End Time:</span>
+    <span class="value">{{ asset.endTime | date:'short' }}</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">Monthly Rate:</span>
+    <span class="value">{{ asset.monthly | currency }}</span>
+  </div>
+
+  <hr />
+
+  <div class="metadata">
+    <p>Created By: {{ asset.createdBy }} on {{ asset.createdOn | date:'short' }}</p>
+    <p *ngIf="asset.modifiedBy">Modified By: {{ asset.modifiedBy }} on {{ asset.modifiedOn | date:'short' }}</p>
+  </div>
+</div>
+
+<ng-template #loading>
+  <p>Loading asset details...</p>
+</ng-template>

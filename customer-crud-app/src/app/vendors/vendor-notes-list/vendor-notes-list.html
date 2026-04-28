@@ -1,1 +1,48 @@
-<!-- vendor-notes list view -->
+<h1>Vendor Notes</h1>
+
+<div class="card">
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input
+      type="text"
+      placeholder="Search here..."
+      (input)="onFilterChange($event.target.value)"
+      [value]="filterText"
+      class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
+    />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <div>
+      <input
+        type="checkbox"
+        id="active"
+        name="active"
+        (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true"
+      />
+      <label for="active">Active</label>
+    </div>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-notes/new']">Add New Note</button>
+  </div>
+
+  <table>
+    <tr>
+      <th>Status</th>
+      <th>Vendor</th>
+      <th>Message</th>
+      <th>Active</th>
+      <th>Last Update</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let note of vendorNotes">
+      <td><a [routerLink]="['/vendor-notes/view', note.rowId]">{{ note.status }}</a></td>
+      <td>{{ note.vendor }}</td>
+      <td>{{ note.message }}</td>
+      <td>{{ note.active ? 'Yes' : 'No' }}</td>
+      <td>{{ note.modifiedOn | date:'short' }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/vendor-notes/edit', note.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(note.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>

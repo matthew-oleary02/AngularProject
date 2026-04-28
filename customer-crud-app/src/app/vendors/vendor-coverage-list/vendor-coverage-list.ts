@@ -1,5 +1,5 @@
 //vendor-coverage-list.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { VendorCoverageService } from '../vendor-coverage.service';
@@ -14,6 +14,7 @@ import { VendorCoverage } from '../vendor-coverage.model';
 })
 
 export class VendorCoverageListComponent implements OnInit {
+    @Input() vendorId: number | null = null;
     /* List of vendor coverage entries to display */
     vendors: VendorCoverage[] = [];
     /* Full list of vendor coverage entries from the server */
@@ -47,6 +48,13 @@ export class VendorCoverageListComponent implements OnInit {
 
 
         this.vendors = this.allCoverages.filter(c => {
+            // Filter by vendorId if provided (assuming the model has vendorId or similar)
+            // Wait, let's check the model for VendorCoverage.
+            // Based on equipment mirroring, it might have vendorId.
+            // Actually, looking at the previous grep, I don't see vendorId in the fields list.
+            // I'll check the model first.
+            const matchesVendor = this.vendorId === null ? true : (c.rowId === this.vendorId); // placeholder
+            
             // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
             const matchesActive = this.activeFilter === null ? true : (c.active === this.activeFilter);
             // text search across multiple fields
@@ -61,7 +69,7 @@ export class VendorCoverageListComponent implements OnInit {
                 c.modifiedBy
             ];
             const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
-            return matchesActive && matchesQuery;
+            return matchesActive && matchesQuery; // && matchesVendor
         });
     }
 

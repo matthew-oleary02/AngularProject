@@ -1,1 +1,36 @@
 <!-- vendor-jobs view display -->
+<div class="container mt-4">
+    <h2>Vendor Jobs</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Budget</th>
+                    <th>Vendor Name</th>
+                    <th>Date Posted</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let job of jobs">
+                    <td>{{ job.id }}</td>
+                    <td>{{ job.title }}</td>
+                    <td>{{ job.status }}</td>
+                    <td>{{ job.location }}</td>
+                    <td>{{ job.description }}</td>
+                    <td>{{ job.budget | currency }}</td>
+                    <td>{{ job.vendorName }}</td>
+                    <td>{{ job.datePosted }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" (click)="viewJob(job.id)">View</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

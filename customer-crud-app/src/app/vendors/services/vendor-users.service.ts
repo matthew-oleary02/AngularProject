@@ -1,24 +1,36 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { VendorUsers } from '../models/vendor-users.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-// Handles CRUD operations for vendor-users API endpoints
+@Injectable({ providedIn: 'root' })
 export class VendorUsersService {
-  // Base API URL
-  private apiUrl = '';
+  private apiUrl = 'http://localhost:3000/vendor-users';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  // CRUD method signatures
-  getAll() {}
-  getById(id: string) {}
-  create(data: any) {}
-  update(id: string, data: any) {}
-  delete(id: string) {}
+  /* Fetch all vendor users from the backend */
+  getVendorUsers(): Observable<VendorUsers[]> {
+    return this.http.get<VendorUsers[]>(this.apiUrl);
+  }
 
-  // Error handling section
-  private handleError(error: any) {
-    console.error(error);
+  /* Fetch a single vendor user by ID */
+  getVendorUser(id: number): Observable<VendorUsers> {
+    return this.http.get<VendorUsers>(`${this.apiUrl}/${id}`);
+  }
+
+  /* Add a new vendor user */
+  addVendorUser(vendorUser: VendorUsers): Observable<VendorUsers> {
+    return this.http.post<VendorUsers>(this.apiUrl, vendorUser);
+  }
+
+  /* Update an existing vendor user */
+  updateVendorUser(vendorUser: VendorUsers): Observable<VendorUsers> {
+    return this.http.put<VendorUsers>(`${this.apiUrl}/${vendorUser.rowId}`, vendorUser);
+  }
+
+  /* Delete a vendor user by ID */
+  deleteVendorUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

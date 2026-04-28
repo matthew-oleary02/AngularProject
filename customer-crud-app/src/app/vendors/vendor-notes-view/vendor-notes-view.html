@@ -1,1 +1,28 @@
-<!-- vendor-notes view display -->
+<h1>Vendor Note Details</h1>
+<div *ngIf="vendorNote; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ vendorNote.vendor || 'Vendor' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ vendorNote.rowId }}</div></div>
+
+    <div class="group-title">Note Info</div>
+    <div class="item"><div class="label">Status</div><div class="value">{{ vendorNote.status }}</div></div>
+    <div class="item"><div class="label">Message</div><div class="value">{{ vendorNote.message }}</div></div>
+    <div class="item"><div class="label">Active</div><div class="value">{{ vendorNote.active ? 'Yes' : 'No' }}</div></div>
+
+    <div class="group-title">Additional Info</div>
+    <div class="item"><div class="label">Entered By</div><div class="value">{{ vendorNote.enteredBy }}</div></div>
+    <div class="item"><div class="label">Date Entered</div><div class="value">{{ vendorNote.dateEntered | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ vendorNote.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Last Update</div><div class="value">{{ vendorNote.modifiedOn | date:'short' }}</div></div>
+  </div>
+  <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
+  <button type="button" class="btn-edit" [routerLink]="['/vendor-notes/edit', vendorNote.rowId]">Edit</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Vendor note not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
+  </div>
+</ng-template>

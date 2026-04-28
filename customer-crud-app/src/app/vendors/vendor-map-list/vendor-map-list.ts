@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { VendorMap } from '../vendor-map.model';
@@ -12,6 +12,7 @@ import { VendorMapService } from '../vendor-map.service';
   styleUrls: ['../../styles/list.css']
 })
 export class VendorMapListComponent implements OnInit {
+  @Input() vendorId: number | null = null;
   vendorMaps: VendorMap[] = [];
   private allVendorMaps: VendorMap[] = [];
   filterText = '';
@@ -21,7 +22,8 @@ export class VendorMapListComponent implements OnInit {
   ngOnInit() {
     this.vendorMapService.getVendorMaps().subscribe({
       next: vm => {
-        this.vendorMaps = vm || [];
+        this.allVendorMaps = vm || [];
+        this.applyFilters();
       },
       error: err => console.error('Error fetching vendor maps:', err)
     });
@@ -41,8 +43,9 @@ export class VendorMapListComponent implements OnInit {
         vm.vendorCoverageId,
         vm.coordinates
       ];
+      const matchesVendor = this.vendorId === null ? true : (vm.vendorId === this.vendorId);
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
-      return matchesQuery;
+      return matchesVendor && matchesQuery;
     });
   }
 

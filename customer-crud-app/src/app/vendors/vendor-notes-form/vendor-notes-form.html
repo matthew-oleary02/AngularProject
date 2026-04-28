@@ -1,1 +1,35 @@
-<!-- vendor-notes form view -->
+<h1>{{ isEdit ? 'Edit Vendor Note' : 'Add New Vendor Note' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label for="vendor" class="full-label">Vendor:</label>
+    <select id="vendor" class="full-input" formControlName="vendor">
+      <option value="">Select a vendor</option>
+      <option *ngFor="let v of vendors" [value]="v.vendorName">
+      {{ v.vendorName }}
+      </option>
+    </select>
+
+    <label for="status" class="full-label">Status:</label>
+    <input id="status" class="full-input" formControlName="status" type="text" />
+    <div class="error" *ngIf="form.get('status')?.invalid && form.get('status')?.touched">
+      Required
+    </div>
+
+    <label for="message" class="full-label">Message:</label>
+    <textarea id="message" class="full-input" formControlName="message" rows="4"></textarea>
+    <div class="error" *ngIf="form.get('message')?.invalid && form.get('message')?.touched">
+      Required
+    </div>
+
+    <label for="active" class="full-label">
+      <input id="active" type="checkbox" formControlName="active" />
+      Active
+    </label>
+    
+    <div class="form-actions">
+      <button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button>
+      <button type="button" class="btn-cancel" [routerLink]="['/vendors']">Cancel</button>
+    </div>
+  </form>
+</div>

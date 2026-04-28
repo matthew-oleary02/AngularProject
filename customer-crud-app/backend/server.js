@@ -3042,6 +3042,127 @@ app.delete('/vendor-maps/:id', async (req, res) => {
   }
 });
 
+// GET /vendor-rates (all vendor rates)
+app.get('/vendor-rates', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorRates');
+    const vendorRates = result.recordset.map(row => ({
+      rowId: row.RowID,
+      vendorName: row.VendorName,
+      trade: row.Trade,
+      rateType: row.RateType,
+      state: row.State,
+      rate: row.Rate
+    }));
+    res.json(vendorRates);
+  } catch (err) {
+    console.error('Error fetching vendor rates:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendor-rates/:id (single vendor rate by ID)
+app.get('/vendor-rates/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM VendorRates WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor rate not found' });
+    }
+    const row = result.recordset[0];
+    const vendorRate = {
+      rowId: row.RowID,
+      vendorName: row.VendorName,
+      trade: row.Trade,
+      rateType: row.RateType,
+      state: row.State,
+      rate: row.Rate
+    };
+    res.json(vendorRate);
+  } catch (err) {
+    console.error('Error fetching vendor rate:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendor-rates (add new vendor rate)
+app.post('/vendor-rates', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorRate = req.body;
+    const query = `
+      INSERT INTO VendorRates (
+        VendorName, Trade, RateType, State, Rate
+      ) VALUES (
+        @VendorName, @Trade, @RateType, @State, @Rate
+      )
+    `;
+    const request = new sql.Request();
+    request.input('VendorName', sql.VarChar, vendorRate.vendorName);
+    request.input('Trade', sql.VarChar, vendorRate.trade);
+    request.input('RateType', sql.VarChar, vendorRate.rateType);
+    request.input('State', sql.VarChar, vendorRate.state);
+    request.input('Rate', sql.Decimal, vendorRate.rate);
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Vendor rate added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor rate:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-rates/:id (update existing vendor rate)
+app.put('/vendor-rates/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorRate = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorRates SET
+        VendorName = @VendorName,
+        Trade = @Trade,
+        RateType = @RateType,
+        State = @State,
+        Rate = @Rate
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('VendorName', sql.VarChar, vendorRate.vendorName);
+    request.input('Trade', sql.VarChar, vendorRate.trade);
+    request.input('RateType', sql.VarChar, vendorRate.rateType);
+    request.input('State', sql.VarChar, vendorRate.state);
+    request.input('Rate', sql.Decimal, vendorRate.rate);
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor rate updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor rate:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-rates/:id (delete vendor rate)
+app.delete('/vendor-rates/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorRates WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor rate:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
 /* ===========================
     VEHICLES MANAGEMENT ENDPOINTS
 =========================== */

@@ -45,7 +45,7 @@ export class VendorRatesFormComponent implements OnInit {
       if (Number.isFinite(this.vendRateId) && this.vendRateId > 0) {
         this.isEdit = true;
         // @ts-ignore
-        this.vendorRatesService.getById(this.vendRateId.toString()).subscribe({
+        this.vendorRatesService.getVendorRateById(this.vendRateId.toString()).subscribe({
           next: (rate: any) => this.form.patchValue(rate),
           error: (err: any) => console.error('Error fetching vendor rate:', err)
         });
@@ -73,8 +73,8 @@ export class VendorRatesFormComponent implements OnInit {
     };
 
     const request = this.isEdit
-      ? this.vendorRatesService.update(this.vendRateId.toString(), vendorRate)
-      : this.vendorRatesService.create(vendorRate);
+      ? this.vendorRatesService.updateVendorRate(this.vendRateId, vendorRate)
+      : this.vendorRatesService.addVendorRate(vendorRate);
 
     // @ts-ignore
     request.subscribe({

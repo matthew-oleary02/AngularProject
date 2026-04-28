@@ -1,4 +1,9 @@
-// Domain model for vendor-contract-status entity
 export interface VendorContractStatus {
-  id?: string;
+  rowId: number;
+  vendorId: number;
+  status: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedBy: string;
+  modifiedOn: Date;
 }

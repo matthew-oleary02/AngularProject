@@ -1,4 +1,13 @@
-// Domain model for vendor-users entity
 export interface VendorUsers {
-  id?: string;
+    rowId: number;
+    vendor: string;
+    username: string;
+    email: string;
+    phone: string;
+    trade: string;
+    active: boolean;
+    createdBy?: string;
+    createdOn?: Date;
+    modifiedBy?: string;
+    modifiedOn?: Date;
 }
