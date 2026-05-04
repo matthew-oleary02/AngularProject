@@ -1,0 +1,57 @@
+<!-- customer-notifs view view -->
+<h1>Customer Notification Details</h1>
+<div *ngIf="customerNotif; else notFound" class="card">
+    <div class="detail-grid">
+        <h2 class="title">{{ customerNotif.customer || 'Customer' }}</h2>
+
+        <div class="item">
+            <div class="label">ID</div>
+            <div class="value">{{ customerNotif.rowId }}</div>
+        </div>
+
+        <div class="group-title">Customer Notification Info</div>
+        <div class="item">
+            <div class="label">Status</div>
+            <div class="value">{{ customerNotif.status }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Service Type</div>
+            <div class="value">{{ customerNotif.serviceType }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Service Class</div>
+            <div class="value">{{ customerNotif.serviceClass }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Email</div>
+            <div class="value">{{ customerNotif.email }}</div>
+        </div>
+
+        <div class="group-title">Additional Info</div>
+        <div class="item">
+            <div class="label">Entered By</div>
+            <div class="value">{{ customerNotif.enteredBy }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Date Entered</div>
+            <div class="value">{{ customerNotif.dateEntered | date:'short' }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Modified By</div>
+            <div class="value">{{ customerNotif.modifiedBy }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Last Update</div>
+            <div class="value">{{ customerNotif.modifiedOn | date:'short' }}</div>
+        </div>
+    </div>
+    <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
+    <button type="button" class="btn-edit" [routerLink]="['/customer-notifs/edit', customerNotif.rowId]">Edit</button>
+</div>
+
+<ng-template #notFound>
+    <div class="card">
+        <p>Customer notification not found.</p>
+        <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
+    </div>
+</ng-template>

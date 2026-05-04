@@ -26,6 +26,8 @@ import { CustomerETAFormComponent } from './customers/customer-eta-form/customer
 import { CustomerETAViewComponent } from './customers/customer-eta-view/customer-eta-view';
 import { CustomerRatesFormComponent } from './customers/customer-rates-form/customer-rates-form';
 import { CustomerRatesViewComponent } from './customers/customer-rates-view/customer-rates-view';
+import { CustomerNotifsFormComponent } from './customers/customer-notifs-form/customer-notifs-form';
+import { CustomerNotifsViewComponent } from './customers/customer-notifs-view/customer-notifs-view';
 import { ServiceTypesViewComponent } from './customers/service-types-view/service-types-view';
 import { ServiceTypesFormComponent } from './customers/service-types-form/service-types-form';
 import { EquipmentListComponent } from './customers/equipment-list/equipment-list';
@@ -141,6 +143,10 @@ export const routes: Routes = [
   { path: 'customer-rates/edit/:id', component: CustomerRatesFormComponent, canActivate: [AuthGuard] },
   { path: 'customer-rates/view/:id', component: CustomerRatesViewComponent, canActivate: [AuthGuard] },
   { path: 'customers/:id/service-types', component: CustomerViewComponent, canActivate: [AuthGuard] },
+  { path: 'customers/:id/customer-notifs', component: CustomerViewComponent, canActivate: [AuthGuard] },
+  { path: 'customer-notifs/new', component: CustomerNotifsFormComponent, canActivate: [AuthGuard] },
+  { path: 'customer-notifs/edit/:id', component: CustomerNotifsFormComponent, canActivate: [AuthGuard] },
+  { path: 'customer-notifs/view/:id', component: CustomerNotifsViewComponent, canActivate: [AuthGuard] },
   { path: 'service-types/view/:id', component: ServiceTypesViewComponent, canActivate: [AuthGuard] },
   { path: 'service-types/new', component: ServiceTypesFormComponent, canActivate: [AuthGuard] },
   { path: 'service-types/edit/:id', component: ServiceTypesFormComponent, canActivate: [AuthGuard] },

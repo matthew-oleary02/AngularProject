@@ -21,6 +21,8 @@ import { ServiceTypes } from '../service-types.model';
 import { ServiceTypesService } from '../service-types.service';
 import { Equipment } from '../equipment.model';
 import { EquipmentService } from '../equipment.service';
+import { CustomerNotifs } from '../customer-notifs.model';
+import { CustomerNotifsService } from '../customer-notifs.service';
 
 @Component({
   selector: 'app-customer-view',
@@ -41,6 +43,7 @@ export class CustomerViewComponent implements OnInit {
   customerRates: CustomerRates[] = [];
   serviceTypes: ServiceTypes[] = [];
   equipment: Equipment[] = [];
+  customerNotifs: CustomerNotifs[] = [];
   private allJobs: Jobs[] = [];
   /* Full list of locations from the server */
   private allLocations: Location[] = [];
@@ -53,6 +56,7 @@ export class CustomerViewComponent implements OnInit {
   private allCustomerRates: CustomerRates[] = [];
   private allServiceTypes: ServiceTypes[] = [];
   private allEquipment: Equipment[] = [];
+  private allCustomerNotifs: CustomerNotifs[] = [];
   filterText = '';
   activeFilter: boolean | null = true;
   activeTab: string = 'openCalls';  // single tab controller
@@ -68,8 +72,9 @@ export class CustomerViewComponent implements OnInit {
     private customerEtaService: CustomerETAService,
     private customerRatesService: CustomerRatesService,
     private serviceTypesService: ServiceTypesService,
-    private equipmentService: EquipmentService
-  ) {}
+    private equipmentService: EquipmentService,
+    private customerNotifsService: CustomerNotifsService
+  ) { }
 
   /* Load customer details based on route parameter */
   ngOnInit() {
@@ -78,7 +83,7 @@ export class CustomerViewComponent implements OnInit {
     if (!Number.isFinite(id) || id <= 0) {
       console.error('Invalid customer ID', idParam);
     };
-    
+
     /* Fetch customer details from the service */
     this.customerService.getCustomer(id).subscribe({
       next: c => this.customer = c,
@@ -103,7 +108,7 @@ export class CustomerViewComponent implements OnInit {
       error: err => console.error('Error fetching locations:', err)
     });
 
-      /* Fetch status messages for the customer */
+    /* Fetch status messages for the customer */
     this.customerService.getStatusMessages(id).subscribe({
       next: csm => {
         this.allStatusMessages = csm || [];
@@ -148,7 +153,7 @@ export class CustomerViewComponent implements OnInit {
       error: err => console.error('Error fetching customer Rates:', err)
     });
 
-     /* Fetch customer Service Types for the customer */
+    /* Fetch customer Service Types for the customer */
     this.customerService.getCustomerServiceTypes(id).subscribe({
       next: st => {
         this.allServiceTypes = st || [];
@@ -164,6 +169,15 @@ export class CustomerViewComponent implements OnInit {
         this.applyFilters();
       },
       error: err => console.error('Error fetching customer Equipment:', err)
+    });
+
+    /* Fetch customer Notifications for the customer */
+    this.customerService.getCustomerNotifs(id).subscribe({
+      next: notifs => {
+        this.allCustomerNotifs = notifs || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching customer Notifications:', err)
     });
   }
 
@@ -217,7 +231,7 @@ export class CustomerViewComponent implements OnInit {
         csm.message
       ];
       const matchesQuery = !q || fields.some(f => !!f && String(f).toLowerCase().includes(q));
-      
+
       return matchesActive && matchesQuery;
     });
 
@@ -333,6 +347,21 @@ export class CustomerViewComponent implements OnInit {
       const matchesQuery = !q || fields.some(f => f?.toLowerCase().includes(q));
       return matchesActive && matchesQuery;
     });
+
+    this.customerNotifs = this.allCustomerNotifs.filter(cn => {
+      // active filter: if activeFilter is null, don't filter by active; otherwise match boolean
+      //const matchesActive = this.activeFilter === null ? true : (cn.active === this.activeFilter);
+      // text search across multiple fields
+      const fields = [
+        cn?.customerId,
+        cn?.status,
+        cn?.serviceType,
+        cn?.serviceClass,
+        cn?.email,
+      ];
+      const matchesQuery = !q || fields.some(f => f?.toLowerCase().includes(q));
+      return /*matchesActive &&*/ matchesQuery;
+    });
   }
 
   /* Clear the filter input and reset location list */
@@ -392,7 +421,7 @@ export class CustomerViewComponent implements OnInit {
           console.error('Error deleting customer NTE:', err)
           alert('Failed to delete customer NTE. Please try again.');
         }
-    });
+      });
     } else if (this.activeTab === 'customerEta') {
       if (!confirm('Delete this customer ETA?')) return;
       this.customerEtaService.deleteCustomerEta(id).subscribe({
@@ -451,6 +480,18 @@ export class CustomerViewComponent implements OnInit {
         error: (err) => {
           console.error('Error deleting job:', err)
           alert('Failed to delete job. Please try again.');
+        }
+      });
+    } else if (this.activeTab === 'customerNotifs') {
+      if (!confirm('Delete this customer Notification?')) return;
+      this.customerNotifsService.deleteCustomerNotif(id).subscribe({
+        next: () => {
+          this.allCustomerNotifs = this.allCustomerNotifs.filter(cn => cn.rowId !== id);
+          this.applyFilters();
+        },
+        error: (err) => {
+          console.error('Error deleting customer Notification:', err)
+          alert('Failed to delete customer Notification. Please try again.');
         }
       });
     }

@@ -1,0 +1,38 @@
+<!-- customer-notifs form view -->
+
+<div *ngIf="form" class="card">
+    <h2>{{ isEdit ? 'Edit' : 'Add' }} Customer Notification</h2>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-row">
+            <label for="customer">Customer</label>
+            <input type="text" id="customer" formControlName="customer" required>
+        </div>
+        <div class="form-row">
+            <label for="status">Status</label>
+            <input type="text" id="status" formControlName="status" required>
+        </div>
+        <div class="form-row">
+            <label for="serviceType">Service Type</label>
+            <input type="text" id="serviceType" formControlName="serviceType" required>
+        </div>
+        <div class="form-row">
+            <label for="serviceClass">Service Class</label>
+            <input type="text" id="serviceClass" formControlName="serviceClass" required>
+        </div>
+        <div class="form-row">
+            <label for="email">Email</label>
+            <input type="text" id="email" formControlName="email" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">{{ isEdit ? 'Update' : 'Add' }}</button>
+            <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<ng-template #notFound>
+    <div class="card">
+        <p>Customer not found.</p>
+        <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
+    </div>
+</ng-template>

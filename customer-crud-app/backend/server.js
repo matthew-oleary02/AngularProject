@@ -2219,6 +2219,133 @@ app.delete('/customer-rates/:id', async (req, res) => {
 });
 
 /* ===========================
+    CUSTOMER NOTIFICATIONS ENDPOINTS
+=========================== */
+
+// GET /customer-notifs (all customer notifications)
+app.get('/customer-notifs', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM CustomerNotifs');
+    const customerNotifs = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      status: row.Status,
+      serviceType: row.ServiceType,
+      serviceClass: row.ServiceClass,
+      email: row.Email
+    }));
+    res.json(customerNotifs);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /customer-notifs/:id (single customer notification by ID)
+app.get('/customer-notifs/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM CustomerNotifs WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Customer notification not found' });
+    }
+    const row = result.recordset[0];
+    const customerNotif = {
+      rowId: Number(row.RowID),
+      customer: row.Customer,
+      status: row.Status,
+      serviceType: row.ServiceType,
+      serviceClass: row.ServiceClass,
+      email: row.Email
+    };
+    res.json(customerNotif);
+  } catch (err) {
+    console.error('Error fetching customer notification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /customer-notifs (add new customer notification)
+app.post('/customer-notifs', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerNotif = req.body;
+    const query = `
+      INSERT INTO CustomerNotifs (
+        Customer, Status, ServiceType, ServiceClass, Email, CreatedBy, CreatedOn
+      ) VALUES (
+        @Customer, @Status, @ServiceType, @ServiceClass, @Email, @CreatedBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Customer', sql.VarChar, customerNotif.customer);
+    request.input('Status', sql.VarChar, customerNotif.status);
+    request.input('ServiceType', sql.VarChar, customerNotif.serviceType);
+    request.input('ServiceClass', sql.VarChar, customerNotif.serviceClass);
+    request.input('Email', sql.VarChar, customerNotif.email);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Customer notification added successfully' });
+  } catch (err) {
+    console.error('Error adding customer notification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /customer-notifs/:id (update existing customer notification)
+app.put('/customer-notifs/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const customerNotif = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE CustomerNotifs SET
+        Customer = @Customer,
+        Status = @Status,
+        ServiceType = @ServiceType,
+        ServiceClass = @ServiceClass,
+        Email = @Email,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Customer', sql.VarChar, customerNotif.customer);
+    request.input('Status', sql.VarChar, customerNotif.status);
+    request.input('ServiceType', sql.VarChar, customerNotif.serviceType);
+    request.input('ServiceClass', sql.VarChar, customerNotif.serviceClass);
+    request.input('Email', sql.VarChar, customerNotif.email);
+    request.input('ModifiedBy', sql.VarChar, 'admin_user');
+    await request.query(query);
+    res.status(200).json({ message: 'Customer notification updated successfully' });
+  } catch (err) {
+    console.error('Error updating customer notification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /customer-notifs/:id (delete customer notification)
+app.delete('/customer-notifs/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM CustomerNotifs WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting customer notification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
     CUSTOMER SERVICE TYPES ENDPOINTS
 =========================== */
 
@@ -3161,7 +3288,661 @@ app.delete('/vendor-rates/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    VENDOR ASSETS MANAGEMENT ENDPOINTS
+=========================== */
 
+// GET /vendor-assets (all vendor assets)
+app.get('/vendor-assets', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorAssets');
+    const vendorAssets = result.recordset.map(row => ({
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      assetName: row.AssetName,
+      active: row.Active,
+      startTime: row.StartTime,
+      endTime: row.EndTime,
+      monthly: row.Monthly,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(vendorAssets);
+  } catch (err) {
+    console.error('Error fetching vendor assets:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET vendor-assets:id
+app.get('/vendor-assets/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM VendorAssets WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor asset not found' });
+    }
+    const row = result.recordset[0];
+    const vendorAsset = {
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      assetName: row.AssetName,
+      active: row.Active,
+      startTime: row.StartTime,
+      endTime: row.EndTime,
+      monthly: row.Monthly,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(vendorAsset);
+  } catch (err) {
+    console.error('Error fetching vendor asset:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST vendor-assets
+app.post('/vendor-assets', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorAsset = req.body;
+    const query = `
+      INSERT INTO VendorAssets (
+        VendorID, AssetName, Active, StartTime, EndTime, Monthly, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+      ) VALUES (
+        @VendorID, @AssetName, @Active, @StartTime, @EndTime, @Monthly, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+      )
+    `;
+    const request = new sql.Request();
+    request.input('VendorID', sql.Int, vendorAsset.vendorId);
+    request.input('AssetName', sql.VarChar, vendorAsset.assetName);
+    request.input('Active', sql.Bit, vendorAsset.active);
+    request.input('StartTime', sql.Date, vendorAsset.startTime);
+    request.input('EndTime', sql.Date, vendorAsset.endTime);
+    request.input('Monthly', sql.Decimal, vendorAsset.monthly);
+    request.input('CreatedBy', sql.VarChar, vendorAsset.createdBy);
+    request.input('CreatedOn', sql.Date, vendorAsset.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorAsset.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorAsset.modifiedOn);
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Vendor asset added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor asset:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-assets/:id (update existing vendor asset)
+app.put('/vendor-assets/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorAsset = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorAssets SET
+        VendorID = @VendorID,
+        AssetName = @AssetName,
+        Active = @Active,
+        StartTime = @StartTime,
+        EndTime = @EndTime,
+        Monthly = @Monthly,
+        CreatedBy = @CreatedBy,
+        CreatedOn = @CreatedOn,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = @ModifiedOn
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('VendorID', sql.Int, vendorAsset.vendorId);
+    request.input('AssetName', sql.VarChar, vendorAsset.assetName);
+    request.input('Active', sql.Bit, vendorAsset.active);
+    request.input('StartTime', sql.Date, vendorAsset.startTime);
+    request.input('EndTime', sql.Date, vendorAsset.endTime);
+    request.input('Monthly', sql.Decimal, vendorAsset.monthly);
+    request.input('CreatedBy', sql.VarChar, vendorAsset.createdBy);
+    request.input('CreatedOn', sql.Date, vendorAsset.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorAsset.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorAsset.modifiedOn);
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor asset updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor asset:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-assets/:id (delete vendor asset)
+app.delete('/vendor-assets/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorAssets WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor asset:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
+    VENDOR CLASSIFICATION ENDPOINTS
+=========================== */
+
+// GET /vendor-classification (all vendor classifications)
+app.get('/vendor-classification', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorClassifications');
+    const vendorClassifications = result.recordset.map(row => ({
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      classificationId: row.ClassificationID,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(vendorClassifications);
+  } catch (err) {
+    console.error('Error fetching vendor classifications:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendor-classification/:id (get one vendor classification by RowID)
+app.get('/vendor-classification/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM VendorClassifications WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor classification not found' });
+    }
+    const row = result.recordset[0];
+    const vendorClassification = {
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      classificationId: row.ClassificationID,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(vendorClassification);
+  } catch (err) {
+    console.error('Error fetching vendor classification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendor-classification (create new vendor classification)
+app.post('/vendor-classification', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorClassification = req.body;
+    const query = `
+      INSERT INTO VendorClassifications (
+        VendorID, ClassificationID, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+      ) VALUES (
+        @VendorID, @ClassificationID, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+      )
+    `;
+    const request = new sql.Request();
+    request.input('VendorID', sql.Int, vendorClassification.vendorId);
+    request.input('ClassificationID', sql.Int, vendorClassification.classificationId);
+    request.input('CreatedBy', sql.VarChar, vendorClassification.createdBy);
+    request.input('CreatedOn', sql.Date, vendorClassification.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorClassification.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorClassification.modifiedOn);
+    await request.query(query);
+    res.status(201).json({ message: 'Vendor classification added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor classification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-classification/:id (update existing vendor classification)
+app.put('/vendor-classification/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorClassification = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorClassifications SET
+        VendorID = @VendorID,
+        ClassificationID = @ClassificationID,
+        CreatedBy = @CreatedBy,
+        CreatedOn = @CreatedOn,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = @ModifiedOn
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('VendorID', sql.Int, vendorClassification.vendorId);
+    request.input('ClassificationID', sql.Int, vendorClassification.classificationId);
+    request.input('CreatedBy', sql.VarChar, vendorClassification.createdBy);
+    request.input('CreatedOn', sql.Date, vendorClassification.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorClassification.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorClassification.modifiedOn);
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor classification updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor classification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-classification/:id (delete vendor classification)
+app.delete('/vendor-classification/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorClassifications WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor classification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
+    VENDOR CONTRACT STATUS ENDPOINTS
+=========================== */
+
+// GET /vendor-contract-status (all vendor contract statuses)
+app.get('/vendor-contract-status', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorContractStatus');
+    const vendorContractStatuses = result.recordset.map(row => ({
+      rowId: row.RowID,
+      code: row.Code,
+      description: row.Description,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(vendorContractStatuses);
+  } catch (err) {
+    console.error('Error fetching vendor contract statuses:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendor-contract-status/:id (get one vendor contract status by RowID)
+app.get('/vendor-contract-status/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM VendorContractStatus WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor contract status not found' });
+    }
+    const row = result.recordset[0];
+    const vendorContractStatus = {
+      rowId: row.RowID,
+      code: row.Code,
+      description: row.Description,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(vendorContractStatus);
+  } catch (err) {
+    console.error('Error fetching vendor contract status:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendor-contract-status (create new vendor contract status)
+app.post('/vendor-contract-status', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorContractStatus = req.body;
+    const query = `
+      INSERT INTO VendorContractStatus (
+        Code, Description, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+      ) VALUES (
+        @Code, @Description, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Code', sql.VarChar, vendorContractStatus.code);
+    request.input('Description', sql.VarChar, vendorContractStatus.description);
+    request.input('CreatedBy', sql.VarChar, vendorContractStatus.createdBy);
+    request.input('CreatedOn', sql.Date, vendorContractStatus.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorContractStatus.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorContractStatus.modifiedOn);
+    await request.query(query);
+    res.status(201).json({ message: 'Vendor contract status added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor contract status:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-contract-status/:id (update existing vendor contract status)
+app.put('/vendor-contract-status/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorContractStatus = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorContractStatus SET
+        Code = @Code,
+        Description = @Description,
+        CreatedBy = @CreatedBy,
+        CreatedOn = @CreatedOn,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = @ModifiedOn
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Code', sql.VarChar, vendorContractStatus.code);
+    request.input('Description', sql.VarChar, vendorContractStatus.description);
+    request.input('CreatedBy', sql.VarChar, vendorContractStatus.createdBy);
+    request.input('CreatedOn', sql.Date, vendorContractStatus.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorContractStatus.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorContractStatus.modifiedOn);
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor contract status updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor contract status:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-contract-status/:id (delete vendor contract status)
+app.delete('/vendor-contract-status/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorContractStatus WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor contract status:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ==========================
+    VENDOR NOTES ENDPOINTS
+=========================== */
+
+// GET /vendor-notes (all vendor notes)
+app.get('/vendor-notes', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorNotes');
+    const vendorNotes = result.recordset.map(row => ({
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      note: row.Note,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(vendorNotes);
+  } catch (err) {
+    console.error('Error fetching vendor notes:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendor-notes/:id (get one vendor note by RowID)
+app.get('/vendor-notes/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query(`SELECT * FROM VendorNotes WHERE RowID = @RowID`);
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor note not found' });
+    }
+    const row = result.recordset[0];
+    const vendorNote = {
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      note: row.Note,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(vendorNote);
+  } catch (err) {
+    console.error('Error fetching vendor note:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendor-notes (create new vendor note)
+app.post('/vendor-notes', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorNote = req.body;
+    const query = `
+      INSERT INTO VendorNotes (
+        VendorID, Note, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+      ) VALUES (
+        @VendorID, @Note, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+      )
+    `;
+    const request = new sql.Request();
+    request.input('VendorID', sql.Int, vendorNote.vendorId);
+    request.input('Note', sql.VarChar, vendorNote.note);
+    request.input('CreatedBy', sql.VarChar, vendorNote.createdBy);
+    request.input('CreatedOn', sql.Date, vendorNote.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorNote.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorNote.modifiedOn);
+    await request.query(query);
+    res.status(201).json({ message: 'Vendor note added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor note:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-notes/:id (update existing vendor note)
+app.put('/vendor-notes/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorNote = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorNotes SET
+        VendorID = @VendorID,
+        Note = @Note,
+        CreatedBy = @CreatedBy,
+        CreatedOn = @CreatedOn,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = @ModifiedOn
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('VendorID', sql.Int, vendorNote.vendorId);
+    request.input('Note', sql.VarChar, vendorNote.note);
+    request.input('CreatedBy', sql.VarChar, vendorNote.createdBy);
+    request.input('CreatedOn', sql.Date, vendorNote.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorNote.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorNote.modifiedOn);
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor note updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor note:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-notes/:id (delete vendor note)
+app.delete('/vendor-notes/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorNotes WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor note:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
+    VENDOR USERS ENDPOINTS
+=========================== */
+
+// GET /vendor-users (all vendor users)
+app.get('/vendor-users', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorUsers');
+    const vendorUsers = result.recordset.map(row => ({
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      userId: row.UserID,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(vendorUsers);
+  } catch (err) {
+    console.error('Error fetching vendor users:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendor-users/:id (get one vendor user by RowID)
+app.get('/vendor-users/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query(`SELECT * FROM VendorUsers WHERE RowID = @RowID`);
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor user not found' });
+    }
+    const row = result.recordset[0];
+    const vendorUser = {
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      userId: row.UserID,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(vendorUser);
+  } catch (err) {
+    console.error('Error fetching vendor user:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendor-users (create new vendor user)
+app.post('/vendor-users', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorUser = req.body;
+    const query = `
+      INSERT INTO VendorUsers (
+        VendorID, UserID, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+      ) VALUES (
+        @VendorID, @UserID, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+      )
+    `;
+    const request = new sql.Request();
+    request.input('VendorID', sql.Int, vendorUser.vendorId);
+    request.input('UserID', sql.Int, vendorUser.userId);
+    request.input('CreatedBy', sql.VarChar, vendorUser.createdBy);
+    request.input('CreatedOn', sql.Date, vendorUser.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorUser.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorUser.modifiedOn);
+    await request.query(query);
+    res.status(201).json({ message: 'Vendor user added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor user:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-users/:id (update existing vendor user)
+app.put('/vendor-users/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorUser = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorUsers SET
+        VendorID = @VendorID,
+        UserID = @UserID,
+        CreatedBy = @CreatedBy,
+        CreatedOn = @CreatedOn,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = @ModifiedOn
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('VendorID', sql.Int, vendorUser.vendorId);
+    request.input('UserID', sql.Int, vendorUser.userId);
+    request.input('CreatedBy', sql.VarChar, vendorUser.createdBy);
+    request.input('CreatedOn', sql.Date, vendorUser.createdOn);
+    request.input('ModifiedBy', sql.VarChar, vendorUser.modifiedBy);
+    request.input('ModifiedOn', sql.Date, vendorUser.modifiedOn);
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor user updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor user:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-users/:id (delete vendor user)
+app.delete('/vendor-users/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorUsers WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor user:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 /* ===========================
     VEHICLES MANAGEMENT ENDPOINTS

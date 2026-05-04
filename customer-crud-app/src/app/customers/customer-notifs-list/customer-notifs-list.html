@@ -1,0 +1,32 @@
+<!-- customer-notifs list view -->
+<h1>Customer Notifacations</h1>
+<div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search name, city, state, email, contact..."
+        (input)="onFilterChange($event.target.value)" [value]="filterText" class="search-box"
+        style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
+</div>
+
+<table class="list-table">
+    <tr>
+        <th>Customer</th>
+        <th>Status</th>
+        <th>Service Type</th>
+        <th>Service Class</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    <tr *ngFor="let cnotif of customerNotifs">
+        <td><a [routerLink]="['/customer-notifs/view', cnotif.rowId]">{{ cnotif.customer }}</a></td>
+        <td>{{ cnotif.status }}</td>
+        <td>{{ cnotif.serviceType }}</td>
+        <td>{{ cnotif.serviceClass }}</td>
+        <td>{{ cnotif.email }}</td>
+        <td>
+            <button type="button" class="btn btn-edit"
+                [routerLink]="['/customer-notifs/edit', cnotif.rowId]">Edit</button>
+            <button type="button" class="btn btn-delete" (click)="onDelete(cnotif.rowId)">Delete</button>
+        </td>
+    </tr>
+</table>
+<button class="add-new-btn" type="button" [routerLink]="['/customer-notifs/new']">Add New Notification</button>

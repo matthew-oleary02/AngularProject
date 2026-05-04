@@ -51,75 +51,80 @@ import { Location } from './location.model'
 export class CustomerService {
   private apiUrl = 'http://localhost:3000/customers';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-/* Fetch all customers from the backend */
-getCustomers(): Observable<Customer[]> {
-  return this.http.get<Customer[]>(this.apiUrl);
-}
+  /* Fetch all customers from the backend */
+  getCustomers(): Observable<Customer[]> {
+    return this.http.get<Customer[]>(this.apiUrl);
+  }
 
-/* Fetch a single customer by ID */
-getCustomer(id: number): Observable<Customer> {
-  return this.http.get<Customer>(`${this.apiUrl}/${id}`);
-}
+  /* Fetch a single customer by ID */
+  getCustomer(id: number): Observable<Customer> {
+    return this.http.get<Customer>(`${this.apiUrl}/${id}`);
+  }
 
-/* Add a new customer */
-addCustomer(customer: Customer): Observable<Customer> {
-  return this.http.post<Customer>(this.apiUrl, customer);
-}
+  /* Add a new customer */
+  addCustomer(customer: Customer): Observable<Customer> {
+    return this.http.post<Customer>(this.apiUrl, customer);
+  }
 
-/* Update an existing customer */
-updateCustomer(customer: Customer): Observable<Customer> {
-  return this.http.put<Customer>(`${this.apiUrl}/${customer.rowId}`, customer);
-}
+  /* Update an existing customer */
+  updateCustomer(customer: Customer): Observable<Customer> {
+    return this.http.put<Customer>(`${this.apiUrl}/${customer.rowId}`, customer);
+  }
 
-/* Fetch jobs for a specific customer */
-getJobsByCustomer(customerId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/jobs`);
-}
+  /* Fetch jobs for a specific customer */
+  getJobsByCustomer(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/jobs`);
+  }
 
-/* Fetch location list per customer */
-getLocationList(customerId: number): Observable<Location[]> {
-  return this.http.get<Location[]>(`${this.apiUrl}/${customerId}/locations`);
-}
+  /* Fetch location list per customer */
+  getLocationList(customerId: number): Observable<Location[]> {
+    return this.http.get<Location[]>(`${this.apiUrl}/${customerId}/locations`);
+  }
 
-/* Fetch status messages per customer */
-getStatusMessages(customerId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/status-messages`);
-}
+  /* Fetch status messages per customer */
+  getStatusMessages(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/status-messages`);
+  }
 
-/* Fetch customer CAMs per customer */
-getCustomerCams(customerId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-cams`);
-}
+  /* Fetch customer CAMs per customer */
+  getCustomerCams(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-cams`);
+  }
 
-/* Fetch customer NTE per customer */
-getCustomerNotToExceed(customerId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-nte`);
-}
+  /* Fetch customer NTE per customer */
+  getCustomerNotToExceed(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-nte`);
+  }
 
-/* Fetch customer ETA per customer */
-getCustomerEstimatedTimeArrival(customerId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-eta`);
-}
+  /* Fetch customer ETA per customer */
+  getCustomerEstimatedTimeArrival(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-eta`);
+  }
 
-/* Fetch customer Rates per customer */
-getCustomerRates(customerId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-rates`);
-}
+  /* Fetch customer Rates per customer */
+  getCustomerRates(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-rates`);
+  }
 
-/* Fetch customer Service Types per customer */
-getCustomerServiceTypes(customerId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/service-types`);
-}
+  /* Fetch customer Service Types per customer */
+  getCustomerServiceTypes(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/service-types`);
+  }
 
-/* Fetch customer Equipment per customer */
-getCustomerEquipment(customerId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/${customerId}/equipment`);
-}
+  /* Fetch customer Equipment per customer */
+  getCustomerEquipment(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/equipment`);
+  }
 
-/* Delete a customer by ID */
-deleteCustomer(id: number): Observable<void> {
-  return this.http.delete<void>(`${this.apiUrl}/${id}`);
-}
+  /* Fetch customer Notifs per customer */
+  getCustomerNotifs(customerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${customerId}/customer-notifs`);
+  }
+
+  /* Delete a customer by ID */
+  deleteCustomer(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
