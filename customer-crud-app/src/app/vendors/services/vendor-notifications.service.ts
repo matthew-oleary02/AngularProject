@@ -1,24 +1,37 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { VendorNotifications } from '../models/vendor-notifications.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-// Handles CRUD operations for vendor-notifications API endpoints
+// Handles CRUD operations for VendorNotifications API endpoints
+@Injectable({ providedIn: 'root' })
 export class VendorNotificationsService {
-  // Base API URL
-  private apiUrl = '';
+  private apiUrl = 'http://localhost:3000/vendor-notifications';
 
-  constructor() {}
+  constructor(private http: HttpClient) { }
 
-  // CRUD method signatures
-  getAll() {}
-  getById(id: string) {}
-  create(data: any) {}
-  update(id: string, data: any) {}
-  delete(id: string) {}
+  /* Fetch all VendorNotifications records from the backend */
+  getVendorNotifications(): Observable<VendorNotifications[]> {
+    return this.http.get<VendorNotifications[]>(this.apiUrl);
+  }
 
-  // Error handling section
-  private handleError(error: any) {
-    console.error(error);
+  /* Fetch a single VendorNotifications record by ID */
+  getVendorNotification(id: number): Observable<VendorNotifications> {
+    return this.http.get<VendorNotifications>(`${this.apiUrl}/${id}`);
+  }
+
+  /* Create a new VendorNotifications record */
+  addVendorNotification(vnotif: VendorNotifications): Observable<VendorNotifications> {
+    return this.http.post<VendorNotifications>(this.apiUrl, vnotif);
+  }
+
+  /* Update an existing VendorNotifications record */
+  updateVendorNotification(vnotif: VendorNotifications): Observable<VendorNotifications> {
+    return this.http.put<VendorNotifications>(`${this.apiUrl}/${vnotif.rowId}`, vnotif);
+  }
+
+  /* Delete a VendorNotifications record by ID */
+  deleteVendorNotification(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

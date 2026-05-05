@@ -1,1 +1,57 @@
-<!-- vendor-notifications view display -->
+<!-- vendor-notifications view view -->
+<h1>Vendor Notification Details</h1>
+<div *ngIf="vendorNotification; else notFound" class="card">
+    <div class="detail-grid">
+        <h2 class="title">{{ vendorNotification.vendor || 'Vendor' }}</h2>
+
+        <div class="item">
+            <div class="label">ID</div>
+            <div class="value">{{ vendorNotification.rowId }}</div>
+        </div>
+
+        <div class="group-title">Vendor Notification Info</div>
+        <div class="item">
+            <div class="label">Status</div>
+            <div class="value">{{ vendorNotification.status }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Service Type</div>
+            <div class="value">{{ vendorNotification.serviceType }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Service Class</div>
+            <div class="value">{{ vendorNotification.serviceClass }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Email</div>
+            <div class="value">{{ vendorNotification.email }}</div>
+        </div>
+
+        <div class="group-title">Additional Info</div>
+        <div class="item">
+            <div class="label">Entered By</div>
+            <div class="value">{{ vendorNotification.createdBy }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Date Entered</div>
+            <div class="value">{{ vendorNotification.createdOn | date:'short' }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Modified By</div>
+            <div class="value">{{ vendorNotification.modifiedBy }}</div>
+        </div>
+        <div class="item">
+            <div class="label">Last Update</div>
+            <div class="value">{{ vendorNotification.modifiedOn | date:'short' }}</div>
+        </div>
+    </div>
+    <button type="button" class="btn-return" [routerLink]="['/vendor-notifications']">Back</button>
+    <button type="button" class="btn-edit" [routerLink]="['/vendor-notifications/edit', vendorNotification.rowId]">Edit</button>
+</div>
+
+<ng-template #notFound>
+    <div class="card">
+        <p>Vendor notification not found.</p>
+        <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
+    </div>
+</ng-template>

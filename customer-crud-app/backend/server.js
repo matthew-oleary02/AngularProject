@@ -3169,6 +3169,10 @@ app.delete('/vendor-maps/:id', async (req, res) => {
   }
 });
 
+/* ===========================
+    VENDOR RATE MANAGEMENT ENDPOINTS
+=========================== */
+
 // GET /vendor-rates (all vendor rates)
 app.get('/vendor-rates', async (req, res) => {
   try {
@@ -3284,6 +3288,146 @@ app.delete('/vendor-rates/:id', async (req, res) => {
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting vendor rate:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
+    VENDOR NOTIFICATION MANAGEMENT ENDPOINTS
+=========================== */
+
+// GET /vendor-notifications (all vendor notifications)
+app.get('/vendor-notifications', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM VendorNotifications');
+    const vendorNotifications = result.recordset.map(row => ({
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      vendor: row.Vendor,
+      status: row.Status,
+      serviceType: row.ServiceType,
+      serviceClass: row.ServiceClass,
+      email: row.Email,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(vendorNotifications);
+  } catch (err) {
+    console.error('Error fetching vendor notifications:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendor-notifications/:id (single vendor notification by ID)
+app.get('/vendor-notifications/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM VendorNotifications WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Vendor notification not found' });
+    }
+    const row = result.recordset[0];
+    const vendorNotification = {
+      rowId: row.RowID,
+      vendorId: row.VendorID,
+      vendor: row.Vendor,
+      status: row.Status,
+      serviceType: row.ServiceType,
+      serviceClass: row.ServiceClass,
+      email: row.Email,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(vendorNotification);
+  } catch (err) {
+    console.error('Error fetching vendor notification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /vendor-notifications (add new vendor notification)
+app.post('/vendor-notifications', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorNotification = req.body;
+    const query = `
+      INSERT INTO VendorNotifications (
+        VendorID, Vendor, Status, ServiceType, ServiceClass, Email, CreatedBy, CreatedOn
+      ) VALUES (
+        @VendorID, @Vendor, @Status, @ServiceType, @ServiceClass, @Email, @CreatedBy, GETDATE()
+      )
+    `;
+    const request = new sql.Request();
+    request.input('VendorID', sql.Int, vendorNotification.vendorId);
+    request.input('Vendor', sql.VarChar, vendorNotification.vendor);
+    request.input('Status', sql.VarChar, vendorNotification.status);
+    request.input('ServiceType', sql.VarChar, vendorNotification.serviceType);
+    request.input('ServiceClass', sql.VarChar, vendorNotification.serviceClass);
+    request.input('Email', sql.VarChar, vendorNotification.email);
+    request.input('CreatedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Vendor notification added successfully' });
+  } catch (err) {
+    console.error('Error adding vendor notification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /vendor-notifications/:id (update existing vendor notification)
+app.put('/vendor-notifications/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const vendorNotification = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE VendorNotifications SET
+        VendorID = @VendorID,
+        Vendor = @Vendor,
+        Status = @Status,
+        ServiceType = @ServiceType,
+        ServiceClass = @ServiceClass,
+        Email = @Email,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = GETDATE()
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('VendorID', sql.Int, vendorNotification.vendorId);
+    request.input('Vendor', sql.VarChar, vendorNotification.vendor);
+    request.input('Status', sql.VarChar, vendorNotification.status);
+    request.input('ServiceType', sql.VarChar, vendorNotification.serviceType);
+    request.input('ServiceClass', sql.VarChar, vendorNotification.serviceClass);
+    request.input('Email', sql.VarChar, vendorNotification.email);
+    request.input('ModifiedBy', sql.VarChar, 'admin');
+    await request.query(query);
+    res.status(200).json({ message: 'Vendor notification updated successfully' });
+  } catch (err) {
+    console.error('Error updating vendor notification:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /vendor-notifications/:id (delete vendor notification)
+app.delete('/vendor-notifications/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorNotifications WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting vendor notification:', err);
     res.status(500).send('Server error');
   }
 });

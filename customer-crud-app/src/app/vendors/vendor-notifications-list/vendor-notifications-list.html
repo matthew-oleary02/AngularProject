@@ -1,1 +1,32 @@
 <!-- vendor-notifications list view -->
+<h1>Vendor Notifications</h1>
+<div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search vendor, status, service type, email..."
+        (input)="onFilterChange($event.target.value)" [value]="filterText" class="search-box"
+        style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-clear" (click)="clearFilter()">Clear</button>
+</div>
+
+<table class="list-table">
+    <tr>
+        <th>Vendor</th>
+        <th>Status</th>
+        <th>Service Type</th>
+        <th>Service Class</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    <tr *ngFor="let vnotif of vendorNotifications">
+        <td><a [routerLink]="['/vendor-notifications/view', vnotif.rowId]">{{ vnotif.vendor }}</a></td>
+        <td>{{ vnotif.status }}</td>
+        <td>{{ vnotif.serviceType }}</td>
+        <td>{{ vnotif.serviceClass }}</td>
+        <td>{{ vnotif.email }}</td>
+        <td>
+            <button type="button" class="btn btn-edit"
+                [routerLink]="['/vendor-notifications/edit', vnotif.rowId]">Edit</button>
+            <button type="button" class="btn btn-delete" (click)="onDelete(vnotif.rowId)">Delete</button>
+        </td>
+    </tr>
+</table>
+<button class="add-new-btn" type="button" [routerLink]="['/vendor-notifications/new']">Add New Notification</button>
