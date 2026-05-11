@@ -5,7 +5,7 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <label for="vendor" class="full-label">Vendor:</label>
-    <select id="vendor" class="full-input" formControlName="vendor">
+    <select id="vendor" class="full-input" formControlName="vendorName">
       <option value="">Select a vendor</option>
       <!-- TODO: Replace vendorName with the actual property name from Vendor model -->
       <option *ngFor="let vend of vendors" [value]="vend.vendorName">
@@ -13,7 +13,7 @@
       </option>
     </select>
 
-    <div class="error" *ngIf="form.get('vendor')?.invalid && form.get('vendor')?.touched">
+    <div class="error" *ngIf="form.get('vendorName')?.invalid && form.get('vendorName')?.touched">
       Required
     </div>
 

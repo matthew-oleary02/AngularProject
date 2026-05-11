@@ -18,7 +18,7 @@ export class VendorAssetViewComponent implements OnInit {
         private vendorAssetService: VendorAssetService,
         private router: Router,
         private route: ActivatedRoute
-    ) {}
+    ) { }
 
     ngOnInit() {
         const idParam = this.route.snapshot.paramMap.get('id');
@@ -32,13 +32,5 @@ export class VendorAssetViewComponent implements OnInit {
             next: asset => this.asset = asset,
             error: err => console.error('Error fetching vendor asset:', err)
         });
-    }
-
-    deleteAsset() {
-        if (this.asset && confirm('Are you sure you want to delete this asset?')) {
-            this.vendorAssetService.deleteVendorAsset(this.asset.rowId).subscribe(() => {
-                this.router.navigate(['/vendors/vendor-asset-list']);
-            });
-        }
     }
 }

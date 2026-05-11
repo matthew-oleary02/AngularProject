@@ -1,8 +1,7 @@
 // Domain model for VendorNotifications entity
 export interface VendorNotifications {
   rowId: number;
-  vendorId: string;
-  vendor: string;
+  vendorName: string;
   status: string;
   serviceType: string;
   serviceClass: string;

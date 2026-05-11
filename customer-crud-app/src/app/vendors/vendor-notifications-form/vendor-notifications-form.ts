@@ -15,6 +15,7 @@ import { VendorNotificationsService } from '../services/vendor-notifications.ser
 export class VendorNotificationsFormComponent implements OnInit {
   isEdit = false;
   vendorNotificationId!: number;
+  vendorId?: number;
   form!: FormGroup;
 
   constructor(
@@ -26,11 +27,21 @@ export class VendorNotificationsFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      vendor: ['', Validators.required],
+      vendorName: ['', Validators.required],
       status: ['', Validators.required],
       serviceType: ['', Validators.required],
       serviceClass: ['', Validators.required],
       email: ['', Validators.required],
+    });
+
+    // Check for vendor context in query params
+    this.route.queryParams.subscribe(params => {
+      if (params['vendorId']) {
+        this.vendorId = Number(params['vendorId']);
+      }
+      if (params['vendorName']) {
+        this.form.patchValue({ vendorName: params['vendorName'] });
+      }
     });
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -43,7 +54,11 @@ export class VendorNotificationsFormComponent implements OnInit {
 
     if (this.isEdit) {
       this.vendorNotificationsService.getVendorNotification(this.vendorNotificationId).subscribe(vnotif => {
-        if (vnotif) this.form.patchValue(vnotif);
+        if (vnotif) {
+          this.form.patchValue(vnotif);
+          // If editing, we should try to find the vendorId if not already set
+          // (assuming the model might have it or we can get it from vendorName)
+        }
       });
     }
   }
@@ -66,7 +81,7 @@ export class VendorNotificationsFormComponent implements OnInit {
     request.subscribe({
       next: () => {
         console.log(`${this.isEdit ? 'Updated' : 'Added'} VendorNotification successfully`);
-        this.router.navigate(['/vendor-notifications'])
+        this.goBack();
       },
       error: err => {
         console.error(`Error ${this.isEdit ? 'updating' : 'adding'} VendorNotification:`, err);
@@ -75,6 +90,14 @@ export class VendorNotificationsFormComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/vendor-notifications']);
+    this.goBack();
+  }
+
+  private goBack() {
+    if (this.vendorId) {
+      this.router.navigate(['/vendors', this.vendorId], { queryParams: { tab: 'vendorNotifications' } });
+    } else {
+      this.router.navigate(['/vendors']);
+    }
   }
 }

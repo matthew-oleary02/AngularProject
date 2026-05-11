@@ -4,8 +4,8 @@
     <h2>{{ isEdit ? 'Edit' : 'Add' }} Vendor Notification</h2>
     <form [formGroup]="form" (ngSubmit)="submit()">
         <div class="form-row">
-            <label for="vendor">Vendor</label>
-            <input type="text" id="vendor" formControlName="vendor" required>
+            <label for="vendorName">Vendor Name</label>
+            <input type="text" id="vendorName" formControlName="vendorName" required>
         </div>
         <div class="form-row">
             <label for="status">Status</label>

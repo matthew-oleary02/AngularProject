@@ -1,8 +1,8 @@
 <!-- vendor-notifications view view -->
-<h1>Vendor Notification Details</h1>
 <div *ngIf="vendorNotification; else notFound" class="card">
+    <h1>Vendor Notification Details</h1>
     <div class="detail-grid">
-        <h2 class="title">{{ vendorNotification.vendor || 'Vendor' }}</h2>
+        <h2 class="title">{{ vendorNotification.vendorName || 'Vendor Name' }}</h2>
 
         <div class="item">
             <div class="label">ID</div>
@@ -46,7 +46,8 @@
         </div>
     </div>
     <button type="button" class="btn-return" [routerLink]="['/vendor-notifications']">Back</button>
-    <button type="button" class="btn-edit" [routerLink]="['/vendor-notifications/edit', vendorNotification.rowId]">Edit</button>
+    <button type="button" class="btn-edit"
+        [routerLink]="['/vendor-notifications/edit', vendorNotification.rowId]">Edit</button>
 </div>
 
 <ng-template #notFound>

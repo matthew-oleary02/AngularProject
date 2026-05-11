@@ -26,7 +26,7 @@ export class VendorAssetFormComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private vendorService: VendorService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.form = this.fb.group({
@@ -43,21 +43,16 @@ export class VendorAssetFormComponent implements OnInit {
             this.assetId = Number(idParam);
             if (Number.isFinite(this.assetId) && this.assetId > 0) {
                 this.isEdit = true;
+                this.vendorAssetService.getVendorAssetById(this.assetId).subscribe({
+                    next: asset => this.form.patchValue(asset),
+                    error: err => console.error('Error fetching vendor asset:', err)
+                });
             }
         }
 
-        if (this.isEdit) {
-            this.vendorAssetService.getVendorAssetById(this.assetId).subscribe(asset => {
-                if (asset) this.form.patchValue(asset);
-            });
-        }
-
-        this.loadVendors();
-    }
-
-    loadVendors(): void {
-        this.vendorService.getVendors().subscribe((data: Vendor[]) => {
-            this.vendors = data;
+        this.vendorService.getVendors().subscribe({
+            next: vendors => this.vendors = vendors,
+            error: err => console.error('Error fetching vendors:', err)
         });
     }
 
@@ -78,7 +73,7 @@ export class VendorAssetFormComponent implements OnInit {
 
         request.subscribe({
             next: () => {
-                this.router.navigate(['/vendors/vendor-asset-list']);
+                this.router.navigate(['/vendors/']);
             },
             error: err => {
                 console.error('Error saving vendor asset:', err);

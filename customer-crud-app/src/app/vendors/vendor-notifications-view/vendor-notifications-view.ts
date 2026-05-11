@@ -20,11 +20,11 @@ export class VendorNotificationsViewComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : NaN;
     if (!Number.isFinite(id) || id <= 0) {
-      console.error('Invalid VendorNotification ID', idParam);
+      console.error('Invalid VendorNotification ID:', idParam);
       return;
     }
 

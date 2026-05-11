@@ -33,9 +33,16 @@
     <label for="monthly" class="full-label">Monthly Rate:</label>
     <input id="monthly" class="full-input" formControlName="monthly" type="number" />
 
-    <div class="button-group">
+    <div class="form-actions">
       <button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button>
-      <button class="btn-cancel" type="button" [routerLink]="['/vendors/vendor-asset-list']">Cancel</button>
+      <button class="btn-cancel" type="button" [routerLink]="['/vendors']">Cancel</button>
     </div>
   </form>
 </div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Vendor Asset not found.</p>
+    <button type="button" class="btn-cancel" [routerLink]="['/vendors']">Back</button>
+  </div>
+</ng-template>

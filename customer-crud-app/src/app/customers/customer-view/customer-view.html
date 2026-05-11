@@ -1,81 +1,116 @@
 <!-- customer-view.html - Form for adding/editing a customer record -->
- 
+
 <h1>Customer Details</h1>
 <div *ngIf="customer; else notFound" class="card">
   <div class="detail-grid">
     <h2 class="title">{{ customer.customerName || 'Customer' }}</h2>
 
-    <div class="item"><div class="label">ID</div><div class="value">{{ customer.rowId }}</div></div>
+    <div class="item">
+      <div class="label">ID</div>
+      <div class="value">{{ customer.rowId }}</div>
+    </div>
 
     <div class="group-title">Billing Address</div>
-    <div class="item"><div class="label">Address 1</div><div class="value">{{ customer.billingAddress.address1 }}</div></div>
-    <div class="item"><div class="label">Address 2</div><div class="value">{{ customer.billingAddress.address2 }}</div></div>
-    <div class="item"><div class="label">City</div><div class="value">{{ customer.billingAddress.city }}</div></div>
-    <div class="item"><div class="label">State</div><div class="value">{{ customer.billingAddress.state }}</div></div>
-    <div class="item"><div class="label">Zip</div><div class="value">{{ customer.billingAddress.zip }}</div></div>
-    <div class="item"><div class="label">County</div><div class="value">{{ customer.billingAddress.county }}</div></div>
-    <div class="item"><div class="label">Country</div><div class="value">{{ customer.billingAddress.country }}</div></div>
-    <div class="item"><div class="label">Email</div><div class="value">{{ customer.billingAddress.email }}</div></div>
+    <div class="item">
+      <div class="label">Address 1</div>
+      <div class="value">{{ customer.billingAddress.address1 }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Address 2</div>
+      <div class="value">{{ customer.billingAddress.address2 }}</div>
+    </div>
+    <div class="item">
+      <div class="label">City</div>
+      <div class="value">{{ customer.billingAddress.city }}</div>
+    </div>
+    <div class="item">
+      <div class="label">State</div>
+      <div class="value">{{ customer.billingAddress.state }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Zip</div>
+      <div class="value">{{ customer.billingAddress.zip }}</div>
+    </div>
+    <div class="item">
+      <div class="label">County</div>
+      <div class="value">{{ customer.billingAddress.county }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Country</div>
+      <div class="value">{{ customer.billingAddress.country }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Email</div>
+      <div class="value">{{ customer.billingAddress.email }}</div>
+    </div>
 
     <div class="group-title">Primary Contact</div>
-    <div class="item"><div class="label">Name</div><div class="value">{{ customer.primaryContact.name }}</div></div>
-    <div class="item"><div class="label">Phone</div><div class="value">{{ customer.primaryContact.phone }}</div></div>
-    <div class="item"><div class="label">Email</div><div class="value">{{ customer.primaryContact.email }}</div></div>
+    <div class="item">
+      <div class="label">Name</div>
+      <div class="value">{{ customer.primaryContact.name }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Phone</div>
+      <div class="value">{{ customer.primaryContact.phone }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Email</div>
+      <div class="value">{{ customer.primaryContact.email }}</div>
+    </div>
 
     <div class="group-title">Additional Info</div>
-    <div class="item"><div class="label">Accounting System Name</div><div class="value">{{ customer.accountingSystemName }}</div></div>
-    <div class="item"><div class="label">Active</div><div class="value">{{ customer.active ? 'Yes' : 'No' }}</div></div>
-    <div class="item"><div class="label">Customer Note</div><div class="value">{{ customer.customerNote }}</div></div>
-    <div class="item"><div class="label">Created By</div><div class="value">{{ customer.createdBy }}</div></div>
-    <div class="item"><div class="label">Created On</div><div class="value">{{ customer.createdOn | date:'short' }}</div></div>
-    <div class="item"><div class="label">Modified By</div><div class="value">{{ customer.modifiedBy }}</div></div>
-    <div class="item"><div class="label">Modified On</div><div class="value">{{ customer.modifiedOn | date:'short' }}</div></div>
+    <div class="item">
+      <div class="label">Accounting System Name</div>
+      <div class="value">{{ customer.accountingSystemName }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Active</div>
+      <div class="value">{{ customer.active ? 'Yes' : 'No' }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Customer Note</div>
+      <div class="value">{{ customer.customerNote }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Created By</div>
+      <div class="value">{{ customer.createdBy }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Created On</div>
+      <div class="value">{{ customer.createdOn | date:'short' }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Modified By</div>
+      <div class="value">{{ customer.modifiedBy }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Modified On</div>
+      <div class="value">{{ customer.modifiedOn | date:'short' }}</div>
+    </div>
   </div>
   <button type="button" class="btn-return" [routerLink]="['/customers']">Back</button>
   <button type="button" class="btn-edit" [routerLink]="['/customers/edit', customer.rowId]">Edit</button>
 </div>
 
 <div class="tabs">
-  <button 
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'openCalls'"
-    (click)="activeTab = 'openCalls'">
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'openCalls'" (click)="activeTab = 'openCalls'">
     Open Calls
   </button>
-  <button 
-    type="button" 
-    class="btn-tab"
-    [class.active]="activeTab === 'sites'"
-    (click)="activeTab = 'sites'">
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'sites'" (click)="activeTab = 'sites'">
     Sites
   </button>
-  <button 
-    type="button" 
-    class="btn-tab"
-    [class.active]="activeTab === 'equipment'"
-    (click)="activeTab = 'equipment'">
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'equipment'" (click)="activeTab = 'equipment'">
     Equipment
   </button>
-  <button 
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'customerCams'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'customerCams'"
     (click)="activeTab = 'customerCams'">
     CAMs
   </button>
-  <button 
-    type="button" 
-    class="btn-tab"
-    [class.active]="activeTab === 'customerNte'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'customerNte'"
     (click)="activeTab = 'customerNte'">
     NTE
   </button>
-  <button
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'eta'"
-    (click)="activeTab = 'eta'">
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'eta'" (click)="activeTab = 'eta'">
     ETA
   </button>
   <!--
@@ -87,33 +122,19 @@
     Files
   </button>
   -->
-  <button
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'statusMessages'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'statusMessages'"
     (click)="activeTab = 'statusMessages'">
     Status Messages
   </button>
-  <button 
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'serviceTypes'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'serviceTypes'"
     (click)="activeTab = 'serviceTypes'">
     Service Types
   </button>
-  <!--
-  <button
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'notifications'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'notifications'"
     (click)="activeTab = 'notifications'">
     Notifications
   </button>
-  -->
-  <button 
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'customerRates'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'customerRates'"
     (click)="activeTab = 'customerRates'">
     Rates
   </button>
@@ -123,345 +144,285 @@
   <h1>Open Calls List</h1>
   <!-- Toolbar with filter input and clear button -->
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
+      <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true" />
       <label for="active">Active</label>
     </td>
     <button type="button" class="btn-create" [routerLink]="['/jobs/new']">Add New Job</button>
   </div>
-<table>
-  <tr>
-    <th>Job#</th>
-    <th>Customer</th>
-    <th>Location</th>
-    <th>ClientTracking#</th>
-    <th>ServiceType</th>
-    <th>JobStatus</th>
-    <th>Trade</th>
-    <th>Vendor</th>
-    <th>JobOwner</th>
-    <th>DateReceived</th>
-    <th>State</th>
-    <th>ETA</th>
-    <th>Caller</th>
-    <th>NTE</th>
-    <th>VendorNTE</th>
-    <th>Quote</th>
-    <th>Active</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let j of jobs">
-    <td><a [routerLink]="['/jobs/view', j.rowId]">{{ j.jobNumber }}</a></td>
-    <td>{{ j.customer }}</td>
-    <td>{{ j.location }}</td>
-    <td>{{ j.clientTrackingNumber }}</td>
-    <td>{{ j.serviceType }}</td>
-    <td>{{ j.jobStatus }}</td>
-    <td>{{ j.trade }}</td>
-    <td>{{ j.vendor }}</td>
-    <td>{{ j.jobOwner }}</td>
-    <td>{{ j.dateReceived | date:'short' }}</td>
-    <td>{{ j.state }}</td>
-    <td>{{ j.eta }}</td>
-    <td>{{ j.caller }}</td>
-    <td>{{ j.nte }}</td>
-    <td>{{ j.vendorNTE }}</td>
-    <td>{{ j.quote }}</td>
-    <td>{{ j.active ? 'Yes' : 'No' }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/jobs/edit', j.rowId]">Edit</button>
-      <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
-      <button type="button" class="btn btn-delete" (click)="onDelete(j.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Job#</th>
+      <th>Customer</th>
+      <th>Location</th>
+      <th>ClientTracking#</th>
+      <th>ServiceType</th>
+      <th>JobStatus</th>
+      <th>Trade</th>
+      <th>Vendor</th>
+      <th>JobOwner</th>
+      <th>DateReceived</th>
+      <th>State</th>
+      <th>ETA</th>
+      <th>Caller</th>
+      <th>NTE</th>
+      <th>VendorNTE</th>
+      <th>Quote</th>
+      <th>Active</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let j of jobs">
+      <td><a [routerLink]="['/jobs/view', j.rowId]">{{ j.jobNumber }}</a></td>
+      <td>{{ j.customer }}</td>
+      <td>{{ j.location }}</td>
+      <td>{{ j.clientTrackingNumber }}</td>
+      <td>{{ j.serviceType }}</td>
+      <td>{{ j.jobStatus }}</td>
+      <td>{{ j.trade }}</td>
+      <td>{{ j.vendor }}</td>
+      <td>{{ j.jobOwner }}</td>
+      <td>{{ j.dateReceived | date:'short' }}</td>
+      <td>{{ j.state }}</td>
+      <td>{{ j.eta }}</td>
+      <td>{{ j.caller }}</td>
+      <td>{{ j.nte }}</td>
+      <td>{{ j.vendorNTE }}</td>
+      <td>{{ j.quote }}</td>
+      <td>{{ j.active ? 'Yes' : 'No' }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/jobs/edit', j.rowId]">Edit</button>
+        <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
+        <button type="button" class="btn btn-delete" (click)="onDelete(j.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <div *ngIf="activeTab === 'sites'" class="card">
   <h1>Site List</h1>
   <!-- Toolbar with filter input and clear button -->
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search name, city, state, email, contact..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search name, city, state, email, contact..."
+      (input)="onFilterChange($event.target.value)" [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
+      <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true" />
       <label for="active">Active</label>
     </td>
     <button type="button" class="btn-create" [routerLink]="['/locations/new']">Add New Site</button>
   </div>
-<table>
-  <tr>
-    <th>Store#</th>
-    <th>Phone</th>
-    <th>Address1</th>
-    <th>City</th>
-    <th>State</th>
-    <th>Zip</th>
-    <th>Active</th>
-    <th>LastUpdate</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let loc of locations">
-    <td><a [routerLink]="['/locations/view', loc.rowId]">{{ loc.storeNumber }}</a></td>
-    <td>{{ loc.primaryContact.phone }}</td>
-    <td>{{ loc.siteAddress.address1 }}</td>
-    <td>{{ loc.siteAddress.city }} </td>
-    <td>{{ loc.siteAddress.state }}</td>
-    <td>{{ loc.siteAddress.zip }}</td>
-    <td>{{ loc.active ? 'Yes' : 'No' }}</td>
-    <td>{{ loc.modifiedOn | date:'short' }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/locations/edit', loc.rowId]">Edit</button>
-      <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
-      <button type="button" class="btn btn-delete" (click)="onDelete(loc.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Store#</th>
+      <th>Phone</th>
+      <th>Address1</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Zip</th>
+      <th>Active</th>
+      <th>LastUpdate</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let loc of locations">
+      <td><a [routerLink]="['/locations/view', loc.rowId]">{{ loc.storeNumber }}</a></td>
+      <td>{{ loc.primaryContact.phone }}</td>
+      <td>{{ loc.siteAddress.address1 }}</td>
+      <td>{{ loc.siteAddress.city }} </td>
+      <td>{{ loc.siteAddress.state }}</td>
+      <td>{{ loc.siteAddress.zip }}</td>
+      <td>{{ loc.active ? 'Yes' : 'No' }}</td>
+      <td>{{ loc.modifiedOn | date:'short' }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/locations/edit', loc.rowId]">Edit</button>
+        <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
+        <button type="button" class="btn btn-delete" (click)="onDelete(loc.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <div *ngIf="activeTab === 'equipment'" class="card">
   <h1>Equipment List</h1>
   <!-- Toolbar with filter input and clear button -->
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search name, city, state, email, contact..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search name, city, state, email, contact..."
+      (input)="onFilterChange($event.target.value)" [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/equipment/new']">Add New Equipment</button>
   </div>
-<table>
-  <tr>
-    <th>Location</th>
-    <th>Entry Status</th>
-    <th>Manufacturer</th>
-    <th>Model</th>
-    <th>Serial#</th>
-    <th>Tonnage</th>
-    <th>Age</th>
-    <th>Condition</th>
-    <th>TypeOfUnit</th>
-    <th>DateLoaded</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let eq of equipment">
-    <td><a [routerLink]="['/equipment/view', eq.rowId]">{{ eq.location }}</a></td>
-    <td>{{ eq.entryStatus }}</td>
-    <td>{{ eq.manufacturer }}</td>
-    <td>{{ eq.model }} </td>
-    <td>{{ eq.serialNumber }}</td>
-    <td>{{ eq.tonnage }}</td>
-    <td>{{ eq.age }} </td>
-    <td>{{ eq.condition }}</td>
-    <td>{{ eq.typeOfUnit }} </td>
-    <td>{{ eq.dateLoaded | date:'short' }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/equipment/edit', eq.rowId]">Edit</button>
-      <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
-      <button type="button" class="btn btn-delete" (click)="onDelete(eq.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Location</th>
+      <th>Entry Status</th>
+      <th>Manufacturer</th>
+      <th>Model</th>
+      <th>Serial#</th>
+      <th>Tonnage</th>
+      <th>Age</th>
+      <th>Condition</th>
+      <th>TypeOfUnit</th>
+      <th>DateLoaded</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let eq of equipment">
+      <td><a [routerLink]="['/equipment/view', eq.rowId]">{{ eq.location }}</a></td>
+      <td>{{ eq.entryStatus }}</td>
+      <td>{{ eq.manufacturer }}</td>
+      <td>{{ eq.model }} </td>
+      <td>{{ eq.serialNumber }}</td>
+      <td>{{ eq.tonnage }}</td>
+      <td>{{ eq.age }} </td>
+      <td>{{ eq.condition }}</td>
+      <td>{{ eq.typeOfUnit }} </td>
+      <td>{{ eq.dateLoaded | date:'short' }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/equipment/edit', eq.rowId]">Edit</button>
+        <!--<button type="button" class="btn btn-view" [routerLink]="['/customers/view', c.rowId]">View</button>-->
+        <button type="button" class="btn btn-delete" (click)="onDelete(eq.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
-<div *ngIf="activeTab === 'statusMessages'" class="card">  <!-- Changed from activeTab2 -->
+<div *ngIf="activeTab === 'statusMessages'" class="card"> <!-- Changed from activeTab2 -->
   <h1>Status Messages</h1>
   <!-- Toolbar with filter input and clear button -->
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search here..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search here..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
+      <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true" />
       <label for="active">Active</label>
     </td>
     <button type="button" class="btn-create" [routerLink]="['/status-messages/new']">Add New Message</button>
   </div>
-<table>
-  <tr>
-    <th>Status</th>
-    <th>Message</th>
-    <th>Active</th>
-    <th>LastUpdate</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let csm of statusMessages">
-    <td>{{ csm.status }}</td>
-    <td>{{ csm.message }}</td>
-    <td>{{ csm.active ? 'Yes' : 'No' }}</td>
-    <td>{{ csm.modifiedOn | date:'short' }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/status-messages/edit', csm.rowId]">Edit</button>
-      <button type="button" class="btn btn-view" [routerLink]="['/status-messages/view', csm.rowId]">View</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(csm.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Status</th>
+      <th>Message</th>
+      <th>Active</th>
+      <th>LastUpdate</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let csm of statusMessages">
+      <td>{{ csm.status }}</td>
+      <td>{{ csm.message }}</td>
+      <td>{{ csm.active ? 'Yes' : 'No' }}</td>
+      <td>{{ csm.modifiedOn | date:'short' }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/status-messages/edit', csm.rowId]">Edit</button>
+        <button type="button" class="btn btn-view" [routerLink]="['/status-messages/view', csm.rowId]">View</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(csm.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <div *ngIf="activeTab === 'customerCams'" class="card">
   <h1>CAMs</h1>
-  
+
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search here..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search here..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <td>
-      <input
-        type="checkbox"
-        id="active"
-        name="active"
-        (change)="onActiveToggle($event.target.checked)"
-        [checked]="activeFilter === true"
-      />
+      <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true" />
       <label for="active">Active</label>
     </td>
     <button type="button" class="btn-create" [routerLink]="['/customer-cams/new']">Add New CAM</button>
   </div>
-<table>
-  <tr>
-    <th>User</th>
-    <th>Email</th>
-    <th>Phone</th>
-    <th>Trade</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let cc of customerCams">
-    <td><a [routerLink] ="['/customer-cams/view', cc.rowId]">{{ cc.username }}</a></td>
-    <td>{{ cc.email }}</td>
-    <td>{{ cc.phone }}</td>
-    <td>{{ cc.trade }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/customer-cams/edit', cc.rowId]">Edit</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(cc.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>User</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Trade</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let cc of customerCams">
+      <td><a [routerLink]="['/customer-cams/view', cc.rowId]">{{ cc.username }}</a></td>
+      <td>{{ cc.email }}</td>
+      <td>{{ cc.phone }}</td>
+      <td>{{ cc.trade }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/customer-cams/edit', cc.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(cc.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
 
 <div *ngIf="activeTab === 'customerNte'" class="card">
   <h1>Customer Not Exceeding</h1>
-  
+
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search here..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search here..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/customer-nte/new']">Add New NTE</button>
   </div>
-<table>
-  <tr>
-    <th>Classification</th>
-    <th>Service Type</th>
-    <th>Amount</th>
-    <th>Vendor NTE</th>
-    <th>Note</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let nte of customerNte">
-    <td>{{ nte.classification }}</td>
-    <td>{{ nte.serviceType }}</td>
-    <td>{{ nte.rateNTE }}</td>
-    <td>{{ nte.vendorNte }}</td>
-    <td>{{ nte.note }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/customer-nte/edit', nte.rowId]">Edit</button>
-      <button type="button" class="btn btn-view" [routerLink]="['/customer-nte/view', nte.rowId]">View</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(nte.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Classification</th>
+      <th>Service Type</th>
+      <th>Amount</th>
+      <th>Vendor NTE</th>
+      <th>Note</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let nte of customerNte">
+      <td>{{ nte.classification }}</td>
+      <td>{{ nte.serviceType }}</td>
+      <td>{{ nte.rateNTE }}</td>
+      <td>{{ nte.vendorNte }}</td>
+      <td>{{ nte.note }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/customer-nte/edit', nte.rowId]">Edit</button>
+        <button type="button" class="btn btn-view" [routerLink]="['/customer-nte/view', nte.rowId]">View</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(nte.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <div *ngIf="activeTab === 'eta'" class="card">
   <h1>Customer ETA</h1>
-  
+
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search here..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search here..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/customer-eta/new']">Add New ETA</button>
   </div>
-<table>
-  <tr>
-    <th>Service Type</th>
-    <th>ETA Days</th>
-    <th>Hours Bus Days</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let eta of customerEta">
-    <td>{{ eta.serviceType }}</td>
-    <td>{{ eta.etaHours }}</td>
-    <td>{{ eta.hoursBusDays }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/customer-eta/edit', eta.rowId]">Edit</button>
-      <button type="button" class="btn btn-view" [routerLink]="['/customer-eta/view', eta.rowId]">View</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(eta.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Service Type</th>
+      <th>ETA Days</th>
+      <th>Hours Bus Days</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let eta of customerEta">
+      <td>{{ eta.serviceType }}</td>
+      <td>{{ eta.etaHours }}</td>
+      <td>{{ eta.hoursBusDays }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/customer-eta/edit', eta.rowId]">Edit</button>
+        <button type="button" class="btn btn-view" [routerLink]="['/customer-eta/view', eta.rowId]">View</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(eta.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <!--
@@ -498,33 +459,27 @@
 
 <div *ngIf="activeTab === 'serviceTypes'" class="card">
   <h1>Customer Service Types</h1>
-  
+
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search here..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search here..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/service-types/new']">Add New Service Type</button>
   </div>
-<table>
-  <tr>
-    <th>Service Type</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let st of serviceTypes">
-    <td>{{ st.serviceType }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/service-types/edit', st.rowId]">Edit</button>
-      <button type="button" class="btn btn-view" [routerLink]="['/service-types/view', st.rowId]">View</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(st.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Service Type</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let st of serviceTypes">
+      <td>{{ st.serviceType }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/service-types/edit', st.rowId]">Edit</button>
+        <button type="button" class="btn btn-view" [routerLink]="['/service-types/view', st.rowId]">View</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(st.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 <!--
 <div *ngIf="activeTab === 'customerNotifs'" class="card">
@@ -567,43 +522,37 @@
 <!-- Customer Rates Tab Content -->
 <div *ngIf="activeTab === 'customerRates'" class="card">
   <h1>Customer Rates</h1>
-  
+
   <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-    <input
-      type="text"
-      placeholder="Search here..."
-      (input)="onFilterChange($event.target.value)"
-      [value]="filterText"
-      class="search-box"
-      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;"
-    />
+    <input type="text" placeholder="Search here..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
     <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
     <button type="button" class="btn-create" [routerLink]="['/customer-rates/new']">Add New Rate</button>
   </div>
-<table>
-  <tr>
-    <th>Trade</th>
-    <th>Rate Type</th>
-    <th>State</th>
-    <th>Rate</th>
-    <th>Created By</th>
-    <th>Created On</th>
-    <th>Actions</th>
-  </tr>
-  <tr *ngFor="let rate of customerRates">
-    <td>{{ rate.trade }}</td>
-    <td>{{ rate.rateType }}</td>
-    <td>{{ rate.state }}</td>
-    <td>{{ rate.rate }}</td>
-    <td>{{ rate.createdBy }}</td>
-    <td>{{ rate.createdOn }}</td>
-    <td>
-      <button type="button" class="btn btn-edit" [routerLink]="['/customer-rates/edit', rate.rowId]">Edit</button>
-      <button type="button" class="btn btn-view" [routerLink]="['/customer-rates/view', rate.rowId]">View</button>
-      <button type="button" class="btn btn-delete" (click)="onDelete(rate.rowId)">Delete</button>
-    </td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Trade</th>
+      <th>Rate Type</th>
+      <th>State</th>
+      <th>Rate</th>
+      <th>Created By</th>
+      <th>Created On</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let rate of customerRates">
+      <td>{{ rate.trade }}</td>
+      <td>{{ rate.rateType }}</td>
+      <td>{{ rate.state }}</td>
+      <td>{{ rate.rate }}</td>
+      <td>{{ rate.createdBy }}</td>
+      <td>{{ rate.createdOn }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/customer-rates/edit', rate.rowId]">Edit</button>
+        <button type="button" class="btn btn-view" [routerLink]="['/customer-rates/view', rate.rowId]">View</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(rate.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <ng-template #notFound>

@@ -3,25 +3,28 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { VendorService } from '../vendors.service';
 import { Vendor } from '../vendors.model';
-import { VendorAssetListComponent } from '../vendor-asset-list/vendor-asset-list';
+import { JobsService } from '../../jobs/jobs.service';
+import { VendorRatesService } from '../services/vendor-rates.service';
+import { VendorNotificationsService } from '../services/vendor-notifications.service';
+//import { VendorAssetListComponent } from '../vendor-asset-list/vendor-asset-list';
 import { VendorCoverageListComponent } from '../vendor-coverage-list/vendor-coverage-list';
-import { VendorJobsListComponent } from '../vendor-jobs-list/vendor-jobs-list';
-import { VendorUsersListComponent } from '../vendor-users-list/vendor-users-list';
+//import { VendorUsersListComponent } from '../vendor-users-list/vendor-users-list';
 import { VendorNotesListComponent } from '../vendor-notes-list/vendor-notes-list';
 import { VendorMapListComponent } from '../vendor-map-list/vendor-map-list';
 import { VendorClassificationListComponent } from '../vendor-classification-list/vendor-classification-list';
 import { VendorContractStatusListComponent } from '../vendor-contract-status-list/vendor-contract-status-list';
+import { VendorAssetService } from '../services/vendor-asset.service';
+import { VendorUsersService } from '../services/vendor-users.service';
 
 @Component({
   selector: 'app-vendor-view',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterModule, 
-    VendorAssetListComponent,
+    CommonModule,
+    RouterModule,
+    //VendorAssetListComponent,
     VendorCoverageListComponent,
-    VendorJobsListComponent,
-    VendorUsersListComponent,
+    //VendorUsersListComponent,
     VendorNotesListComponent,
     VendorMapListComponent,
     VendorClassificationListComponent,
@@ -33,12 +36,30 @@ import { VendorContractStatusListComponent } from '../vendor-contract-status-lis
 
 export class VendorsViewComponent implements OnInit {
   vendor?: Vendor;
+  jobs: any[] = [];
+  rates: any[] = [];
+  notifications: any[] = [];
+  vendorAssets: any[] = [];
+  users: any[] = [];
+  private allJobs: any[] = [];
+  private allRates: any[] = [];
+  private allNotifications: any[] = [];
+  private allVendorAssets: any[] = [];
+  private allUsers: any[] = [];
+  filterText = '';
   activeTab: string = 'vendorJobs';
+  activeFilter: boolean | null = true;
 
-  constructor(private vendorService: VendorService,
+  constructor(
+    private vendorService: VendorService,
+    private jobsService: JobsService,
+    private ratesService: VendorRatesService,
+    private notificationsService: VendorNotificationsService,
+    private vendorAssetService: VendorAssetService,
+    private vendorUsersService: VendorUsersService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   /* Load vendor details based on route parameter */
   ngOnInit() {
@@ -46,12 +67,198 @@ export class VendorsViewComponent implements OnInit {
     const id = idParam ? Number(idParam) : NaN;
     if (!Number.isFinite(id) || id <= 0) {
       console.error('Invalid vendor ID', idParam);
-    };
-    
+      return;
+    }
+
     /* Fetch vendor details from the service */
     this.vendorService.getVendor(id).subscribe({
       next: v => this.vendor = v,
       error: err => console.error('Error fetching vendor:', err)
+    });
+
+    /* Fetch jobs for the vendor */
+    this.vendorService.getJobsByVendor(id).subscribe({
+      next: jobs => {
+        this.allJobs = jobs || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching jobs:', err)
+    });
+
+    /* Fetch rates for the vendor */
+    this.vendorService.getRatesByVendor(id).subscribe({
+      next: rates => {
+        this.allRates = rates || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching rates:', err)
+    });
+
+    /* Fetch notifications for the vendor */
+    this.vendorService.getNotificationsByVendor(id).subscribe({
+      next: notifs => {
+        this.allNotifications = notifs || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching notifications:', err)
+    });
+
+    /* Fetch assets for the vendor */
+    this.vendorService.getAssetsByVendor(id).subscribe({
+      next: assets => {
+        this.allVendorAssets = assets || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching assets:', err)
+    });
+
+    /* Fetch users for the vendor */
+    this.vendorService.getUsersByVendor(id).subscribe({
+      next: users => {
+        this.allUsers = users || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching users:', err)
+    });
+  }
+
+  onFilterChange(query: string) {
+    this.filterText = query || '';
+    this.applyFilters();
+  }
+
+  onActiveToggle(checked: boolean) {
+    this.activeFilter = checked;
+    this.applyFilters();
+  }
+
+  private applyFilters() {
+    const q = this.filterText.toLowerCase().trim();
+
+    this.jobs = this.allJobs.filter(job => {
+      const fields = [
+        job?.jobNumber,
+        job?.customer,
+        job?.location,
+        job?.clientTrackingNumber,
+        job?.serviceType,
+        job?.jobStatus,
+        job?.trade,
+        job?.vendor,
+        job?.jobOwner,
+        job?.caller,
+        job?.jobNote
+      ];
+      return !q || fields.some(f => f?.toLowerCase().includes(q));
+    });
+
+    this.rates = this.allRates.filter(rate => {
+      const fields = [
+        rate?.vendorName,
+        rate?.trade,
+        rate?.rateType,
+        rate?.state,
+        rate?.rate?.toString()
+      ];
+      return !q || fields.some(f => f?.toLowerCase().includes(q));
+    });
+
+    this.notifications = this.allNotifications.filter(n => {
+      const fields = [
+        n?.vendorName,
+        n?.status,
+        n?.serviceType,
+        n?.serviceClass,
+        n?.email
+      ];
+      return !q || fields.some(f => f?.toLowerCase().includes(q));
+    });
+
+    this.vendorAssets = this.allVendorAssets.filter(asset => {
+      const matchesActive = this.activeFilter === null ? true : (asset.active === this.activeFilter);
+      const fields = [
+        asset?.assetName,
+        asset?.vendorId,
+        asset?.active,
+        asset?.startTime,
+        asset?.endTime,
+        asset?.monthly
+      ];
+      const matchesQuery = !q || fields.some(f => f?.toLowerCase().includes(q));
+
+      return matchesQuery && matchesActive;
+    });
+
+    this.users = this.allUsers.filter(user => {
+      const matchesActive = this.activeFilter === null ? true : (user.active === this.activeFilter);
+      const fields = [
+        user?.username,
+        user?.email,
+        user?.phone
+      ];
+      const matchesQuery = !q || fields.some(f => f?.toLowerCase().includes(q));
+
+      return matchesQuery && matchesActive;
+    });
+  }
+
+  clearFilter() {
+    this.filterText = '';
+    this.applyFilters();
+  }
+
+  onDeleteJob(id: number) {
+    if (!confirm('Delete this job?')) return;
+    this.jobsService.deleteJob(id).subscribe({
+      next: () => {
+        this.allJobs = this.allJobs.filter(j => j.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting job:', err)
+    });
+  }
+
+  onDeleteRate(id: number) {
+    if (!confirm('Delete this rate?')) return;
+    this.ratesService.deleteVendorRate(id).subscribe({
+      next: () => {
+        this.allRates = this.allRates.filter(r => r.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting rate:', err)
+    });
+  }
+
+  onDeleteNotification(id: number) {
+    if (!confirm('Delete this notification?')) return;
+    this.notificationsService.deleteVendorNotification(id).subscribe({
+      next: () => {
+        this.allNotifications = this.allNotifications.filter(n => n.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting notification:', err)
+    });
+  }
+
+  onDeleteAsset(id: number) {
+    if (!confirm('Delete this asset?')) return;
+    this.vendorAssetService.deleteVendorAsset(id).subscribe({
+      next: () => {
+        this.allVendorAssets = this.allVendorAssets.filter(asset => asset.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting asset:', err)
+    });
+  }
+
+  onDeleteUser(id: number) {
+    if (!confirm('Delete this user?')) return;
+    this.vendorUsersService.deleteVendorUser(id).subscribe({
+      next: () => {
+        this.allUsers = this.allUsers.filter(user => user.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting user:', err)
     });
   }
 }

@@ -6,27 +6,33 @@
         <input type="text" placeholder="Search..." (input)="onFilterChange($event.target.value)" [value]="filterText"
             class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
         <td><button type="button" class="btn-clear" (click)="clearFilter()">Clear</button></td>
-
-        <table class="list-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Vendor Name</th>
-                    <th>Vendor ID</th>
-                    <th>Vendor Coverage ID</th>
-                    <th>Coordinates</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let vendorMap of vendorMaps">
-                    <td>{{ vendorMap.rowId }}</td>
-                    <td><a [routerLink]="['/vendor-maps/view', vendorMap.rowId]">{{ vendorMap.vendorName }}</a></td>
-                    <td>{{ vendorMap.vendorId }}</td>
-                    <td>{{ vendorMap.vendorCoverageId }}</td>
-                    <td>{{ vendorMap.coordinates }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <button type="button" class="btn-add" [routerLink]="['/vendor-maps/new']">Add Vendor Map</button>
     </div>
+    <table class="list-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Vendor Name</th>
+                <th>Vendor ID</th>
+                <th>Vendor Coverage ID</th>
+                <th>Coordinates</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let vendorMap of vendorMaps">
+                <td>{{ vendorMap.rowId }}</td>
+                <td><a [routerLink]="['/vendor-maps/view', vendorMap.rowId]">{{ vendorMap.vendorName }}</a></td>
+                <td>{{ vendorMap.vendorId }}</td>
+                <td>{{ vendorMap.vendorCoverageId }}</td>
+                <td>{{ vendorMap.coordinates }}</td>
+                <td>
+                    <button type="button" class="btn-edit"
+                        [routerLink]="['/vendor-maps/edit', vendorMap.rowId]">Edit</button>
+                    <button type="button" class="btn-delete" (click)="onDelete(vendorMap.rowId)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
+<button type="button" class="add-new-btn" [routerLink]="['/vendor-maps/new']">Add Vendor Map</button>

@@ -19,6 +19,7 @@ export class VendorUsersFormComponent implements OnInit {
     form!: FormGroup;
     isEdit = false;
     vendorUserId!: number;
+    vendorId?: number;
     vendors: Vendor[] = [];
 
     constructor(
@@ -38,6 +39,16 @@ export class VendorUsersFormComponent implements OnInit {
             phone: [''],
             trade: [''],
             active: [true]
+        });
+
+        // Check for vendor context in query params
+        this.route.queryParams.subscribe(params => {
+            if (params['vendorId']) {
+                this.vendorId = Number(params['vendorId']);
+            }
+            if (params['vendorName']) {
+                this.form.patchValue({ vendor: params['vendorName'] });
+            }
         });
 
         /* Check if we are in edit mode based on route parameters */
@@ -77,12 +88,23 @@ export class VendorUsersFormComponent implements OnInit {
 
         request.subscribe({
             next: () => {
-                // TODO: Verify target route for vendor users navigation
-                this.router.navigate(['/vendors']);
+                this.goBack();
             },
             error: err => {
                 console.error('Error saving vendor user:', err);
             }
         });
+    }
+
+    cancel() {
+        this.goBack();
+    }
+
+    private goBack() {
+        if (this.vendorId) {
+            this.router.navigate(['/vendors', this.vendorId], { queryParams: { tab: 'vendorUsers' } });
+        } else {
+            this.router.navigate(['/vendors']);
+        }
     }
 }

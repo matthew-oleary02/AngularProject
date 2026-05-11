@@ -14,6 +14,11 @@ export class VendorUsersService {
     return this.http.get<VendorUsers[]>(this.apiUrl);
   }
 
+  /* Fetch users for a specific vendor */
+  getUsersByVendor(vendorId: number): Observable<VendorUsers[]> {
+    return this.http.get<VendorUsers[]>(`http://localhost:3000/vendors/${vendorId}/users`);
+  }
+
   /* Fetch a single vendor user by ID */
   getVendorUser(id: number): Observable<VendorUsers> {
     return this.http.get<VendorUsers>(`${this.apiUrl}/${id}`);

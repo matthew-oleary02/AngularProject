@@ -73,4 +73,8 @@ export class CustomerNotifsFormComponent implements OnInit {
       }
     });
   }
+
+  cancel() {
+    this.router.navigate(['/customer-notifs']);
+  }
 }

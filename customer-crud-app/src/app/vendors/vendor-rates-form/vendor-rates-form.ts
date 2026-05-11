@@ -18,6 +18,7 @@ export class VendorRatesFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
   vendRateId!: number;
+  vendorId?: number;
   vendors: any[] = []; // TODO: Change type to Vendor if model exists
 
   constructor(
@@ -31,11 +32,21 @@ export class VendorRatesFormComponent implements OnInit {
   /* Initialize the form and load vendor rates data if editing */
   ngOnInit() {
     this.form = this.fb.group({
-      vendor: ['', Validators.required],
+      vendorName: ['', Validators.required],
       trade: [''],
       rateType: [''],
       state: [''],
       rate: [''],
+    });
+
+    // Check for vendor context in query params
+    this.route.queryParams.subscribe(params => {
+      if (params['vendorId']) {
+        this.vendorId = Number(params['vendorId']);
+      }
+      if (params['vendorName']) {
+        this.form.patchValue({ vendorName: params['vendorName'] });
+      }
     });
 
     /* Check if we are in edit mode based on route parameters */
@@ -44,16 +55,13 @@ export class VendorRatesFormComponent implements OnInit {
       this.vendRateId = Number(idParam);
       if (Number.isFinite(this.vendRateId) && this.vendRateId > 0) {
         this.isEdit = true;
-        // @ts-ignore
-        this.vendorRatesService.getVendorRateById(this.vendRateId.toString()).subscribe({
+        this.vendorRatesService.getVendorRateById(this.vendRateId).subscribe({
           next: (rate: any) => this.form.patchValue(rate),
           error: (err: any) => console.error('Error fetching vendor rate:', err)
         });
       }
     }
     /* Load vendor list for the dropdown */
-    // TODO: Ensure getAll() exists on VendorsService or use correct method
-    // @ts-ignore
     this.vendorService.getVendors().subscribe({
       next: (vendors: any) => this.vendors = vendors,
       error: (err: any) => console.error('Error fetching vendors:', err)
@@ -67,8 +75,8 @@ export class VendorRatesFormComponent implements OnInit {
       return;
     }
 
-    const vendorRate: VendorRates = {
-      id: this.vendRateId?.toString() || '0',
+    const vendorRate: any = {
+      rowId: this.vendRateId || 0,
       ...this.form.value
     };
 
@@ -76,14 +84,25 @@ export class VendorRatesFormComponent implements OnInit {
       ? this.vendorRatesService.updateVendorRate(this.vendRateId, vendorRate)
       : this.vendorRatesService.addVendorRate(vendorRate);
 
-    // @ts-ignore
     request.subscribe({
       next: () => {
-        this.router.navigate(['/vendors']);
+        this.goBack();
       },
       error: (err: any) => {
         console.error('Error saving vendor rate:', err);
       }
     });
+  }
+
+  cancel() {
+    this.goBack();
+  }
+
+  private goBack() {
+    if (this.vendorId) {
+      this.router.navigate(['/vendors', this.vendorId], { queryParams: { tab: 'vendorRates' } });
+    } else {
+      this.router.navigate(['/vendors']);
+    }
   }
 }
