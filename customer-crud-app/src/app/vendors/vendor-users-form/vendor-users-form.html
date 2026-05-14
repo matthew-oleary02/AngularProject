@@ -3,15 +3,15 @@
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="submit()">
 
-    <label for="vendor" class="full-label">Vendor:</label>
-    <select id="vendor" class="full-input" formControlName="vendor">
+    <label for="vendorName" class="full-label">Vendor Name:</label>
+    <select id="vendorName" class="full-input" formControlName="vendorName">
       <option value="">Select a vendor</option>
       <option *ngFor="let v of vendors" [value]="v.vendorName">
-      {{ v.vendorName }}
+        {{ v.vendorName }}
       </option>
     </select>
 
-    <div class="error" *ngIf="form.get('vendor')?.invalid && form.get('vendor')?.touched">
+    <div class="error" *ngIf="form.get('vendorName')?.invalid && form.get('vendorName')?.touched">
       Required
     </div>
 

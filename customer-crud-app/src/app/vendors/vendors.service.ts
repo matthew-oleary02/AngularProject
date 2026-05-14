@@ -49,6 +49,11 @@ export class VendorService {
     return this.http.get<any[]>(`${this.apiUrl}/${vendorId}/notifications`);
   }
 
+  /* Fetch coverage for a specific vendor */
+  getCoverageByVendor(vendorId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${vendorId}/coverage`);
+  }
+
   /* Fetch assets for a specific vendor */
   getAssetsByVendor(vendorId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${vendorId}/assets`);

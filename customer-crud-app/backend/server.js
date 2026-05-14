@@ -2785,14 +2785,14 @@ app.get('/vendors/:id/rates', async (req, res) => {
     }
     await sql.connect(config);
     const request = new sql.Request();
-    request.input('VendorId', sql.Int, vendorId);
+    request.input('VendorID', sql.Int, vendorId);
     const result = await request.query(`
       SELECT vr.* FROM VendorRates vr
       INNER JOIN Vendor v ON vr.VendorName = v.VendorName
-      WHERE v.RowID = @VendorId
+      WHERE v.RowID = @VendorID
     `);
     const rates = result.recordset.map(row => ({
-      rowId: row.RowId,
+      rowId: row.RowID,
       vendorName: row.VendorName,
       trade: row.Trade,
       rateType: row.RateType,
@@ -2815,20 +2815,24 @@ app.get('/vendors/:id/users', async (req, res) => {
     }
     await sql.connect(config);
     const request = new sql.Request();
-    request.input('VendorId', sql.Int, vendorId);
+    request.input('VendorID', sql.Int, vendorId);
     const result = await request.query(`
       SELECT vu.* FROM VendorUsers vu
-      INNER JOIN Vendor v ON vu.Vendor = v.VendorName
-      WHERE v.RowID = @VendorId
+      INNER JOIN Vendor v ON vu.VendorName = v.VendorName
+      WHERE v.RowID = @VendorID
     `);
     const users = result.recordset.map(row => ({
-      rowId: row.RowId,
-      vendor: row.Vendor,
+      rowId: row.RowID || row.RowId,
+      vendorName: row.VendorName,
       username: row.Username,
       email: row.Email,
       phone: row.Phone,
       trade: row.Trade,
-      active: row.Active
+      active: row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
     }));
     res.json(users);
   } catch (err) {
@@ -2867,6 +2871,45 @@ app.get('/vendors/:id/notifications', async (req, res) => {
     res.json(notifs);
   } catch (err) {
     console.error('Error fetching notifications for vendor:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendors/:id/coverage (fetch coverage for a specific vendor)
+app.get('/vendors/:id/coverage', async (req, res) => {
+  try {
+    const vendorId = parseInt(req.params.id, 10);
+    if (Number.isNaN(vendorId)) {
+      return res.status(400).json({ error: 'Invalid vendor id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('VendorID', sql.Int, vendorId);
+    const result = await request.query(`
+      SELECT vc.* FROM VendorCoverage vc
+      INNER JOIN Vendor v ON vc.VendorName = v.VendorName
+      WHERE v.RowID = @VendorID
+    `);
+    const coverage = result.recordset.map(row => ({
+      rowId: row.RowID || row.RowId,
+      vendorName: row.VendorName,
+      status: row.Status,
+      city: row.City,
+      state: row.State,
+      zipCode: row.ZipCode,
+      trade: row.Trade,
+      rate: row.Rate,
+      radius: row.Radius,
+      vendorStatus: row.VendorStatus,
+      active: row.Active,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(coverage);
+  } catch (err) {
+    console.error('Error fetching coverage for vendor:', err);
     res.status(500).send('Server error');
   }
 });
@@ -3355,7 +3398,7 @@ app.get('/vendor-rates', async (req, res) => {
     await sql.connect(config);
     const result = await sql.query('SELECT * FROM VendorRates');
     const vendorRates = result.recordset.map(row => ({
-      rowId: row.RowId,
+      rowId: row.RowID,
       vendorName: row.VendorName,
       trade: row.Trade,
       rateType: row.RateType,
@@ -3382,7 +3425,7 @@ app.get('/vendor-rates/:id', async (req, res) => {
     }
     const row = result.recordset[0];
     const vendorRate = {
-      rowId: row.RowId,
+      rowId: row.RowID,
       vendorName: row.VendorName,
       trade: row.Trade,
       rateType: row.RateType,
@@ -3459,8 +3502,8 @@ app.delete('/vendor-rates/:id', async (req, res) => {
     await sql.connect(config);
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
-    request.input('RowId', sql.Int, id);
-    await request.query('DELETE FROM VendorRates WHERE RowId = @RowId');
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorRates WHERE RowID = @RowID');
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting vendor rate:', err);
@@ -4142,8 +4185,8 @@ app.get('/vendor-users', async (req, res) => {
     await sql.connect(config);
     const result = await sql.query('SELECT * FROM VendorUsers');
     const vendorUsers = result.recordset.map(row => ({
-      rowId: row.RowId,
-      vendor: row.Vendor,
+      rowId: row.RowID || row.RowId,
+      vendorName: row.VendorName,
       username: row.Username,
       email: row.Email,
       phone: row.Phone,
@@ -4174,8 +4217,8 @@ app.get('/vendor-users/:id', async (req, res) => {
     }
     const row = result.recordset[0];
     const vendorUser = {
-      rowId: row.RowId,
-      vendor: row.Vendor,
+      rowId: row.RowID || row.Id || row.RowId,
+      vendorName: row.VendorName,
       username: row.Username,
       email: row.Email,
       phone: row.Phone,
@@ -4200,13 +4243,13 @@ app.post('/vendor-users', async (req, res) => {
     const vendorUser = req.body;
     const query = `
       INSERT INTO VendorUsers (
-        Vendor, Username, Email, Phone, Trade, Active, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+        VendorName, Username, Email, Phone, Trade, Active, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
       ) VALUES (
-        @Vendor, @Username, @Email, @Phone, @Trade, @Active, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+        @VendorName, @Username, @Email, @Phone, @Trade, @Active, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
       )
     `;
     const request = new sql.Request();
-    request.input('Vendor', sql.VarChar, vendorUser.vendor);
+    request.input('VendorName', sql.VarChar, vendorUser.vendorName);
     request.input('Username', sql.VarChar, vendorUser.username);
     request.input('Email', sql.VarChar, vendorUser.email);
     request.input('Phone', sql.VarChar, vendorUser.phone);
@@ -4232,7 +4275,7 @@ app.put('/vendor-users/:id', async (req, res) => {
     const id = req.params.id;
     const query = `
       UPDATE VendorUsers SET
-        Vendor = @Vendor,
+        VendorName = @VendorName,
         Username = @Username,
         Email = @Email,
         Phone = @Phone,
@@ -4246,7 +4289,7 @@ app.put('/vendor-users/:id', async (req, res) => {
     `;
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
-    request.input('Vendor', sql.VarChar, vendorUser.vendor);
+    request.input('VendorName', sql.VarChar, vendorUser.vendorName);
     request.input('Username', sql.VarChar, vendorUser.username);
     request.input('Email', sql.VarChar, vendorUser.email);
     request.input('Phone', sql.VarChar, vendorUser.phone);
@@ -4264,42 +4307,14 @@ app.put('/vendor-users/:id', async (req, res) => {
   }
 });
 
-// GET /vendors/:vendorId/users (get users for a specific vendor)
-app.get('/vendors/:vendorId/users', async (req, res) => {
-  try {
-    await sql.connect(config);
-    const vendorId = parseInt(req.params.vendorId, 10);
-    const request = new sql.Request();
-    request.input('VendorId', sql.Int, vendorId);
-    const result = await request.query('SELECT * FROM VendorUsers WHERE Vendor = @VendorId');
-    const users = result.recordset.map(row => ({
-      rowId: row.RowId,
-      vendor: row.Vendor,
-      username: row.Username,
-      email: row.Email,
-      phone: row.Phone,
-      trade: row.Trade,
-      active: row.Active,
-      createdBy: row.CreatedBy,
-      createdOn: row.CreatedOn,
-      modifiedBy: row.ModifiedBy,
-      modifiedOn: row.ModifiedOn
-    }));
-    res.json(users);
-  } catch (err) {
-    console.error('Error fetching vendor users:', err);
-    res.status(500).send('Server error');
-  }
-});
-
 // DELETE /vendor-users/:id (delete vendor user)
 app.delete('/vendor-users/:id', async (req, res) => {
   try {
     await sql.connect(config);
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
-    request.input('RowId', sql.Int, id);
-    await request.query('DELETE FROM VendorUsers WHERE RowId = @RowId');
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM VendorUsers WHERE RowID = @RowID');
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting vendor user:', err);

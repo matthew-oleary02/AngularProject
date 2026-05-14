@@ -7,7 +7,7 @@ import { JobsService } from '../../jobs/jobs.service';
 import { VendorRatesService } from '../services/vendor-rates.service';
 import { VendorNotificationsService } from '../services/vendor-notifications.service';
 //import { VendorAssetListComponent } from '../vendor-asset-list/vendor-asset-list';
-import { VendorCoverageListComponent } from '../vendor-coverage-list/vendor-coverage-list';
+//import { VendorCoverageListComponent } from '../vendor-coverage-list/vendor-coverage-list';
 //import { VendorUsersListComponent } from '../vendor-users-list/vendor-users-list';
 import { VendorNotesListComponent } from '../vendor-notes-list/vendor-notes-list';
 import { VendorMapListComponent } from '../vendor-map-list/vendor-map-list';
@@ -15,6 +15,7 @@ import { VendorClassificationListComponent } from '../vendor-classification-list
 import { VendorContractStatusListComponent } from '../vendor-contract-status-list/vendor-contract-status-list';
 import { VendorAssetService } from '../services/vendor-asset.service';
 import { VendorUsersService } from '../services/vendor-users.service';
+import { VendorCoverageService } from '../vendor-coverage.service';
 
 @Component({
   selector: 'app-vendor-view',
@@ -23,7 +24,7 @@ import { VendorUsersService } from '../services/vendor-users.service';
     CommonModule,
     RouterModule,
     //VendorAssetListComponent,
-    VendorCoverageListComponent,
+    //VendorCoverageListComponent,
     //VendorUsersListComponent,
     VendorNotesListComponent,
     VendorMapListComponent,
@@ -39,11 +40,13 @@ export class VendorsViewComponent implements OnInit {
   jobs: any[] = [];
   rates: any[] = [];
   notifications: any[] = [];
+  vendorCoverage: any[] = [];
   vendorAssets: any[] = [];
   users: any[] = [];
   private allJobs: any[] = [];
   private allRates: any[] = [];
   private allNotifications: any[] = [];
+  private allCoverage: any[] = [];
   private allVendorAssets: any[] = [];
   private allUsers: any[] = [];
   filterText = '';
@@ -55,6 +58,7 @@ export class VendorsViewComponent implements OnInit {
     private jobsService: JobsService,
     private ratesService: VendorRatesService,
     private notificationsService: VendorNotificationsService,
+    private coverageService: VendorCoverageService,
     private vendorAssetService: VendorAssetService,
     private vendorUsersService: VendorUsersService,
     private router: Router,
@@ -101,6 +105,15 @@ export class VendorsViewComponent implements OnInit {
         this.applyFilters();
       },
       error: err => console.error('Error fetching notifications:', err)
+    });
+
+    /* Fetch coverage for the vendor */
+    this.vendorService.getCoverageByVendor(id).subscribe({
+      next: coverage => {
+        this.allCoverage = coverage || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching coverage:', err)
     });
 
     /* Fetch assets for the vendor */
@@ -174,6 +187,24 @@ export class VendorsViewComponent implements OnInit {
       return !q || fields.some(f => f?.toLowerCase().includes(q));
     });
 
+    this.vendorCoverage = this.allCoverage.filter(coverage => {
+      const matchesActive = this.activeFilter === null ? true : (coverage.active === this.activeFilter);
+      const fields = [
+        coverage?.vendorName,
+        coverage?.status,
+        coverage?.city,
+        coverage?.state,
+        coverage?.zipCode,
+        coverage?.trade,
+        coverage?.rate?.toString(),
+        coverage?.radius,
+        coverage?.vendorStatus,
+      ];
+      const matchesQuery = !q || fields.some(f => f?.toLowerCase().includes(q));
+
+      return matchesQuery && matchesActive;
+    });
+
     this.vendorAssets = this.allVendorAssets.filter(asset => {
       const matchesActive = this.activeFilter === null ? true : (asset.active === this.activeFilter);
       const fields = [
@@ -192,9 +223,11 @@ export class VendorsViewComponent implements OnInit {
     this.users = this.allUsers.filter(user => {
       const matchesActive = this.activeFilter === null ? true : (user.active === this.activeFilter);
       const fields = [
+        user?.vendorName,
         user?.username,
         user?.email,
-        user?.phone
+        user?.phone,
+        user?.trade,
       ];
       const matchesQuery = !q || fields.some(f => f?.toLowerCase().includes(q));
 
@@ -240,6 +273,17 @@ export class VendorsViewComponent implements OnInit {
     });
   }
 
+  onDeleteCoverage(id: number) {
+    if (!confirm('Delete this coverage?')) return;
+    this.coverageService.deleteVendorCoverage(id).subscribe({
+      next: () => {
+        this.allCoverage = this.allCoverage.filter(c => c.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting coverage:', err)
+    });
+  }
+
   onDeleteAsset(id: number) {
     if (!confirm('Delete this asset?')) return;
     this.vendorAssetService.deleteVendorAsset(id).subscribe({
@@ -252,7 +296,7 @@ export class VendorsViewComponent implements OnInit {
   }
 
   onDeleteUser(id: number) {
-    if (!confirm('Delete this user?')) return;
+    if (!id || !confirm('Delete this user?')) return;
     this.vendorUsersService.deleteVendorUser(id).subscribe({
       next: () => {
         this.allUsers = this.allUsers.filter(user => user.rowId !== id);

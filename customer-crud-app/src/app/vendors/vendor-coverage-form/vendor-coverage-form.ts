@@ -25,16 +25,19 @@ export class VendorCoverageFormComponent implements OnInit {
         private coverageService: VendorCoverageService,
         private router: Router,
         private route: ActivatedRoute
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.form = this.fb.group({
             vendorName: ['', Validators.required],
+            status: [''],
             city: [''],
             state: [''],
             zipCode: [''],
             trade: [''],
+            rate: [''],
             radius: [''],
+            vendorStatus: [''],
             active: [true],
         });
 
@@ -48,13 +51,13 @@ export class VendorCoverageFormComponent implements OnInit {
 
         if (this.isEdit) {
             this.coverageService.getVendorCoverageById(this.coverageId).subscribe(c => {
-        if (c) this.form.patchValue(c);
-      });
+                if (c) this.form.patchValue(c);
+            });
+        }
     }
-}
 
     submit() {
-    // If not delete action, prevent submission when the form is invalid
+        // If not delete action, prevent submission when the form is invalid
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
@@ -68,10 +71,10 @@ export class VendorCoverageFormComponent implements OnInit {
         const request = this.isEdit
             ? this.coverageService.updateVendorCoverage(coverage)
             : this.coverageService.addVendorCoverage(coverage);
-        
+
         request.subscribe({
             next: () => {
-                this.router.navigate(['/vendor-coverage']);
+                this.router.navigate(['/vendors']);
             },
             error: err => {
                 console.error('Error saving vendor coverage:', err)

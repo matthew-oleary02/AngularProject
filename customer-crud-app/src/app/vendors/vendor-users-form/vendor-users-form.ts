@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { VendorUsersService } from '../services/vendor-users.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -28,12 +28,12 @@ export class VendorUsersFormComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private vendorService: VendorService
-    ) {}
+    ) { }
 
     /* Initialize the form and load vendor user data if editing */
     ngOnInit() {
         this.form = this.fb.group({
-            vendor: ['', Validators.required],
+            vendorName: ['', Validators.required],
             username: ['', Validators.required],
             email: [''],
             phone: [''],
@@ -81,7 +81,7 @@ export class VendorUsersFormComponent implements OnInit {
             rowId: this.vendorUserId || 0,
             ...this.form.value
         };
-        
+
         const request = this.isEdit
             ? this.vendorUsersService.updateVendorUser(vendorUser)
             : this.vendorUsersService.addVendorUser(vendorUser);

@@ -1,6 +1,6 @@
 export interface VendorUsers {
     rowId: number;
-    vendor: string;
+    vendorName: string;
     username: string;
     email: string;
     phone: string;

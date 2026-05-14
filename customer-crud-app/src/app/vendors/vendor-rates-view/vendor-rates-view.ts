@@ -25,11 +25,12 @@ export class VendorRatesViewComponent implements OnInit {
             console.error('Invalid vendor rate ID', idParam);
         };
 
-        /* Fetch vendor rate details from the service */
-        // @ts-ignore
-        this.vendorRatesService.getById(id.toString()).subscribe({
-            next: (rate: any) => this.rate = rate,
-            error: (err: any) => console.error('Error fetching vendor rate:', err)
-        });
+        if (Number.isFinite(id) && id > 0) {
+            /* Fetch vendor rate details from the service */
+            this.vendorRatesService.getVendorRateById(id).subscribe({
+                next: (rate: any) => this.rate = rate,
+                error: (err: any) => console.error('Error fetching vendor rate:', err)
+            });
+        }
     }
 }

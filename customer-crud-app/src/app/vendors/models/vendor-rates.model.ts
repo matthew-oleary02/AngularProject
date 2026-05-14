@@ -1,6 +1,6 @@
 // Domain model for vendor-rates entity
 export interface VendorRates {
-  id?: number;
+  rowId: number;
   vendorName: string;
   trade: string;
   rateType: string;

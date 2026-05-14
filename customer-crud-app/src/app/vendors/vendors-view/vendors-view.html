@@ -1,7 +1,5 @@
-<!-- vendors-view.html - Form for adding/editing a vendors record -->
-
-<h1>Vendor Details</h1>
-<div *ngIf="vendor; else notFound" class="card">
+@if (vendor) {
+<div class="card">
   <div class="detail-grid">
     <h2 class="title">{{ vendor.vendorName || 'Vendor' }}</h2>
 
@@ -91,280 +89,335 @@
   <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
 </div>
 
-<div *ngIf="vendor">
-  <div class="tabs">
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorJobs'"
-      (click)="activeTab = 'vendorJobs'">
-      Jobs
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorRates'"
-      (click)="activeTab = 'vendorRates'">
-      Rates
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorNotifications'"
-      (click)="activeTab = 'vendorNotifications'">
-      Notifications
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorCoverage'"
-      (click)="activeTab = 'vendorCoverage'">
-      Coverage
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorAssets'"
-      (click)="activeTab = 'vendorAssets'">
-      Assets
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorUsers'"
-      (click)="activeTab = 'vendorUsers'">
-      Users
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorNotes'"
-      (click)="activeTab = 'vendorNotes'">
-      Notes
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorClassification'"
-      (click)="activeTab = 'vendorClassification'">
-      Classifications
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorContractStatus'"
-      (click)="activeTab = 'vendorContractStatus'">
-      Contract Status
-    </button>
-    <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorMap'" (click)="activeTab = 'vendorMap'">
-      Map
-    </button>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorJobs'" class="card">
-    <h1>Vendor Jobs</h1>
-    <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-      <input type="text" placeholder="Search jobs..." (input)="onFilterChange($event.target.value)" [value]="filterText"
-        class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
-      <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
-      <button type="button" class="btn-create" [routerLink]="['/jobs/new']">Add New Job</button>
-    </div>
-    <table>
-      <tr>
-        <th>Job#</th>
-        <th>Customer</th>
-        <th>Location</th>
-        <th>ClientTracking#</th>
-        <th>ServiceType</th>
-        <th>JobStatus</th>
-        <th>Trade</th>
-        <th>Vendor</th>
-        <th>JobOwner</th>
-        <th>DateReceived</th>
-        <th>State</th>
-        <th>ETA</th>
-        <th>Caller</th>
-        <th>NTE</th>
-        <th>VendorNTE</th>
-        <th>Quote</th>
-        <th>Active</th>
-        <th>Actions</th>
-      </tr>
-      <tr *ngFor="let j of jobs">
-        <td><a [routerLink]="['/jobs/view', j.rowId]">{{ j.jobNumber }}</a></td>
-        <td>{{ j.customer }}</td>
-        <td>{{ j.location }}</td>
-        <td>{{ j.clientTrackingNumber }}</td>
-        <td>{{ j.serviceType }}</td>
-        <td>{{ j.jobStatus }}</td>
-        <td>{{ j.trade }}</td>
-        <td>{{ j.vendor }}</td>
-        <td>{{ j.jobOwner }}</td>
-        <td>{{ j.dateReceived | date:'short' }}</td>
-        <td>{{ j.state }}</td>
-        <td>{{ j.eta }}</td>
-        <td>{{ j.caller }}</td>
-        <td>{{ j.nte | currency }}</td>
-        <td>{{ j.vendorNTE | currency }}</td>
-        <td>{{ j.quote | currency }}</td>
-        <td>{{ j.active ? 'Yes' : 'No' }}</td>
-        <td>
-          <button type="button" class="btn btn-edit" [routerLink]="['/jobs/edit', j.rowId]">Edit</button>
-          <button type="button" class="btn btn-delete" (click)="onDeleteJob(j.rowId)">Delete</button>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorRates'" class="card">
-    <h1>Vendor Rates</h1>
-    <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-      <input type="text" placeholder="Search rates..." (input)="onFilterChange($event.target.value)"
-        [value]="filterText" class="search-box"
-        style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
-      <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
-      <button type="button" class="btn-create" [routerLink]="['/vendor-rates/new']"
-        [queryParams]="{ vendorId: vendor.rowId, vendorName: vendor.vendorName }">Add New Rate</button>
-    </div>
-    <table>
-      <tr>
-        <th>Vendor Name</th>
-        <th>Trade</th>
-        <th>Rate Type</th>
-        <th>State</th>
-        <th>Rate</th>
-        <th>Actions</th>
-      </tr>
-      <tr *ngFor="let r of rates">
-        <td>{{ r.vendorName }}</td>
-        <td>{{ r.trade }}</td>
-        <td>{{ r.rateType }}</td>
-        <td>{{ r.state }}</td>
-        <td>{{ r.rate | currency }}</td>
-        <td>
-          <button type="button" class="btn btn-edit" [routerLink]="['/vendor-rates/edit', r.rowId]">Edit</button>
-          <button type="button" class="btn btn-delete" (click)="onDeleteRate(r.rowId)">Delete</button>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorNotifications'" class="card">
-    <h1>Vendor Notifications</h1>
-    <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-      <input type="text" placeholder="Search notifications..." (input)="onFilterChange($event.target.value)"
-        [value]="filterText" class="search-box"
-        style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
-      <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
-      <button type="button" class="btn-create" [routerLink]="['/vendor-notifications/new']"
-        [queryParams]="{ vendorId: vendor.rowId, vendorName: vendor.vendorName }">Add New
-        Notification</button>
-    </div>
-    <table>
-      <tr>
-        <th>VendorName</th>
-        <th>Status</th>
-        <th>Service Type</th>
-        <th>Service Class</th>
-        <th>Email</th>
-        <th>Actions</th>
-      </tr>
-      <tr *ngFor="let n of notifications">
-        <td><a [routerLink]="['/vendor-notifications/view', n.rowId]">{{ n.vendorName }}</a></td>
-        <td>{{ n.status }}</td>
-        <td>{{ n.serviceType }}</td>
-        <td>{{ n.serviceClass }}</td>
-        <td>{{ n.email }}</td>
-        <td>
-          <button type="button" class="btn btn-edit"
-            [routerLink]="['/vendor-notifications/edit', n.rowId]">Edit</button>
-          <button type="button" class="btn btn-delete" (click)="onDeleteNotification(n.rowId)">Delete</button>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorClassification'" class="card">
-    <app-vendor-classification-list [vendorId]="vendor.rowId"></app-vendor-classification-list>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorContractStatus'" class="card">
-    <app-vendor-contract-status-list [vendorId]="vendor.rowId"></app-vendor-contract-status-list>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorCoverage'" class="card">
-    <app-vendor-coverage-list [vendorId]="vendor.rowId"></app-vendor-coverage-list>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorAssets'" class="card">
-    <h1>Vendor Asset List</h1>
-    <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-      <input type="text" placeholder="Search asset name, vendor ID..." (input)="onFilterChange($event.target.value)"
-        [value]="filterText" class="search-box"
-        style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
-      <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
-      <td>
-        <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
-          [checked]="activeFilter === true" />
-        <label for="active">Active</label>
-      </td>
-      <button type="button" class="btn-create" [routerLink]="['/vendor-assets/new']">Add New Vendor Asset</button>
-    </div>
-
-    <table class="list-table">
-      <thead>
-        <tr>
-          <th>Asset Name</th>
-          <th>Vendor ID</th>
-          <th>Active</th>
-          <th>Monthly Rate</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let asset of vendorAssets">
-          <td><a [routerLink]="['/vendor-assets/view', asset.rowId]">{{ asset.assetName }}</a></td>
-          <td>{{ asset.vendorId }}</td>
-          <td>{{ asset.active ? 'Yes' : 'No' }}</td>
-          <td>{{ asset.monthly | currency }}</td>
-          <td>{{ asset.startTime | date:'short' }}</td>
-          <td>{{ asset.endTime | date:'short' }}</td>
-          <td>
-            <button type="button" class="btn btn-edit" [routerLink]="['/vendor-assets/edit', asset.rowId]">Edit</button>
-            <button type="button" class="btn btn-delete" (click)="onDeleteAsset(asset.rowId)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorUsers'" class="card">
-    <h1>Vendor User List</h1>
-    <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
-      <input type="text" placeholder="Search vendor, status, service type, email..."
-        (input)="onFilterChange($event.target.value)" [value]="filterText" class="search-box"
-        style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
-      <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
-      <td>
-        <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
-          [checked]="activeFilter === true" />
-        <label for="active">Active</label>
-      </td>
-      <button class="btn-create" type="button" [routerLink]="['/vendor-users/new']"
-        [queryParams]="{ vendorId: vendor.rowId, vendorName: vendor.vendorName }">Add New Vendor User</button>
-    </div>
-
-    <table class="list-table">
-      <tr>
-        <th>User</th>
-        <th>Vendor</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Trade</th>
-        <th>Actions</th>
-      </tr>
-      <tr *ngFor="let vu of users">
-        <td><a [routerLink]="['/vendor-users/view', vu.rowId]">{{ vu.username }}</a></td>
-        <td>{{ vu.vendor }}</td>
-        <td>{{ vu.email }}</td>
-        <td>{{ vu.phone }}</td>
-        <td>{{ vu.trade }}</td>
-        <td>
-          <button type="button" class="btn btn-edit" [routerLink]="['/vendor-users/edit', vu.rowId]">Edit</button>
-          <button type="button" class="btn btn-delete" (click)="onDeleteUser(vu.rowId)">Delete</button>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorNotes'" class="card">
-    <app-vendor-notes-list [vendorId]="vendor.rowId"></app-vendor-notes-list>
-  </div>
-
-  <div *ngIf="activeTab === 'vendorMap'" class="card">
-    <app-vendor-map-list [vendorId]="vendor.rowId"></app-vendor-map-list>
-  </div>
-
+<div class="tabs">
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorJobs'" (click)="activeTab = 'vendorJobs'">
+    Jobs
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorRates'"
+    (click)="activeTab = 'vendorRates'">
+    Rates
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorNotifications'"
+    (click)="activeTab = 'vendorNotifications'">
+    Notifications
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorCoverage'"
+    (click)="activeTab = 'vendorCoverage'">
+    Coverage
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorAssets'"
+    (click)="activeTab = 'vendorAssets'">
+    Assets
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorUsers'"
+    (click)="activeTab = 'vendorUsers'">
+    Users
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorNotes'"
+    (click)="activeTab = 'vendorNotes'">
+    Notes
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorClassification'"
+    (click)="activeTab = 'vendorClassification'">
+    Classifications
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorContractStatus'"
+    (click)="activeTab = 'vendorContractStatus'">
+    Contract Status
+  </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorMap'" (click)="activeTab = 'vendorMap'">
+    Map
+  </button>
 </div>
 
-<ng-template #notFound>
-  <div class="card">
-    <p>Vendor not found.</p>
-    <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
+@if (activeTab === 'vendorJobs') {
+<div class="card">
+  <h1>Vendor Jobs</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search jobs..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <button type="button" class="btn-create" [routerLink]="['/jobs/new']">Add New Job</button>
   </div>
-</ng-template>
+  <table>
+    <tr>
+      <th>Job#</th>
+      <th>Customer</th>
+      <th>Location</th>
+      <th>ClientTracking#</th>
+      <th>ServiceType</th>
+      <th>JobStatus</th>
+      <th>Trade</th>
+      <th>Vendor</th>
+      <th>JobOwner</th>
+      <th>DateReceived</th>
+      <th>State</th>
+      <th>ETA</th>
+      <th>Caller</th>
+      <th>NTE</th>
+      <th>VendorNTE</th>
+      <th>Quote</th>
+      <th>Active</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let j of jobs">
+      <td><a [routerLink]="['/jobs/view', j.rowId]">{{ j.jobNumber }}</a></td>
+      <td>{{ j.customer }}</td>
+      <td>{{ j.location }}</td>
+      <td>{{ j.clientTrackingNumber }}</td>
+      <td>{{ j.serviceType }}</td>
+      <td>{{ j.jobStatus }}</td>
+      <td>{{ j.trade }}</td>
+      <td>{{ j.vendor }}</td>
+      <td>{{ j.jobOwner }}</td>
+      <td>{{ j.dateReceived | date:'short' }}</td>
+      <td>{{ j.state }}</td>
+      <td>{{ j.eta }}</td>
+      <td>{{ j.caller }}</td>
+      <td>{{ j.nte | currency }}</td>
+      <td>{{ j.vendorNTE | currency }}</td>
+      <td>{{ j.quote | currency }}</td>
+      <td>{{ j.active ? 'Yes' : 'No' }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/jobs/edit', j.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDeleteJob(j.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>
+}
+
+@if (activeTab === 'vendorRates') {
+<div class="card">
+  <h1>Vendor Rates</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search rates..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-rates/new']"
+      [queryParams]="{ vendorId: vendor.rowId, vendorName: vendor.vendorName }">Add New Rate</button>
+  </div>
+  <table>
+    <tr>
+      <th>Vendor Name</th>
+      <th>Trade</th>
+      <th>Rate Type</th>
+      <th>State</th>
+      <th>Rate</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let r of rates">
+      <td><a [routerLink]="['/vendor-rates/view', r.rowId]">{{ r.vendorName }}</a></td>
+      <td>{{ r.trade }}</td>
+      <td>{{ r.rateType }}</td>
+      <td>{{ r.state }}</td>
+      <td>{{ r.rate | currency }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/vendor-rates/edit', r.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDeleteRate(r.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>
+}
+
+@if (activeTab === 'vendorNotifications') {
+<div class="card">
+  <h1>Vendor Notifications</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search notifications..." (input)="onFilterChange($event.target.value)"
+      [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-notifications/new']">Add New
+      Notification</button>
+  </div>
+  <table>
+    <tr>
+      <th>VendorName</th>
+      <th>Status</th>
+      <th>Service Type</th>
+      <th>Service Class</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let n of notifications">
+      <td><a [routerLink]="['/vendor-notifications/view', n.rowId]">{{ n.vendorName }}</a></td>
+      <td>{{ n.status }}</td>
+      <td>{{ n.serviceType }}</td>
+      <td>{{ n.serviceClass }}</td>
+      <td>{{ n.email }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/vendor-notifications/edit', n.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDeleteNotification(n.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>
+}
+
+@if (activeTab === 'vendorClassification') {
+<div class="card">
+  <app-vendor-classification-list [vendorId]="vendor.rowId"></app-vendor-classification-list>
+</div>
+}
+
+@if (activeTab === 'vendorContractStatus') {
+<div class="card">
+  <app-vendor-contract-status-list [vendorId]="vendor.rowId"></app-vendor-contract-status-list>
+</div>
+}
+
+@if (activeTab === 'vendorCoverage') {
+<div class="card">
+  <h1>Vendor Coverage List</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search name, city, state, zip, contact..."
+      (input)="onFilterChange($event.target.value)" [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+      [checked]="activeFilter === true" />
+    <label for="active">Active</label>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-coverage/new']">Add New Coverage</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Zip Code</th>
+        <th>Trade</th>
+        <th>Rate</th>
+        <th>Radius</th>
+        <th>Vendor Status</th>
+        <th>Active</th>
+        <th>Created By</th>
+        <th>Created On</th>
+        <th>Modified By</th>
+        <th>Modified On</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let coverage of vendorCoverage">
+        <td>{{ coverage.rowId }}</td>
+        <td><a [routerLink]="['/vendor-coverage/view', coverage.rowId]">{{ coverage.vendorName }}</a></td>
+        <td>{{ coverage.status }}</td>
+        <td>{{ coverage.city }}</td>
+        <td>{{ coverage.state }}</td>
+        <td>{{ coverage.zipCode }}</td>
+        <td>{{ coverage.trade }}</td>
+        <td>{{ coverage.rate | currency }}</td>
+        <td>{{ coverage.radius }}</td>
+        <td>{{ coverage.vendorStatus }}</td>
+        <td>{{ coverage.active }}</td>
+        <td>{{ coverage.createdBy }}</td>
+        <td>{{ coverage.createdOn | date:'short' }}</td>
+        <td>{{ coverage.modifiedBy }}</td>
+        <td>{{ coverage.modifiedOn | date:'short' }}</td>
+        <td>
+          <button type="button" class="btn btn-edit"
+            [routerLink]="['/vendor-coverage/edit', coverage.rowId]">Edit</button>
+          <button type="button" class="btn btn-delete" (click)="onDeleteCoverage(coverage.rowId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+}
+
+@if (activeTab === 'vendorAssets') {
+<div class="card">
+  <h1>Vendor Asset List</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search asset name, vendor ID..." (input)="onFilterChange($event.target.value)"
+      [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <td>
+      <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true" />
+      <label for="active">Active</label>
+    </td>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-assets/new']">Add New Vendor Asset</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Asset Name</th>
+        <th>Vendor ID</th>
+        <th>Active</th>
+        <th>Monthly Rate</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let asset of vendorAssets">
+        <td><a [routerLink]="['/vendor-assets/view', asset.rowId]">{{ asset.assetName }}</a></td>
+        <td>{{ asset.vendorId }}</td>
+        <td>{{ asset.active ? 'Yes' : 'No' }}</td>
+        <td>{{ asset.monthly | currency }}</td>
+        <td>{{ asset.startTime | date:'short' }}</td>
+        <td>{{ asset.endTime | date:'short' }}</td>
+        <td>
+          <button type="button" class="btn btn-edit" [routerLink]="['/vendor-assets/edit', asset.rowId]">Edit</button>
+          <button type="button" class="btn btn-delete" (click)="onDeleteAsset(asset.rowId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+}
+
+@if (activeTab === 'vendorUsers') {
+<div class="card">
+  <h1>Vendor User List</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search vendor, status, service type, email..."
+      (input)="onFilterChange($event.target.value)" [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
+    <td>
+      <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true" />
+      <label for="active">Active</label>
+    </td>
+    <button class="btn-create" type="button" [routerLink]="['/vendor-users/new']">Add New Vendor User</button>
+  </div>
+
+  <table class="list-table">
+    <tr>
+      <th>User</th>
+      <th>Vendor Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Trade</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let vu of users">
+      <td><a [routerLink]="['/vendor-users/view', vu.rowId]">{{ vu.username }}</a></td>
+      <td>{{ vu.vendorName }}</td>
+      <td>{{ vu.email }}</td>
+      <td>{{ vu.phone }}</td>
+      <td>{{ vu.trade }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/vendor-users/edit', vu.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDeleteUser(vu.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>
+}
+} @else {
+<div class="card">
+  <p>Vendor not found.</p>
+  <button type="button" class="btn-return" [routerLink]="['/vendors']">Back</button>
+</div>
+}
