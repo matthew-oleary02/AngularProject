@@ -54,13 +54,20 @@ export class VendorMapListComponent implements OnInit {
     this.applyFilters();
   }
 
-  onDelete(id: number) {
-    if (!Number.isFinite(id) || id <= 0) return;
-    if (!confirm(`Delete vendor map #${id}?`)) return;
+  onDelete(id: any) {
+    const numericId = Number(id);
+    if (!Number.isFinite(numericId) || numericId <= 0) {
+      console.warn('Invalid ID for deletion:', id);
+      return;
+    }
+    if (!confirm(`Delete vendor map #${numericId}?`)) return;
 
-    this.vendorMapService.deleteVendorMap(id).subscribe({
+    console.log('Deleting vendor map with ID:', numericId);
+    this.vendorMapService.deleteVendorMap(numericId).subscribe({
       next: () => {
-        this.vendorMaps = this.vendorMaps.filter(vm => vm.rowId !== id);
+        console.log('Successfully deleted vendor map:', numericId);
+        this.allVendorMaps = this.allVendorMaps.filter(vm => Number(vm.rowId) !== numericId);
+        this.applyFilters();
       },
       error: err => {
         console.error('Error deleting vendor map:', err);

@@ -9,13 +9,16 @@ import { VendorNotificationsService } from '../services/vendor-notifications.ser
 //import { VendorAssetListComponent } from '../vendor-asset-list/vendor-asset-list';
 //import { VendorCoverageListComponent } from '../vendor-coverage-list/vendor-coverage-list';
 //import { VendorUsersListComponent } from '../vendor-users-list/vendor-users-list';
-import { VendorNotesListComponent } from '../vendor-notes-list/vendor-notes-list';
+//import { VendorNotesListComponent } from '../vendor-notes-list/vendor-notes-list';
 import { VendorMapListComponent } from '../vendor-map-list/vendor-map-list';
-import { VendorClassificationListComponent } from '../vendor-classification-list/vendor-classification-list';
-import { VendorContractStatusListComponent } from '../vendor-contract-status-list/vendor-contract-status-list';
+//import { VendorClassificationListComponent } from '../vendor-classification-list/vendor-classification-list';
+//import { VendorContractStatusListComponent } from '../vendor-contract-status-list/vendor-contract-status-list';
 import { VendorAssetService } from '../services/vendor-asset.service';
 import { VendorUsersService } from '../services/vendor-users.service';
 import { VendorCoverageService } from '../vendor-coverage.service';
+import { VendorNotesService } from '../services/vendor-notes.service';
+import { VendorClassificationService } from '../services/vendor-classification.service';
+import { VendorContractStatusService } from '../services/vendor-contract-status.service';
 
 @Component({
   selector: 'app-vendor-view',
@@ -26,10 +29,10 @@ import { VendorCoverageService } from '../vendor-coverage.service';
     //VendorAssetListComponent,
     //VendorCoverageListComponent,
     //VendorUsersListComponent,
-    VendorNotesListComponent,
+    //VendorNotesListComponent,
     VendorMapListComponent,
-    VendorClassificationListComponent,
-    VendorContractStatusListComponent
+    //VendorClassificationListComponent,
+    //VendorContractStatusListComponent
   ],
   templateUrl: './vendors-view.html',
   styleUrls: ['../../styles/view.css'],
@@ -43,12 +46,18 @@ export class VendorsViewComponent implements OnInit {
   vendorCoverage: any[] = [];
   vendorAssets: any[] = [];
   users: any[] = [];
+  vendorNotes: any[] = [];
+  vendorClassifications: any[] = [];
+  vendorContractStatus: any[] = [];
   private allJobs: any[] = [];
   private allRates: any[] = [];
   private allNotifications: any[] = [];
   private allCoverage: any[] = [];
   private allVendorAssets: any[] = [];
   private allUsers: any[] = [];
+  private allVendorNotes: any[] = [];
+  private allVendorClassifications: any[] = [];
+  private allVendorContractStatus: any[] = [];
   filterText = '';
   activeTab: string = 'vendorJobs';
   activeFilter: boolean | null = true;
@@ -61,6 +70,9 @@ export class VendorsViewComponent implements OnInit {
     private coverageService: VendorCoverageService,
     private vendorAssetService: VendorAssetService,
     private vendorUsersService: VendorUsersService,
+    private vendorNotesService: VendorNotesService,
+    private vendorClassificationsService: VendorClassificationService,
+    private vendorContractStatusService: VendorContractStatusService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -132,6 +144,32 @@ export class VendorsViewComponent implements OnInit {
         this.applyFilters();
       },
       error: err => console.error('Error fetching users:', err)
+    });
+
+    /* Fetch notes for the vendor */
+    this.vendorService.getNotesByVendor(id).subscribe({
+      next: notes => {
+        this.allVendorNotes = notes || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching notes:', err)
+    });
+
+    /* Fetch classifications for the vendor */
+    this.vendorService.getClassificationsByVendor(id).subscribe({
+      next: classifications => {
+        this.allVendorClassifications = classifications || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching classifications:', err)
+    });
+
+    this.vendorService.getContractStatusesByVendor(id).subscribe({
+      next: contractStatuses => {
+        this.allVendorContractStatus = contractStatuses || [];
+        this.applyFilters();
+      },
+      error: err => console.error('Error fetching contract statuses:', err)
     });
   }
 
@@ -233,6 +271,35 @@ export class VendorsViewComponent implements OnInit {
 
       return matchesQuery && matchesActive;
     });
+
+    this.vendorNotes = this.allVendorNotes.filter(note => {
+      const matchesActive = this.activeFilter === null ? true : (note.active === this.activeFilter);
+      const fields = [
+        note?.vendorName,
+        note?.note,
+        note?.noteDate,
+        note?.noteCreatedBy
+      ];
+      const matchesQuery = !q || fields.some(f => f?.toLowerCase().includes(q));
+
+      return matchesQuery && matchesActive;
+    });
+
+    this.vendorClassifications = this.allVendorClassifications.filter(classification => {
+      const fields = [
+        classification?.classification,
+        classification?.createdBy,
+      ];
+      return !q || fields.some(f => f?.toLowerCase().includes(q));
+    });
+
+    this.vendorContractStatus = this.allVendorContractStatus.filter(status => {
+      const fields = [
+        status?.status,
+        status?.createdBy,
+      ];
+      return !q || fields.some(f => f?.toLowerCase().includes(q));
+    });
   }
 
   clearFilter() {
@@ -303,6 +370,39 @@ export class VendorsViewComponent implements OnInit {
         this.applyFilters();
       },
       error: err => console.error('Error deleting user:', err)
+    });
+  }
+
+  onDeleteNote(id: number) {
+    if (!id || !confirm('Delete this note?')) return;
+    this.vendorNotesService.deleteVendorNote(id).subscribe({
+      next: () => {
+        this.allVendorNotes = this.allVendorNotes.filter(note => note.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting note:', err)
+    });
+  }
+
+  onDeleteClassification(id: number) {
+    if (!id || !confirm('Delete this classification?')) return;
+    this.vendorClassificationsService.deleteClassification(id).subscribe({
+      next: () => {
+        this.allVendorClassifications = this.allVendorClassifications.filter(classification => classification.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting classification:', err)
+    });
+  }
+
+  onDeleteContractStatus(id: number) {
+    if (!id || !confirm('Delete this contract status?')) return;
+    this.vendorContractStatusService.deleteContractStatus(id).subscribe({
+      next: () => {
+        this.allVendorContractStatus = this.allVendorContractStatus.filter(status => status.rowId !== id);
+        this.applyFilters();
+      },
+      error: err => console.error('Error deleting contract status:', err)
     });
   }
 }

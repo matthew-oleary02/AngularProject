@@ -62,7 +62,7 @@ import { VendorMapFormComponent } from './vendors/vendor-map-form/vendor-map-for
 import { VendorMapViewComponent } from './vendors/vendor-map-view/vendor-map-view';
 import { VendorUsersFormComponent } from './vendors/vendor-users-form/vendor-users-form';
 import { VendorUsersViewComponent } from './vendors/vendor-users-view/vendor-users-view';
-import { VendorNotesListComponent } from './vendors/vendor-notes-list/vendor-notes-list';
+
 import { VendorNotesFormComponent } from './vendors/vendor-notes-form/vendor-notes-form';
 import { VendorNotesViewComponent } from './vendors/vendor-notes-view/vendor-notes-view';
 import { VendorAssetFormComponent } from './vendors/vendor-asset-form/vendor-asset-form';
@@ -197,7 +197,6 @@ export const routes: Routes = [
   { path: 'vendor-users/edit/:id', component: VendorUsersFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-users/view/:id', component: VendorUsersViewComponent, canActivate: [AuthGuard] },
   { path: 'vendors/:id/vendor-users', component: VendorsViewComponent, canActivate: [AuthGuard] },
-  { path: 'vendor-notes', component: VendorNotesListComponent, canActivate: [AuthGuard] },
   { path: 'vendor-notes/new', component: VendorNotesFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-notes/edit/:id', component: VendorNotesFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-notes/view/:id', component: VendorNotesViewComponent, canActivate: [AuthGuard] },
@@ -205,12 +204,15 @@ export const routes: Routes = [
   { path: 'vendor-assets/new', component: VendorAssetFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-assets/edit/:id', component: VendorAssetFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-assets/view/:id', component: VendorAssetViewComponent, canActivate: [AuthGuard] },
+  { path: 'vendors/:id/vendor-assets', component: VendorsViewComponent, canActivate: [AuthGuard] },
   { path: 'vendor-classification/new', component: VendorClassificationFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-classification/edit/:id', component: VendorClassificationFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-classification/view/:id', component: VendorClassificationViewComponent, canActivate: [AuthGuard] },
+  { path: 'vendors/:id/vendor-classification', component: VendorsViewComponent, canActivate: [AuthGuard] },
   { path: 'vendor-contract-status/new', component: VendorContractStatusFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-contract-status/edit/:id', component: VendorContractStatusFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-contract-status/view/:id', component: VendorContractStatusViewComponent, canActivate: [AuthGuard] },
+  { path: 'vendors/:id/vendor-contract-status', component: VendorsViewComponent, canActivate: [AuthGuard] },
   { path: 'vendor-notifications/new', component: VendorNotificationsFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-notifications/edit/:id', component: VendorNotificationsFormComponent, canActivate: [AuthGuard] },
   { path: 'vendor-notifications/view/:id', component: VendorNotificationsViewComponent, canActivate: [AuthGuard] },

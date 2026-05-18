@@ -64,7 +64,7 @@ export class VendorMapFormComponent implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.router.navigate(['/vendor-map']);
+        this.router.navigate(['/vendor-maps']);
       },
       error: err => {
         console.error('Error saving vendor map', err);

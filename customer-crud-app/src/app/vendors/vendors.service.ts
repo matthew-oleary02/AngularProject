@@ -63,4 +63,19 @@ export class VendorService {
   getUsersByVendor(vendorId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${vendorId}/users`);
   }
+
+  /* Fetch notes for a specific vendor */
+  getNotesByVendor(vendorId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${vendorId}/notes`);
+  }
+
+  /* Fetch classifications for a specific vendor */
+  getClassificationsByVendor(vendorId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${vendorId}/classifications`);
+  }
+
+  /* Fetch contract statuses for a specific vendor */
+  getContractStatusesByVendor(vendorId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${vendorId}/contract-statuses`);
+  }
 }

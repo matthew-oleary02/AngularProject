@@ -4,21 +4,40 @@
   <div class="detail-grid">
     <h2 class="title">{{ classification.classification }}</h2>
 
-    <div class="item"><div class="label">ID</div><div class="value">{{ classification.rowId }}</div></div>
-    <div class="item"><div class="label">Vendor ID</div><div class="value">{{ classification.vendorId }}</div></div>
-    <div class="item"><div class="label">Classification</div><div class="value">{{ classification.classification }}</div></div>
-    
-    <div class="group-title">Audit Info</div>
-    <div class="item"><div class="label">Created By</div><div class="value">{{ classification.createdBy }}</div></div>
-    <div class="item"><div class="label">Created On</div><div class="value">{{ classification.createdOn | date:'short' }}</div></div>
-    <div class="item"><div class="label">Modified By</div><div class="value">{{ classification.modifiedBy }}</div></div>
-    <div class="item"><div class="label">Modified On</div><div class="value">{{ classification.modifiedOn | date:'short' }}</div></div>
-  </div>
+    <div class="item">
+      <div class="label">ID</div>
+      <div class="value">{{ classification.rowId }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Vendor ID</div>
+      <div class="value">{{ classification.vendorId }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Classification</div>
+      <div class="value">{{ classification.classification }}</div>
+    </div>
 
-  <div class="actions" style="margin-top: 20px;">
-    <button type="button" class="btn-return" [routerLink]="['/vendors']">Back to Vendors</button>
-    <button type="button" class="btn-edit" [routerLink]="['/vendor-classification/edit', classification.rowId]">Edit</button>
+    <div class="group-title">Audit Info</div>
+    <div class="item">
+      <div class="label">Created By</div>
+      <div class="value">{{ classification.createdBy }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Created On</div>
+      <div class="value">{{ classification.createdOn | date:'short' }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Modified By</div>
+      <div class="value">{{ classification.modifiedBy }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Modified On</div>
+      <div class="value">{{ classification.modifiedOn | date:'short' }}</div>
+    </div>
   </div>
+  <button type="button" class="btn-return" [routerLink]="['/vendors']">Back to Vendors</button>
+  <button type="button" class="btn-edit"
+    [routerLink]="['/vendor-classification/edit', classification.rowId]">Edit</button>
 </div>
 
 <ng-template #notFound>

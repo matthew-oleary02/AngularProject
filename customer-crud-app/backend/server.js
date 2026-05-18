@@ -2945,6 +2945,93 @@ app.get('/vendors/:id/assets', async (req, res) => {
   }
 });
 
+// GET /vendors/:id/notes (fetch notes for a specific vendor)
+app.get('/vendors/:id/notes', async (req, res) => {
+  try {
+    const vendorId = parseInt(req.params.id, 10);
+    if (Number.isNaN(vendorId)) {
+      return res.status(400).json({ error: 'Invalid vendor id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('VendorId', sql.Int, vendorId);
+    const result = await request.query(`
+      SELECT vn.* FROM VendorNote vn
+      INNER JOIN Vendor v ON vn.Vendor = v.VendorName
+      WHERE v.RowId = @VendorId
+    `);
+    const notes = result.recordset.map(row => ({
+      rowId: row.RowId,
+      vendor: row.Vendor,
+      status: row.Status,
+      message: row.Message,
+      active: row.Active,
+      enteredBy: row.EnteredBy,
+      dateEntered: row.DateEntered,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(notes);
+  } catch (err) {
+    console.error('Error fetching notes for vendor:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendors/:id/classifications
+app.get('/vendors/:id/classifications', async (req, res) => {
+  try {
+    const vendorId = parseInt(req.params.id, 10);
+    if (Number.isNaN(vendorId)) {
+      return res.status(400).json({ error: 'Invalid vendor id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('VendorId', sql.Int, vendorId);
+    const result = await request.query('SELECT * FROM VendorClassification WHERE VendorId = @VendorId');
+    const classifications = result.recordset.map(row => ({
+      rowId: row.RowId,
+      vendorId: row.VendorId,
+      classification: row.Classification,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(classifications);
+  } catch (err) {
+    console.error('Error fetching classifications for vendor:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /vendors/:id/contract-statuses
+app.get('/vendors/:id/contract-statuses', async (req, res) => {
+  try {
+    const vendorId = parseInt(req.params.id, 10);
+    if (Number.isNaN(vendorId)) {
+      return res.status(400).json({ error: 'Invalid vendor id.' });
+    }
+    await sql.connect(config);
+    const request = new sql.Request();
+    request.input('VendorId', sql.Int, vendorId);
+    const result = await request.query('SELECT * FROM VendorContractStatus WHERE VendorId = @VendorId');
+    const contractStatuses = result.recordset.map(row => ({
+      rowId: row.RowId,
+      vendorId: row.VendorId,
+      status: row.Status,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(contractStatuses);
+  } catch (err) {
+    console.error('Error fetching vendor contract statuses for vendor:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 // POST /vendors (add new vendor)
 app.post('/vendors', async (req, res) => {
   try {
@@ -3268,10 +3355,10 @@ app.get('/vendor-maps', async (req, res) => {
     await sql.connect(config);
     const result = await sql.query('SELECT * FROM VendorMap');
     const vendorMaps = result.recordset.map(row => ({
-      rowId: row.RowID,
-      vendorId: row.VendorID,
+      rowId: row.RowID || row.RowId,
+      vendorId: row.VendorID || row.VendorId,
       vendorName: row.VendorName,
-      vendorCoverageId: row.VendorCoverageID,
+      vendorCoverageId: row.VendorCoverageID || row.VendorCoverageId,
       coordinates: row.Coordinates,
       createdBy: row.CreatedBy,
       createdOn: row.CreatedOn,
@@ -3298,10 +3385,10 @@ app.get('/vendor-maps/:id', async (req, res) => {
     }
     const row = result.recordset[0];
     const vendorMap = {
-      rowId: row.RowID,
-      vendorId: row.VendorID,
+      rowId: row.RowID || row.RowId,
+      vendorId: row.VendorID || row.VendorId,
       vendorName: row.VendorName,
-      vendorCoverageId: row.VendorCoverageID,
+      vendorCoverageId: row.VendorCoverageID || row.VendorCoverageId,
       coordinates: row.Coordinates,
       createdBy: row.CreatedBy,
       createdOn: row.CreatedOn,
@@ -3802,17 +3889,17 @@ app.delete('/vendor-assets/:id', async (req, res) => {
 app.get('/vendor-classification', async (req, res) => {
   try {
     await sql.connect(config);
-    const result = await sql.query('SELECT * FROM VendorClassifications');
-    const vendorClassifications = result.recordset.map(row => ({
-      rowId: row.RowID,
-      vendorId: row.VendorID,
-      classificationId: row.ClassificationID,
+    const result = await sql.query('SELECT * FROM VendorClassification');
+    const vendorClassification = result.recordset.map(row => ({
+      rowId: row.RowId,
+      vendorId: row.VendorId,
+      classification: row.Classification,
       createdBy: row.CreatedBy,
       createdOn: row.CreatedOn,
       modifiedBy: row.ModifiedBy,
       modifiedOn: row.ModifiedOn
     }));
-    res.json(vendorClassifications);
+    res.json(vendorClassification);
   } catch (err) {
     console.error('Error fetching vendor classifications:', err);
     res.status(500).send('Server error');
@@ -3826,15 +3913,15 @@ app.get('/vendor-classification/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
-    const result = await request.query('SELECT * FROM VendorClassifications WHERE RowID = @RowID');
+    const result = await request.query('SELECT * FROM VendorClassification WHERE RowID = @RowID');
     if (result.recordset.length === 0) {
       return res.status(404).json({ message: 'Vendor classification not found' });
     }
     const row = result.recordset[0];
     const vendorClassification = {
-      rowId: row.RowID,
-      vendorId: row.VendorID,
-      classificationId: row.ClassificationID,
+      rowId: row.RowId,
+      vendorId: row.VendorId,
+      classification: row.Classification,
       createdBy: row.CreatedBy,
       createdOn: row.CreatedOn,
       modifiedBy: row.ModifiedBy,
@@ -3853,15 +3940,15 @@ app.post('/vendor-classification', async (req, res) => {
     await sql.connect(config);
     const vendorClassification = req.body;
     const query = `
-      INSERT INTO VendorClassifications (
-        VendorID, ClassificationID, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+      INSERT INTO VendorClassification (
+        VendorId, Classification, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
       ) VALUES (
-        @VendorID, @ClassificationID, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+        @VendorId, @Classification, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
       )
     `;
     const request = new sql.Request();
-    request.input('VendorID', sql.Int, vendorClassification.vendorId);
-    request.input('ClassificationID', sql.Int, vendorClassification.classificationId);
+    request.input('VendorId', sql.Int, vendorClassification.vendorId);
+    request.input('Classification', sql.VarChar, vendorClassification.classification);
     request.input('CreatedBy', sql.VarChar, vendorClassification.createdBy);
     request.input('CreatedOn', sql.Date, vendorClassification.createdOn);
     request.input('ModifiedBy', sql.VarChar, vendorClassification.modifiedBy);
@@ -3881,9 +3968,9 @@ app.put('/vendor-classification/:id', async (req, res) => {
     const vendorClassification = req.body;
     const id = req.params.id;
     const query = `
-      UPDATE VendorClassifications SET
-        VendorID = @VendorID,
-        ClassificationID = @ClassificationID,
+      UPDATE VendorClassification SET
+        VendorId = @VendorId,
+        Classification = @Classification,
         CreatedBy = @CreatedBy,
         CreatedOn = @CreatedOn,
         ModifiedBy = @ModifiedBy,
@@ -3891,9 +3978,9 @@ app.put('/vendor-classification/:id', async (req, res) => {
       WHERE RowID = @RowID
     `;
     const request = new sql.Request();
-    request.input('RowID', sql.Int, id);
-    request.input('VendorID', sql.Int, vendorClassification.vendorId);
-    request.input('ClassificationID', sql.Int, vendorClassification.classificationId);
+    request.input('RowId', sql.Int, id);
+    request.input('VendorId', sql.Int, vendorClassification.vendorId);
+    request.input('Classification', sql.VarChar, vendorClassification.classification);
     request.input('CreatedBy', sql.VarChar, vendorClassification.createdBy);
     request.input('CreatedOn', sql.Date, vendorClassification.createdOn);
     request.input('ModifiedBy', sql.VarChar, vendorClassification.modifiedBy);
@@ -3912,8 +3999,8 @@ app.delete('/vendor-classification/:id', async (req, res) => {
     await sql.connect(config);
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
-    request.input('RowID', sql.Int, id);
-    await request.query('DELETE FROM VendorClassifications WHERE RowID = @RowID');
+    request.input('RowId', sql.Int, id);
+    await request.query('DELETE FROM VendorClassification WHERE RowID = @RowID');
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting vendor classification:', err);
@@ -3932,8 +4019,8 @@ app.get('/vendor-contract-status', async (req, res) => {
     const result = await sql.query('SELECT * FROM VendorContractStatus');
     const vendorContractStatuses = result.recordset.map(row => ({
       rowId: row.RowID,
-      code: row.Code,
-      description: row.Description,
+      vendorId: row.VendorId,
+      status: row.Status,
       createdBy: row.CreatedBy,
       createdOn: row.CreatedOn,
       modifiedBy: row.ModifiedBy,
@@ -3960,8 +4047,8 @@ app.get('/vendor-contract-status/:id', async (req, res) => {
     const row = result.recordset[0];
     const vendorContractStatus = {
       rowId: row.RowID,
-      code: row.Code,
-      description: row.Description,
+      vendorId: row.VendorId,
+      status: row.Status,
       createdBy: row.CreatedBy,
       createdOn: row.CreatedOn,
       modifiedBy: row.ModifiedBy,
@@ -3981,14 +4068,14 @@ app.post('/vendor-contract-status', async (req, res) => {
     const vendorContractStatus = req.body;
     const query = `
       INSERT INTO VendorContractStatus (
-        Code, Description, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+        VendorId, Status, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
       ) VALUES (
-        @Code, @Description, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+        @VendorId, @Status, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
       )
     `;
     const request = new sql.Request();
-    request.input('Code', sql.VarChar, vendorContractStatus.code);
-    request.input('Description', sql.VarChar, vendorContractStatus.description);
+    request.input('VendorId', sql.Int, vendorContractStatus.vendorId);
+    request.input('Status', sql.VarChar, vendorContractStatus.status);
     request.input('CreatedBy', sql.VarChar, vendorContractStatus.createdBy);
     request.input('CreatedOn', sql.Date, vendorContractStatus.createdOn);
     request.input('ModifiedBy', sql.VarChar, vendorContractStatus.modifiedBy);
@@ -4009,8 +4096,8 @@ app.put('/vendor-contract-status/:id', async (req, res) => {
     const id = req.params.id;
     const query = `
       UPDATE VendorContractStatus SET
-        Code = @Code,
-        Description = @Description,
+        VendorId = @VendorId,
+        Status = @Status,
         CreatedBy = @CreatedBy,
         CreatedOn = @CreatedOn,
         ModifiedBy = @ModifiedBy,
@@ -4019,8 +4106,8 @@ app.put('/vendor-contract-status/:id', async (req, res) => {
     `;
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
-    request.input('Code', sql.VarChar, vendorContractStatus.code);
-    request.input('Description', sql.VarChar, vendorContractStatus.description);
+    request.input('VendorId', sql.Int, vendorContractStatus.vendorId);
+    request.input('Status', sql.VarChar, vendorContractStatus.status);
     request.input('CreatedBy', sql.VarChar, vendorContractStatus.createdBy);
     request.input('CreatedOn', sql.Date, vendorContractStatus.createdOn);
     request.input('ModifiedBy', sql.VarChar, vendorContractStatus.modifiedBy);
@@ -4056,17 +4143,19 @@ app.delete('/vendor-contract-status/:id', async (req, res) => {
 app.get('/vendor-notes', async (req, res) => {
   try {
     await sql.connect(config);
-    const result = await sql.query('SELECT * FROM VendorNotes');
-    const vendorNotes = result.recordset.map(row => ({
-      rowId: row.RowID,
-      vendorId: row.VendorID,
-      note: row.Note,
-      createdBy: row.CreatedBy,
-      createdOn: row.CreatedOn,
+    const result = await sql.query('SELECT * FROM VendorNote');
+    const vendorNote = result.recordset.map(row => ({
+      rowId: row.RowId,
+      vendor: row.Vendor,
+      status: row.Status,
+      message: row.Message,
+      active: row.Active,
+      enteredBy: row.EnteredBy,
+      dateEntered: row.DateEntered,
       modifiedBy: row.ModifiedBy,
       modifiedOn: row.ModifiedOn
     }));
-    res.json(vendorNotes);
+    res.json(vendorNote);
   } catch (err) {
     console.error('Error fetching vendor notes:', err);
     res.status(500).send('Server error');
@@ -4079,18 +4168,20 @@ app.get('/vendor-notes/:id', async (req, res) => {
     await sql.connect(config);
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
-    request.input('RowID', sql.Int, id);
-    const result = await request.query(`SELECT * FROM VendorNotes WHERE RowID = @RowID`);
+    request.input('RowId', sql.Int, id);
+    const result = await request.query(`SELECT * FROM VendorNote WHERE RowId = @RowId`);
     if (result.recordset.length === 0) {
       return res.status(404).json({ message: 'Vendor note not found' });
     }
     const row = result.recordset[0];
     const vendorNote = {
-      rowId: row.RowID,
-      vendorId: row.VendorID,
-      note: row.Note,
-      createdBy: row.CreatedBy,
-      createdOn: row.CreatedOn,
+      rowId: row.RowId,
+      vendor: row.Vendor,
+      status: row.Status,
+      message: row.Message,
+      active: row.Active,
+      enteredBy: row.EnteredBy,
+      dateEntered: row.DateEntered,
       modifiedBy: row.ModifiedBy,
       modifiedOn: row.ModifiedOn
     };
@@ -4107,19 +4198,19 @@ app.post('/vendor-notes', async (req, res) => {
     await sql.connect(config);
     const vendorNote = req.body;
     const query = `
-      INSERT INTO VendorNotes (
-        VendorID, Note, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+      INSERT INTO VendorNote (
+        Vendor, Status, Message, Active, EnteredBy, DateEntered, ModifiedBy, ModifiedOn
       ) VALUES (
-        @VendorID, @Note, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+        @Vendor, @Status, @Message, @Active, @EnteredBy, GETDATE(), @ModifiedBy, GETDATE()
       )
     `;
     const request = new sql.Request();
-    request.input('VendorID', sql.Int, vendorNote.vendorId);
-    request.input('Note', sql.VarChar, vendorNote.note);
-    request.input('CreatedBy', sql.VarChar, vendorNote.createdBy);
-    request.input('CreatedOn', sql.Date, vendorNote.createdOn);
-    request.input('ModifiedBy', sql.VarChar, vendorNote.modifiedBy);
-    request.input('ModifiedOn', sql.Date, vendorNote.modifiedOn);
+    request.input('Vendor', sql.VarChar, vendorNote.vendor);
+    request.input('Status', sql.VarChar, vendorNote.status);
+    request.input('Message', sql.VarChar, vendorNote.message);
+    request.input('Active', sql.Bit, vendorNote.active);
+    request.input('EnteredBy', sql.VarChar, vendorNote.enteredBy || 'admin');
+    request.input('ModifiedBy', sql.VarChar, vendorNote.modifiedBy || 'admin');
     await request.query(query);
     res.status(201).json({ message: 'Vendor note added successfully' });
   } catch (err) {
@@ -4135,23 +4226,22 @@ app.put('/vendor-notes/:id', async (req, res) => {
     const vendorNote = req.body;
     const id = req.params.id;
     const query = `
-      UPDATE VendorNotes SET
-        VendorID = @VendorID,
-        Note = @Note,
-        CreatedBy = @CreatedBy,
-        CreatedOn = @CreatedOn,
+      UPDATE VendorNote SET
+        Vendor = @Vendor,
+        Status = @Status,
+        Message = @Message,
+        Active = @Active,
         ModifiedBy = @ModifiedBy,
-        ModifiedOn = @ModifiedOn
+        ModifiedOn = GETDATE()
       WHERE RowID = @RowID
     `;
     const request = new sql.Request();
-    request.input('RowID', sql.Int, id);
-    request.input('VendorID', sql.Int, vendorNote.vendorId);
-    request.input('Note', sql.VarChar, vendorNote.note);
-    request.input('CreatedBy', sql.VarChar, vendorNote.createdBy);
-    request.input('CreatedOn', sql.Date, vendorNote.createdOn);
-    request.input('ModifiedBy', sql.VarChar, vendorNote.modifiedBy);
-    request.input('ModifiedOn', sql.Date, vendorNote.modifiedOn);
+    request.input('RowId', sql.Int, id);
+    request.input('Vendor', sql.VarChar, vendorNote.vendor);
+    request.input('Status', sql.VarChar, vendorNote.status);
+    request.input('Message', sql.VarChar, vendorNote.message);
+    request.input('Active', sql.Bit, vendorNote.active);
+    request.input('ModifiedBy', sql.VarChar, vendorNote.modifiedBy || 'admin');
     await request.query(query);
     res.status(200).json({ message: 'Vendor note updated successfully' });
   } catch (err) {
@@ -4167,7 +4257,7 @@ app.delete('/vendor-notes/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     const request = new sql.Request();
     request.input('RowID', sql.Int, id);
-    await request.query('DELETE FROM VendorNotes WHERE RowID = @RowID');
+    await request.query('DELETE FROM VendorNote WHERE RowID = @RowID');
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting vendor note:', err);

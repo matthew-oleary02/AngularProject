@@ -258,13 +258,123 @@
 
 @if (activeTab === 'vendorClassification') {
 <div class="card">
-  <app-vendor-classification-list [vendorId]="vendor.rowId"></app-vendor-classification-list>
+  <h1>Vendor Classifications</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search classifications..." (input)="onFilterChange($any($event.target).value)"
+      [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-classification/new']">Add New
+      Classification</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Classification</th>
+        <th>Created On</th>
+        <th>Created By</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of vendorClassifications">
+        <td>{{ c.rowId }}</td>
+        <td><a [routerLink]="['/vendor-classification/view', c.rowId]">{{ c.classification }}</a>
+        <td>{{ c.createdOn | date:'short' }}</td>
+        <td>{{ c.createdBy }}</td>
+        <td>
+          <button type="button" class="btn btn-edit"
+            [routerLink]="['/vendor-classification/edit', c.rowId]">Edit</button>
+          <button type="button" class="btn btn-delete" (click)="onDeleteClassification(c.rowId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 }
 
 @if (activeTab === 'vendorContractStatus') {
 <div class="card">
-  <app-vendor-contract-status-list [vendorId]="vendor.rowId"></app-vendor-contract-status-list>
+  <h1>Vendor Contract Status</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search status..." (input)="onFilterChange($any($event.target).value)"
+      [value]="filterText" class="search-box"
+      style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-contract-status/new']">Add New Status</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Created On</th>
+        <th>Created By</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of vendorContractStatus">
+        <td>{{ s.rowId }}</td>
+        <td><a [routerLink]="['/vendor-contract-status/view', s.rowId]">{{ s.status }}</a>
+        <td>{{ s.createdOn | date:'short' }}</td>
+        <td>{{ s.createdBy }}</td>
+        <td>
+          <button type="button" class="btn btn-edit"
+            [routerLink]="['/vendor-contract-status/edit', s.rowId]">Edit</button>
+          <button type="button" class="btn btn-delete" (click)="onDeleteContractStatus(s.rowId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+}
+
+@if (activeTab === 'vendorNotes') {
+<div class="card">
+  <h1>Vendor Notes</h1>
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search here..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <button type="button" class="btn-return" (click)="clearFilter()">Clear</button>
+    <div>
+      <input type="checkbox" id="active" name="active" (change)="onActiveToggle($event.target.checked)"
+        [checked]="activeFilter === true" />
+      <label for="active">Active</label>
+    </div>
+    <button type="button" class="btn-create" [routerLink]="['/vendor-notes/new']">Add New Note</button>
+  </div>
+
+  <table>
+    <tr>
+      <th>Status</th>
+      <th>Vendor</th>
+      <th>Message</th>
+      <th>Active</th>
+      <th>Last Update</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let note of vendorNotes">
+      <td><a [routerLink]="['/vendor-notes/view', note.rowId]">{{ note.status }}</a></td>
+      <td>{{ note.vendor }}</td>
+      <td>{{ note.message }}</td>
+      <td>{{ note.active ? 'Yes' : 'No' }}</td>
+      <td>{{ note.modifiedOn | date:'short' }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/vendor-notes/edit', note.rowId]">Edit</button>
+        <button type="button" class="btn btn-delete" (click)="onDeleteNote(note.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>
+}
+
+@if (activeTab === 'vendorMap') {
+<div class="card">
+  <app-vendor-map-list [vendorId]="vendor.rowId"></app-vendor-map-list>
 </div>
 }
 
