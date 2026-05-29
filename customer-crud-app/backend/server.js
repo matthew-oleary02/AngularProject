@@ -2084,6 +2084,257 @@ app.delete('/customer-eta/:id', async (req, res) => {
 });
 
 /* ===========================
+    JOBS ETA ENDPOINTS
+=========================== */
+
+// GET /jobs-eta (all job eta)
+app.get('/jobs-eta', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM JobsETA');
+    const jobsETAs = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      job: row.Job,
+      serviceType: row.ServiceType,
+      etaHours: row.ETAHours,
+      hoursBusDays: row.HoursBusDays
+    }));
+    res.json(jobsETAs);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /jobs-eta/:id (single job eta by ID)
+app.get('/jobs-eta/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM JobsETA WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Job ETA not found' });
+    }
+    const row = result.recordset[0];
+    const jobETA = {
+      rowId: Number(row.RowID),
+      job: row.Job,
+      serviceType: row.ServiceType,
+      etaHours: row.ETAHours,
+      hoursBusDays: row.HoursBusDays
+    };
+    res.json(jobETA);
+  } catch (err) {
+    console.error('Error fetching job ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /jobs-eta (add new job eta)
+app.post('/jobs-eta', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const jobETA = req.body;
+    const query = `
+      INSERT INTO JobsETA (
+        Job, ServiceType, ETAHours, HoursBusDays
+      ) VALUES (
+        @Job, @ServiceType, @ETAHours, @HoursBusDays
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Job', sql.VarChar, jobETA.job);
+    request.input('ServiceType', sql.VarChar, jobETA.serviceType);
+    request.input('ETAHours', sql.Int, jobETA.etaHours);
+    request.input('HoursBusDays', sql.Int, jobETA.hoursBusDays);
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Job ETA added successfully' });
+  } catch (err) {
+    console.error('Error adding job ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /jobs-eta/:id (update existing job eta)
+app.put('/jobs-eta/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const jobETA = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE JobsETA SET
+        Job = @Job,
+        ServiceType = @ServiceType,
+        ETAHours = @ETAHours,
+        HoursBusDays = @HoursBusDays
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Job', sql.VarChar, jobETA.job);
+    request.input('ServiceType', sql.VarChar, jobETA.serviceType);
+    request.input('ETAHours', sql.Int, jobETA.etaHours);
+    request.input('HoursBusDays', sql.Int, jobETA.hoursBusDays);
+    await request.query(query);
+    res.status(200).json({ message: 'Job ETA updated successfully' });
+  } catch (err) {
+    console.error('Error updating job ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /jobs-eta/:id (delete job eta)
+app.delete('/jobs-eta/:id', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM JobsETA WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting job ETA:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
+    JOB NOTES ENDPOINTS
+=========================== */
+
+// GET /job-notes (all job notes)
+app.get('/job-notes', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const result = await sql.query('SELECT * FROM JobNotes');
+    const jobNotes = result.recordset.map(row => ({
+      rowId: Number(row.RowID),
+      job: row.Job,
+      noteType: row.NoteType,
+      note: row.Note,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    }));
+    res.json(jobNotes);
+  } catch (err) {
+    console.error('SQL error', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// GET /job-notes/:id (single job note by ID)
+app.get('/job-notes/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    const result = await request.query('SELECT * FROM JobNotes WHERE RowID = @RowID');
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Job note not found' });
+    }
+    const row = result.recordset[0];
+    const jobNote = {
+      rowId: Number(row.RowID),
+      job: row.Job,
+      noteType: row.NoteType,
+      note: row.Note,
+      createdBy: row.CreatedBy,
+      createdOn: row.CreatedOn,
+      modifiedBy: row.ModifiedBy,
+      modifiedOn: row.ModifiedOn
+    };
+    res.json(jobNote);
+  } catch (err) {
+    console.error('Error fetching job note:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// POST /job-notes (add new job note)
+app.post('/job-notes', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const jobNote = req.body;
+    const query = `
+      INSERT INTO JobNotes (
+        Job, NoteType, Note, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn
+      ) VALUES (
+        @Job, @NoteType, @Note, @CreatedBy, @CreatedOn, @ModifiedBy, @ModifiedOn
+      )
+    `;
+    const request = new sql.Request();
+    request.input('Job', sql.VarChar, jobNote.job);
+    request.input('NoteType', sql.VarChar, jobNote.noteType);
+    request.input('Note', sql.VarChar, jobNote.note);
+    request.input('CreatedBy', sql.VarChar, jobNote.createdBy);
+    request.input('CreatedOn', sql.DateTime, jobNote.createdOn);
+    request.input('ModifiedBy', sql.VarChar, jobNote.modifiedBy);
+    request.input('ModifiedOn', sql.DateTime, jobNote.modifiedOn);
+    await request.query(query);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json({ message: 'Job note added successfully' });
+  } catch (err) {
+    console.error('Error adding job note:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// PUT /job-notes/:id (update existing job note)
+app.put('/job-notes/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const jobNote = req.body;
+    const id = req.params.id;
+    const query = `
+      UPDATE JobNotes SET
+        Job = @Job,
+        NoteType = @NoteType,
+        Note = @Note,
+        CreatedBy = @CreatedBy,
+        CreatedOn = @CreatedOn,
+        ModifiedBy = @ModifiedBy,
+        ModifiedOn = @ModifiedOn
+      WHERE RowID = @RowID
+    `;
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    request.input('Job', sql.VarChar, jobNote.job);
+    request.input('NoteType', sql.VarChar, jobNote.noteType);
+    request.input('Note', sql.VarChar, jobNote.note);
+    request.input('CreatedBy', sql.VarChar, jobNote.createdBy);
+    request.input('CreatedOn', sql.DateTime, jobNote.createdOn);
+    request.input('ModifiedBy', sql.VarChar, jobNote.modifiedBy);
+    request.input('ModifiedOn', sql.DateTime, jobNote.modifiedOn);
+    await request.query(query);
+    res.status(200).json({ message: 'Job note updated successfully' });
+  } catch (err) {
+    console.error('Error updating job note:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// DELETE /job-notes/:id (delete job note)
+app.delete('/job-notes/:id', async (req, res) => {
+  try {
+    await sql.connect(config);
+    const id = parseInt(req.params.id, 10);
+    const request = new sql.Request();
+    request.input('RowID', sql.Int, id);
+    await request.query('DELETE FROM JobNotes WHERE RowID = @RowID');
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting job note:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+/* ===========================
     CUSTOMER RATES ENDPOINTS
 =========================== */
 

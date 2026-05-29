@@ -24,6 +24,14 @@ import { CustomerNTEFormComponent } from './customers/customer-nte-form/customer
 import { CustomerNTEViewComponent } from './customers/customer-nte-view/customer-nte-view';
 import { CustomerETAFormComponent } from './customers/customer-eta-form/customer-eta-form';
 import { CustomerETAViewComponent } from './customers/customer-eta-view/customer-eta-view';
+import { JobsETAFormComponent } from './jobs/jobs-eta-form/jobs-eta-form';
+import { JobsETAViewComponent } from './jobs/jobs-eta-view/jobs-eta-view';
+import { JobsNotesFormComponent } from './jobs/jobs-notes-form/jobs-notes-form';
+import { JobsNotesViewComponent } from './jobs/jobs-notes-view/jobs-notes-view';
+import { JobsEquipmentFormComponent } from './jobs/jobs-equipment-form/jobs-equipment-form';
+import { JobsEquipmentViewComponent } from './jobs/jobs-equipment-view/jobs-equipment-view';
+import { JobsVendorAssignmentFormComponent } from './jobs/jobs-vendor-assignment-form/jobs-vendor-assignment-form';
+import { JobsVendorAssignmentViewComponent } from './jobs/jobs-vendor-assignment-view/jobs-vendor-assignment-view';
 import { CustomerRatesFormComponent } from './customers/customer-rates-form/customer-rates-form';
 import { CustomerRatesViewComponent } from './customers/customer-rates-view/customer-rates-view';
 import { CustomerNotifsFormComponent } from './customers/customer-notifs-form/customer-notifs-form';
@@ -141,6 +149,22 @@ export const routes: Routes = [
   { path: 'customer-eta/new', component: CustomerETAFormComponent, canActivate: [AuthGuard] },
   { path: 'customer-eta/edit/:id', component: CustomerETAFormComponent, canActivate: [AuthGuard] },
   { path: 'customer-eta/view/:id', component: CustomerETAViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs/:id/jobs-eta', component: JobsViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-eta/new', component: JobsETAFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-eta/edit/:id', component: JobsETAFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-eta/view/:id', component: JobsETAViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs/:id/jobs-notes', component: JobsViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-notes/new', component: JobsNotesFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-notes/edit/:id', component: JobsNotesFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-notes/view/:id', component: JobsNotesViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs/:id/jobs-equipment', component: JobsViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-equipment/new', component: JobsEquipmentFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-equipment/edit/:id', component: JobsEquipmentFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-equipment/view/:id', component: JobsEquipmentViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs/:id/jobs-vendor-assignments', component: JobsViewComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-vendor-assignments/new', component: JobsVendorAssignmentFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-vendor-assignments/edit/:id', component: JobsVendorAssignmentFormComponent, canActivate: [AuthGuard] },
+  { path: 'jobs-vendor-assignments/view/:id', component: JobsVendorAssignmentViewComponent, canActivate: [AuthGuard] },
   { path: 'customers/:id/customer-rates', component: CustomerViewComponent, canActivate: [AuthGuard] },
   { path: 'customer-rates/new', component: CustomerRatesFormComponent, canActivate: [AuthGuard] },
   { path: 'customer-rates/edit/:id', component: CustomerRatesFormComponent, canActivate: [AuthGuard] },

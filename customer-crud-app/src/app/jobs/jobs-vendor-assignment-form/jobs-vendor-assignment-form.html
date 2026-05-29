@@ -1,0 +1,39 @@
+<h1>{{ isEdit ? 'Edit' : 'Add' }} Jobs Vendor Assignment</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+
+      <!-- Job Selection -->
+      <div class="field">
+        <label for="jobId">Job</label>
+        <select id="jobId" formControlName="jobId">
+          <option value="">-- Select Job --</option>
+          <option *ngFor="let v of jobs" [value]="v.rowId">
+            {{ v.jobName }} (ID: {{ v.rowId }})
+          </option>
+        </select>
+        <div *ngIf="form.get('jobId')?.touched && form.get('jobId')?.invalid" class="error">
+          Job is required.
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="field">
+        <label for="status">Status</label>
+        <input id="status" type="text" formControlName="status" placeholder="Enter contract status">
+        <div *ngIf="form.get('status')?.touched && form.get('status')?.invalid" class="error">
+          Status is required.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-cancel" [routerLink]="['/jobs']">Cancel</button>
+      <button type="submit" class="btn-create" [disabled]="form.invalid">
+        {{ isEdit ? 'Update' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>

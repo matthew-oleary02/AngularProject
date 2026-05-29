@@ -1,0 +1,22 @@
+<h1>Job ETA Details</h1>
+<div *ngIf="eta; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ eta.serviceType || 'Service Type' }}</h2>
+
+    <div class="item"><div class="label">ID</div><div class="value">{{ eta.rowId }}</div></div>
+
+    <div class="group-title">Job ETA Info</div>
+    <div class="item"><div class="label">Job Number</div><div class="value">{{ eta.job }}</div></div>
+    <div class="item"><div class="label">ETA Hours</div><div class="value">{{ eta.etaHours }}</div></div>
+    <div class="item"><div class="label">HoursBusDays</div><div class="value">{{ eta.hoursBusDays }}</div></div>
+
+  </div>
+  <button type="button" class="btn-return" [routerLink]="['/jobs']">Back</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Job ETA not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/jobs']">Back</button>
+  </div>
+</ng-template>

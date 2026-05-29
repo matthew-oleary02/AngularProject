@@ -4,83 +4,244 @@
     <h2 class="title">Job#{{ jobs.jobNumber || 'Job #' }}</h2>
 
     <div class="group-title">Job Info</div>
-    <div class="item"><div class="label">ID</div><div class="value">{{ jobs.rowId }}</div></div>
-    <div class="item"><div class="label">Customer</div><div class="value">{{ jobs.customer }}</div></div>
-    <div class="item"><div class="label">Location</div><div class="value">{{ jobs.location }}</div></div>
-    <div class="item"><div class="label">Service Type</div><div class="value">{{ jobs.serviceType }}</div></div>
-    <div class="item"><div class="label">Job Status</div><div class="value">{{ jobs.jobStatus }}</div></div>
-    <div class="item"><div class="label">Trade</div><div class="value">{{ jobs.trade }}</div></div>
-    <div class="item"><div class="label">Vendor</div><div class="value">{{ jobs.vendor }}</div></div>
-    <div class="item"><div class="label">Job Owner</div><div class="value">{{ jobs.jobOwner }}</div></div>
-    <div class="item"><div class="label">Date Received</div><div class="value">{{ jobs.dateReceived }}</div></div>
-    <div class="item"><div class="label">State</div><div class="value">{{ jobs.state }}</div></div>
-    <div class="item"><div class="label">ETA</div><div class="value">{{ jobs.eta }}</div></div>
-    <div class="item"><div class="label">Caller</div><div class="value">{{ jobs.caller }}</div></div>
-    <div class="item"><div class="label">NTE</div><div class="value">{{ jobs.nte }}</div></div>
-    <div class="item"><div class="label">Vendor NTE</div><div class="value">{{ jobs.vendorNTE }}</div></div>
-    <div class="item"><div class="label">Quote</div><div class="value">{{ jobs.quote }}</div></div>
+    <div class="item">
+      <div class="label">ID</div>
+      <div class="value">{{ jobs.rowId }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Customer</div>
+      <div class="value">{{ jobs.customer }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Location</div>
+      <div class="value">{{ jobs.location }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Service Type</div>
+      <div class="value">{{ jobs.serviceType }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Job Status</div>
+      <div class="value">{{ jobs.jobStatus }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Trade</div>
+      <div class="value">{{ jobs.trade }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Vendor</div>
+      <div class="value">{{ jobs.vendor }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Job Owner</div>
+      <div class="value">{{ jobs.jobOwner }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Date Received</div>
+      <div class="value">{{ jobs.dateReceived }}</div>
+    </div>
+    <div class="item">
+      <div class="label">State</div>
+      <div class="value">{{ jobs.state }}</div>
+    </div>
+    <div class="item">
+      <div class="label">ETA</div>
+      <div class="value">{{ jobs.eta }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Caller</div>
+      <div class="value">{{ jobs.caller }}</div>
+    </div>
+    <div class="item">
+      <div class="label">NTE</div>
+      <div class="value">{{ jobs.nte }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Vendor NTE</div>
+      <div class="value">{{ jobs.vendorNTE }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Quote</div>
+      <div class="value">{{ jobs.quote }}</div>
+    </div>
 
     <div class="group-title">Additional Info</div>
-    <div class="item"><div class="label">Active</div><div class="value">{{ jobs.active ? 'Yes' : 'No' }}</div></div>
-    <div class="item"><div class="label">Job Note</div><div class="value">{{ jobs.jobNote }}</div></div>
-    <div class="item"><div class="label">Entered By</div><div class="value">{{ jobs.enteredBy }}</div></div>
-    <div class="item"><div class="label">Date Entered</div><div class="value">{{ jobs.dateEntered | date:'short' }}</div></div>
-    <div class="item"><div class="label">Modified By</div><div class="value">{{ jobs.modifiedBy }}</div></div>
-    <div class="item"><div class="label">Last Update</div><div class="value">{{ jobs.modifiedOn | date:'short' }}</div></div>
+    <div class="item">
+      <div class="label">Active</div>
+      <div class="value">{{ jobs.active ? 'Yes' : 'No' }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Job Note</div>
+      <div class="value">{{ jobs.jobNote }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Entered By</div>
+      <div class="value">{{ jobs.enteredBy }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Date Entered</div>
+      <div class="value">{{ jobs.dateEntered | date:'short' }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Modified By</div>
+      <div class="value">{{ jobs.modifiedBy }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Last Update</div>
+      <div class="value">{{ jobs.modifiedOn | date:'short' }}</div>
+    </div>
   </div>
-    <button type="button" class="btn-return" [routerLink]="['/jobs']">Back</button>
+  <button type="button" class="btn-return" [routerLink]="['/jobs']">Back</button>
 </div>
 
 <div class="tabs">
-  <button 
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'jobStatusNotes'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'jobStatusNotes'"
     (click)="activeTab = 'jobStatusNotes'">
     Notes
   </button>
+  <!--
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'purchaseOrders'"
+    [class.active]="activeTab === 'serviceRequestFiles'"
+    (click)="activeTab = 'serviceRequestFiles'">
+    Service Request Files
+  </button>
+  -->
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'purchaseOrders'"
     (click)="activeTab = 'purchaseOrders'">
     Purchase Orders
   </button>
-  <button 
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'jobEquipment'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'jobEquipment'"
     (click)="activeTab = 'jobEquipment'">
     Equipment
   </button>
-  <button 
-    type="button" 
-    class="btn-tab" 
-    [class.active]="activeTab === 'invoiceItems'"
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'invoiceItems'"
     (click)="activeTab = 'invoiceItems'">
     Invoice Items
   </button>
+  <!--
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'vendorAssignment'"
+    [class.active]="activeTab === 'onSiteHistory'"
+    (click)="activeTab = 'onSiteHistory'">
+    On Site History
+  </button>
+  -->
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'vendorAssignment'"
     (click)="activeTab = 'vendorAssignment'">
     Vendor Assignment
   </button>
+  <!--
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'workTickets'"
+    [class.active]="activeTab === 'siteHistory'"
+    (click)="activeTab = 'siteHistory'">
+    Site History
+  </button>
+  -->
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'workTickets'"
     (click)="activeTab = 'workTickets'">
     Work Tickets
   </button>
+  <button type="button" class="btn-tab" [class.active]="activeTab === 'jobETA'" (click)="activeTab = 'jobETA'">
+    ETA
+  </button>
+  <!--
   <button 
     type="button" 
     class="btn-tab" 
-    [class.active]="activeTab === 'jobETA'"
-    (click)="activeTab = 'jobETA'">
-    ETA
+    [class.active]="activeTab === 'vendorJobTime'"
+    (click)="activeTab = 'vendorJobTime'">
+    Vendor Check Ins
   </button>
+  -->
+  <!--
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'childJobs'"
+    (click)="activeTab = 'childJobs'">
+    Child Jobs
+  </button>
+  -->
+  <!--
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'jobBoard'"
+    (click)="activeTab = 'jobBoard'">
+    Scheduling
+  </button>
+  -->
+  <!--
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'quotes'"
+    (click)="activeTab = 'quotes'">
+    Quotes
+  </button>
+  -->
+  <!--
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'internalNotes'"
+    (click)="activeTab = 'internalNotes'">
+    Internal Notes
+  </button>
+  -->
+  <!--
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'assignedRoles'"
+    (click)="activeTab = 'assignedRoles'">
+    Assigned Roles
+  </button>
+  -->
+  <!--
+  <button 
+    type="button" 
+    class="btn-tab" 
+    [class.active]="activeTab === 'permitHistory'"
+    (click)="activeTab = 'permitHistory'">
+    Permit History
+  </button>
+  -->
+</div>
+
+<!-- Job ETA Tab Content -->
+<div *ngIf="activeTab === 'jobETA'" class="card">
+  <h1>Job ETA</h1>
+
+  <div class="toolbar" style="display:flex;gap:8px;align-items:center;padding-bottom:8px;">
+    <input type="text" placeholder="Search here..." (input)="onFilterChange($event.target.value)" [value]="filterText"
+      class="search-box" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:6px;" />
+    <td><button type="button" class="btn-return" (click)="clearFilter()">Clear</button></td>
+    <button type="button" class="btn-create" [routerLink]="['/jobs-eta/new']">Add New ETA</button>
+  </div>
+  <table>
+    <tr>
+      <th>Service Type</th>
+      <th>ETA Hours</th>
+      <th>Hours Bus Days</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let eta of jobsEta">
+      <td>{{ eta.serviceType }}</td>
+      <td>{{ eta.etaHours }}</td>
+      <td>{{ eta.hoursBusDays }}</td>
+      <td>
+        <button type="button" class="btn btn-edit" [routerLink]="['/jobs-eta/edit', eta.rowId]">Edit</button>
+        <button type="button" class="btn btn-view" [routerLink]="['/jobs-eta/view', eta.rowId]">View</button>
+        <button type="button" class="btn btn-delete" (click)="onDelete(eta.rowId)">Delete</button>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <ng-template #notFound>

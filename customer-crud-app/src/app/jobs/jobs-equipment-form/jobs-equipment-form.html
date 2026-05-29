@@ -1,0 +1,54 @@
+<h1>{{ isEdit ? 'Edit JobsEquipment' : 'Add New JobsEquipment' }}</h1>
+
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label for="job" class="full-label">Job:</label>
+    <select id="job" class="full-input" formControlName="job">
+      <option value="">Select a job</option>
+      <option *ngFor="let cust of jobs" [value]="cust.jobName">
+      {{ cust.jobName }}
+      </option>
+    </select>
+
+    <div class="error" *ngIf="form.get('job')?.invalid && form.get('job')?.touched">
+      Required
+    </div>
+    <label for="location" class="full-label">Store Number:</label>
+    <input id="location" class="full-input" formControlName="location" type="text" />
+
+    <div class="error" *ngIf="form.get('location')?.invalid && form.get('location')?.touched">
+      Required
+    </div>
+
+    <label for="entryStatus" class="full-label">Entry Status:</label>
+    <input id="entryStatus" class="full-input" formControlName="entryStatus" type="text" />
+
+    <label for="manufacturer" class="full-label">Manufacturer:</label>
+    <input id="manufacturer" class="full-input" formControlName="manufacturer" type="text" />
+
+    <label for="model" class="full-label">Model:</label>
+    <input id="model" class="full-input" formControlName="model" type="text" />
+
+    <label for="serialNumber" class="full-label">Serial Number:</label>
+    <input id="serialNumber" class="full-input" formControlName="serialNumber" type="text" />
+
+    <label for="tonnage" class="full-label">Tonnage:</label>
+    <input id="tonnage" class="full-input" formControlName="tonnage" type="number" />
+
+    <label for="age" class="full-label">Age:</label>
+    <input id="age" class="full-input" formControlName="age" type="number" />
+
+    <label for="condition" class="full-label">Condition:</label>
+    <input id="condition" class="full-input" formControlName="condition" type="text" />
+
+    <label for="typeOfUnit" class="full-label">Type Of Unit:</label>
+    <input id="typeOfUnit" class="full-input" formControlName="typeOfUnit" type="text" />
+
+    <label for="dateLoaded" class="full-label">Date Loaded:</label>
+    <input id="dateLoaded" class="full-input" formControlName="dateLoaded" type="date" />
+
+    <button type="submit" [disabled]="form.invalid">{{ isEdit ? 'Update' : 'Create' }}</button>
+    <button class="btn-cancel" type="button" [routerLink]="['/jobs']">Cancel</button>
+    </form>
+</div>

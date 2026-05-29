@@ -1,0 +1,47 @@
+<h1>Jobs Vendor Assignment Details</h1>
+
+<div *ngIf="status; else notFound" class="card">
+  <div class="detail-grid">
+    <h2 class="title">{{ status.status }}</h2>
+
+    <div class="item">
+      <div class="label">ID</div>
+      <div class="value">{{ status.rowId }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Job ID</div>
+      <div class="value">{{ status.jobId }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Status</div>
+      <div class="value">{{ status.status }}</div>
+    </div>
+
+    <div class="group-title">Audit Info</div>
+    <div class="item">
+      <div class="label">Created By</div>
+      <div class="value">{{ status.createdBy }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Created On</div>
+      <div class="value">{{ status.createdOn | date:'short' }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Modified By</div>
+      <div class="value">{{ status.modifiedBy }}</div>
+    </div>
+    <div class="item">
+      <div class="label">Modified On</div>
+      <div class="value">{{ status.modifiedOn | date:'short' }}</div>
+    </div>
+  </div>
+  <button type="button" class="btn-return" [routerLink]="['/jobs']">Back to Jobs</button>
+  <button type="button" class="btn-edit" [routerLink]="['/jobs-vendor-assignment/edit', status.rowId]">Edit</button>
+</div>
+
+<ng-template #notFound>
+  <div class="card">
+    <p>Job contract status not found.</p>
+    <button type="button" class="btn-return" [routerLink]="['/jobs']">Back to Jobs</button>
+  </div>
+</ng-template>
