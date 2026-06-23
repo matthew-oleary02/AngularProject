@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { JobsVendorAssignment } from '../jobs-vendor-assignment.model';
+import { JobsVendorAssignment } from './jobs-vendor-assignment.model';
 
 @Injectable({ providedIn: 'root' })
 export class JobsVendorAssignmentService {

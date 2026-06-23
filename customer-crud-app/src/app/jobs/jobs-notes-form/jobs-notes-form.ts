@@ -4,8 +4,8 @@ import { JobsNotesService } from '../jobs-notes.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { JobNote } from '../jobs-notes.model';
-import { JobService } from '../jobs.service';
-import { Job } from '../jobs.model';
+import { JobsService } from '../jobs.service';
+import { Jobs } from '../jobs.model';
 
 @Component({
   selector: 'app-jobs-notes-form',
@@ -18,14 +18,14 @@ export class JobsNotesFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
   noteId!: number;
-  jobs: Job[] = [];
+  jobs: Jobs[] = [];
 
   constructor(
     private fb: FormBuilder,
     private jobsNotesService: JobsNotesService,
     private router: Router,
     private route: ActivatedRoute,
-    private jobService: JobService
+    private jobsService: JobsService
   ) {}
 
   /* Initialize the form and load note data if editing */
@@ -57,7 +57,7 @@ export class JobsNotesFormComponent implements OnInit {
   }
 
   loadJobs(): void {
-    this.jobService.getJobs().subscribe((data: Job[]) => {
+    this.jobsService.getJobs().subscribe((data: Jobs[]) => {
       this.jobs = data;
     });
   }

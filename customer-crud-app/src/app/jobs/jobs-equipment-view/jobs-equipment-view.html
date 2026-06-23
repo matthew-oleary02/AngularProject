@@ -1,28 +1,28 @@
 <h1>JobsEquipment Details</h1>
-<div *ngIf="equipment; else notFound" class="card">
+<div *ngIf="jobsEquipment; else notFound" class="card">
   <div class="detail-grid">
-    <h2 class="title">{{ jobs-equipment.model || 'Model' }}</h2>
+    <h2 class="title">{{ jobsEquipment.model || 'Model' }}</h2>
 
-    <div class="item"><div class="label">ID</div><div class="value">{{ equipment.rowId }}</div></div>
+    <div class="item"><div class="label">ID</div><div class="value">{{ jobsEquipment.rowId }}</div></div>
 
     <div class="group-title">JobsEquipment Info</div>
-    <div class="item"><div class="label">Job</div><div class="value">{{ equipment.job }}</div></div>
-    <div class="item"><div class="label">Location</div><div class="value">{{ equipment.location }}</div></div>
-    <div class="item"><div class="label">Entry Status</div><div class="value">{{ equipment.entryStatus }}</div></div>
-    <div class="item"><div class="label">Manufacturer</div><div class="value">{{ equipment.manufacturer }}</div></div>
-    <div class="item"><div class="label">Model</div><div class="value">{{ jobs-equipment.model }}</div></div>
-    <div class="item"><div class="label">Serial Number</div><div class="value">{{ equipment.serialNumber }}</div></div>
-    <div class="item"><div class="label">Tonnage</div><div class="value">{{ equipment.tonnage }}</div></div>
-    <div class="item"><div class="label">Age</div><div class="value">{{ equipment.age }}</div></div>
-    <div class="item"><div class="label">Condition</div><div class="value">{{ equipment.condition }}</div></div>
-    <div class="item"><div class="label">Type Of Unit</div><div class="value">{{ equipment.typeOfUnit }}</div></div>
-    <div class="item"><div class="label">Date Loaded</div><div class="value">{{ equipment.dateLoaded | date:'short' }}</div></div>
+    <div class="item"><div class="label">Job</div><div class="value">{{ jobsEquipment.job }}</div></div>
+    <div class="item"><div class="label">Location</div><div class="value">{{ jobsEquipment.location }}</div></div>
+    <div class="item"><div class="label">Entry Status</div><div class="value">{{ jobsEquipment.entryStatus }}</div></div>
+    <div class="item"><div class="label">Manufacturer</div><div class="value">{{ jobsEquipment.manufacturer }}</div></div>
+    <div class="item"><div class="label">Model</div><div class="value">{{ jobsEquipment.model }}</div></div>
+    <div class="item"><div class="label">Serial Number</div><div class="value">{{ jobsEquipment.serialNumber }}</div></div>
+    <div class="item"><div class="label">Tonnage</div><div class="value">{{ jobsEquipment.tonnage }}</div></div>
+    <div class="item"><div class="label">Age</div><div class="value">{{ jobsEquipment.age }}</div></div>
+    <div class="item"><div class="label">Condition</div><div class="value">{{ jobsEquipment.condition }}</div></div>
+    <div class="item"><div class="label">Type Of Unit</div><div class="value">{{ jobsEquipment.typeOfUnit }}</div></div>
+    <div class="item"><div class="label">Date Loaded</div><div class="value">{{ jobsEquipment.dateLoaded | date:'short' }}</div></div>
 
     <div class="group-title">Additional Info</div>
-    <div class="item"><div class="label">Entered By</div><div class="value">{{ equipment.enteredBy }}</div></div>
-    <div class="item"><div class="label">Date Entered</div><div class="value">{{ equipment.dateEntered | date:'short' }}</div></div>
-    <div class="item"><div class="label">Modified By</div><div class="value">{{ equipment.modifiedBy }}</div></div>
-    <div class="item"><div class="label">Last Update</div><div class="value">{{ equipment.modifiedOn | date:'short' }}</div></div>
+    <div class="item"><div class="label">Entered By</div><div class="value">{{ jobsEquipment.enteredBy }}</div></div>
+    <div class="item"><div class="label">Date Entered</div><div class="value">{{ jobsEquipment.dateEntered | date:'short' }}</div></div>
+    <div class="item"><div class="label">Modified By</div><div class="value">{{ jobsEquipment.modifiedBy }}</div></div>
+    <div class="item"><div class="label">Last Update</div><div class="value">{{ jobsEquipment.modifiedOn | date:'short' }}</div></div>
   </div>
   <button type="button" class="btn-return" [routerLink]="['/jobs']">Back</button>
 </div>

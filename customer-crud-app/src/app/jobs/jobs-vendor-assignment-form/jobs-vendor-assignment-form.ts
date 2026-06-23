@@ -4,8 +4,8 @@ import { JobsVendorAssignmentService } from '../jobs-vendor-assignment.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { JobsVendorAssignment } from '../jobs-vendor-assignment.model';
-import { JobService } from '../jobs.service';
-import { Job } from '../jobs.model';
+import { JobsService } from '../jobs.service';
+import { Jobs } from '../jobs.model';
 
 @Component({
   selector: 'app-jobs-vendor-assignment-form',
@@ -18,14 +18,14 @@ export class JobsVendorAssignmentFormComponent implements OnInit {
   form!: FormGroup;
   isEdit = false;
   statusId!: number;
-  jobs: Job[] = [];
+  jobs: Jobs[] = [];
 
   constructor(
     private fb: FormBuilder,
     private statusService: JobsVendorAssignmentService,
     private router: Router,
     private route: ActivatedRoute,
-    private jobService: JobService
+    private jobsService: JobsService
   ) {}
 
   /* Initialize the form and load status data if editing */
@@ -52,7 +52,7 @@ export class JobsVendorAssignmentFormComponent implements OnInit {
   }
 
   loadJobs(): void {
-    this.jobService.getJobs().subscribe((data: Job[]) => {
+    this.jobsService.getJobs().subscribe((data: Jobs[]) => {
       this.jobs = data;
     });
   }

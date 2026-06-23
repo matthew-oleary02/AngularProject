@@ -10,7 +10,7 @@
         <select id="jobId" formControlName="jobId">
           <option value="">-- Select Job --</option>
           <option *ngFor="let v of jobs" [value]="v.rowId">
-            {{ v.jobName }} (ID: {{ v.rowId }})
+            {{ v.jobNumber }} (ID: {{ v.rowId }})
           </option>
         </select>
         <div *ngIf="form.get('jobId')?.touched && form.get('jobId')?.invalid" class="error">

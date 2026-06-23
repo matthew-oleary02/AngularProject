@@ -12,7 +12,7 @@ import { JobsEquipment } from '../jobs-equipment.model';
     styleUrls: ['../../styles/view.css'],
 })
 export class JobsEquipmentViewComponent implements OnInit {
-    equipment?: JobsEquipment;
+    jobsEquipment?: JobsEquipment;
 
     constructor(private jobsEquipmentService: JobsEquipmentService,
         private router: Router,

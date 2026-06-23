@@ -27,7 +27,7 @@
     <th>DateLoaded</th>
     <th>Actions</th>
   </tr>
-  <tr *ngFor="let eq of equipment">
+  <tr *ngFor="let eq of jobsEquipment">
     <td><a [routerLink]="['/equipment/view', eq.rowId]">{{ eq.job }}</a></td>
     <td>{{ eq.location }}</td>
     <td>{{ eq.entryStatus }}</td>

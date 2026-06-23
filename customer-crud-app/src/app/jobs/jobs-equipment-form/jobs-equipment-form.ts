@@ -5,8 +5,8 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { JobsEquipmentService } from '../jobs-equipment.service';
 import { JobsEquipment } from '../jobs-equipment.model';
-import { JobService } from '../jobs.service'; // Adjust the path as necessary
-import { Job } from '../jobs.model'; // Adjust the path as necessary
+import { JobsService } from '../jobs.service'; // Adjust the path as necessary
+import { Jobs } from '../jobs.model'; // Adjust the path as necessary
 
 @Component({
     selector: 'app-jobs-equipment-form',
@@ -20,14 +20,14 @@ export class JobsEquipmentFormComponent implements OnInit {
     form!: FormGroup;
     isEdit = false;
     jobsEquipmentId!: number;
-    jobs: Job[] = [];
+    jobs: Jobs[] = [];
 
     constructor(
         private fb: FormBuilder,
         private jobsEquipmentService: JobsEquipmentService,
         private router: Router,
         private route: ActivatedRoute,
-        private jobService: JobService
+        private jobsService: JobsService
     ) {}
 
     ngOnInit() {
@@ -66,7 +66,7 @@ export class JobsEquipmentFormComponent implements OnInit {
   }
 
     loadJobs(): void {
-    this.jobService.getJobs().subscribe((data: Job[]) => {
+    this.jobsService.getJobs().subscribe((data: Jobs[]) => {
       this.jobs = data;
     });
   }

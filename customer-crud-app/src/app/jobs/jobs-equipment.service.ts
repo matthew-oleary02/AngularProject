@@ -20,12 +20,12 @@ export class JobsEquipmentService {
 
     /* Add new equipment */
     addJobsEquipment(jobsEquipment: JobsEquipment): Observable<JobsEquipment> {
-        return this.http.post<JobsEquipment>(this.apiUrl, equipment);
+        return this.http.post<JobsEquipment>(this.apiUrl, jobsEquipment);
     }
 
     /* Update existing equipment */
     updateJobsEquipment(jobsEquipment: JobsEquipment): Observable<JobsEquipment> {
-        return this.http.put<JobsEquipment>(`${this.apiUrl}/${equipment.rowId}`, equipment);
+        return this.http.put<JobsEquipment>(`${this.apiUrl}/${jobsEquipment.rowId}`, jobsEquipment);
     }
 
     /* Delete equipment by ID */

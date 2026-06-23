@@ -6,8 +6,8 @@
     <label for="job" class="full-label">Job:</label>
     <select id="job" class="full-input" formControlName="job">
       <option value="">Select a job</option>
-      <option *ngFor="let cust of jobs" [value]="cust.jobName">
-      {{ cust.jobName }}
+      <option *ngFor="let cust of jobs" [value]="cust.jobNumber">
+      {{ cust.jobNumber }}
       </option>
     </select>
 
